@@ -2,8 +2,7 @@
     <img #sourceImage [src]="src" class="source-image">
 </div>
 
-<gentics-image-preview [class.hidden]="mode === 'crop'"
-                       [cropper]="cropper"
+<gentics-image-preview [visible]="mode !== 'crop'"
                        [src]="src"
                        [width]="previewWidth"
                        [height]="previewHeight"></gentics-image-preview>

@@ -1,9 +1,8 @@
 import {Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import Cropper from 'cropperjs';
-import {ImagePreviewComponent} from "../image-preview/image-preview.component";
 
-export type Mode = 'preview' | 'crop' | 'resize' | 'focalPoint';
-export type AspectRatio = 'original' | 'square' | 'free';
+import { ImagePreviewComponent } from "../image-preview/image-preview.component";
+import { AspectRatio, Mode } from "../../models";
+import { CropperService } from "../../providers/cropper.service";
 
 @Component({
     selector: 'gentics-image-editor',
@@ -18,14 +17,12 @@ export class GenticsImageEditorComponent {
     @ViewChild('sourceImage') sourceImage: ElementRef;
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
 
-    cropper: Cropper;
     mode: Mode = 'preview';
     cropAspectRatio: AspectRatio = 'original';
     previewWidth: number;
     previewHeight: number;
-    private cropperData: Cropper.Data;
 
-    ngAfterViewInit(): void {}
+    constructor(private cropperService: CropperService) {}
 
     setMode(modeClicked: Mode): void {
         if (this.mode !== modeClicked) {
@@ -36,37 +33,16 @@ export class GenticsImageEditorComponent {
     }
 
     setCropAspectRatio(value: AspectRatio) {
-        const imageData = this.cropper.getImageData();
-        let aspectRatioNumber: number;
-        switch (value) {
-            case 'original':
-                aspectRatioNumber = imageData.naturalWidth / imageData.naturalHeight;
-                break;
-            case 'square':
-                aspectRatioNumber = 1;
-                break;
-            default:
-                aspectRatioNumber = NaN;
-                break;
-        }
-        this.cropper.setAspectRatio(aspectRatioNumber);
+        this.cropperService.setCropAspectRatio(value);
     }
 
     resetCrop(): void {
-        const imageData = this.cropper.getImageData();
         this.cropAspectRatio = 'original';
-        this.setCropAspectRatio('original');
-        this.cropper.setData({
-            x: 0,
-            y: 0,
-            width: imageData.naturalWidth,
-            height: imageData.naturalHeight
-        });
+        this.cropperService.resetCrop();
     }
 
     applyCrop(): void {
-        this.cropperData = this.cropper.getData();
-        this.imagePreview.recalculatePreview();
+        this.imagePreview.recalculatePreview(this.cropperService.cropper);
         this.setMode('preview');
     }
 
@@ -116,28 +92,16 @@ export class GenticsImageEditorComponent {
 
     private enterCropMode(): void {
         console.log(`entering crop mode`);
-        if (!this.cropper) {
-            this.cropper = new Cropper(this.sourceImage.nativeElement, {
-                viewMode: 1,
-                autoCrop: true,
-                zoomable: false,
-                ready: () => {
-                    if (this.cropperData) {
-                        this.cropper.setData(this.cropperData);
-                    }
-                    this.previewWidth = this.cropper.getImageData().naturalWidth;
-                    this.previewHeight = this.cropper.getImageData().naturalHeight;
-                    this.setCropAspectRatio(this.cropAspectRatio);
-                }
+        this.cropperService.enable(this.sourceImage.nativeElement, this.cropAspectRatio)
+            .then(imageData => {
+                this.previewWidth = imageData.naturalWidth;
+                this.previewHeight = imageData.naturalHeight;
             });
-        } else {
-            this.cropper.enable();
-        }
     }
 
     private exitCropMode(): void {
         console.log(`exiting crop mode`);
-        this.cropper.disable();
+        this.cropperService.disable();
     }
 
     private enterResizeMode(): void {
