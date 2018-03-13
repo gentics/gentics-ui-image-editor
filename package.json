@@ -10,7 +10,7 @@
     "docs:watch": "npm run docs:build -- -s -w",
     "lint": "tslint --type-check --project tsconfig.json src/**/*.ts",
     "lite": "lite-server",
-    "playground:build": "webpack --config playground/webpack.config.js -w",
+    "playground:build": "webpack --config playground/webpack.config.js -w -d",
     "playground": "concurrently \"npm run build:watch\" \"npm run playground:build\" \"npm run lite\"",
     "test": "tsc && karma start"
   },

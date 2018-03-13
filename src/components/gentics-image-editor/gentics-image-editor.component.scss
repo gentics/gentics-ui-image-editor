@@ -1,0 +1,45 @@
+@import "../../../node_modules/cropperjs/dist/cropper.css";
+
+gentics-image-editor {
+  border: 3px dotted pink;
+  display: block;
+  background-color: white;
+
+
+  .crop-area {
+    overflow: hidden;
+    &.hidden {
+      height: 0;
+      visibility: hidden;
+    }
+  }
+
+  img.source-image {
+    max-width: 100%;
+  }
+
+  .image-preview {
+    overflow: hidden;
+    margin: auto;
+
+    img {
+      display: block;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: auto;
+    }
+  }
+
+  .mode-selector {
+    padding: 10px;
+  }
+
+  gentics-image-preview.hidden {
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+}
+

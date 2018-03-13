@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "outDir": "../build",
+    "sourceMap": true,
     "rootDir": ".",
     "lib": [
       "es2015",

@@ -1,0 +1,9 @@
+<div class="image-preview"
+     [style.width.px]="cropBoxWidth"
+     [style.height.px]="cropBoxHeight">
+    <img #previewImage [src]="src"
+         class="preview-image"
+         [style.width.px]="previewImageWidth"
+         [style.height.px]="previewImageHeight"
+         [style.transform]="previewImageTransform">
+</div>
