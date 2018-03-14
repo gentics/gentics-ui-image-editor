@@ -1,4 +1,5 @@
 @import "../../../node_modules/cropperjs/dist/cropper.css";
+@import "../../../node_modules/gentics-ui-core/dist/styles/variables";
 
 gentics-image-editor {
   border: 3px dotted pink;
@@ -34,6 +35,21 @@ gentics-image-editor {
 
   .mode-selector {
     padding: 10px;
+  }
+
+  .range-container {
+    display: flex;
+    align-items: center;
+    margin: 5px 10px;
+    gtx-range {
+      flex: 1;
+    }
+
+    icon {
+      margin: 20px;
+      color: $gtx-color-light-gray;
+      font-size: 32px;
+    }
   }
 }
 

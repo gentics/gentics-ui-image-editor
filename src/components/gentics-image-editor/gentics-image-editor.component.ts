@@ -3,6 +3,10 @@ import {Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angul
 import { ImagePreviewComponent } from "../image-preview/image-preview.component";
 import { AspectRatio, Mode } from "../../models";
 import { CropperService } from "../../providers/cropper.service";
+import { ResizeService } from "../../providers/resize.service";
+import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
+import {Observable} from "rxjs/Observable";
+import {map, tap} from "rxjs/operators";
 
 @Component({
     selector: 'gentics-image-editor',
@@ -18,11 +22,28 @@ export class GenticsImageEditorComponent {
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
 
     mode: Mode = 'preview';
+
+    // crop-related state
     cropAspectRatio: AspectRatio = 'original';
     previewWidth: number;
     previewHeight: number;
 
-    constructor(private cropperService: CropperService) {}
+    // resize-related state
+    resizeScale = 1;
+    resizeRangeValue = 0;
+    resizeMin$: Observable<number>;
+    resizeMax$: Observable<number>;
+    resizeDimensions$: Observable<string>;
+
+    constructor(private cropperService: CropperService,
+                private resizeService: ResizeService) {}
+
+    ngOnInit(): void {
+        this.resizeMin$ = this.resizeService.min$;
+        this.resizeMax$ = this.resizeService.max$;
+        this.resizeDimensions$ = this.resizeService.resizeDimensions$.pipe(
+            map(dimensions => `${dimensions.width}px x ${dimensions.height}px`));
+    }
 
     setMode(modeClicked: Mode): void {
         if (this.mode !== modeClicked) {
@@ -42,11 +63,29 @@ export class GenticsImageEditorComponent {
     }
 
     applyCrop(): void {
-        this.imagePreview.updateCropperData(this.cropperService.cropper);
+        this.imagePreview.updateCropperData(this.cropperService.cropperData);
         this.setMode('preview');
     }
 
     cancelCrop(): void {
+        this.setMode('preview');
+    }
+
+    previewResize(width: number): void {
+        this.resizeService.update(width);
+        const scale = this.resizeService.getNormalizedScaleValue();
+        this.imagePreview.updateScale(scale, scale);
+    }
+
+    applyResize(): void {
+        const scale = this.resizeService.getNormalizedScaleValue();
+        this.resizeScale = scale;
+        this.imagePreview.updateScale(scale, scale);
+        this.setMode('preview');
+    }
+
+    cancelResize(): void {
+        this.imagePreview.updateScale(1, 1);
         this.setMode('preview');
     }
 
@@ -105,6 +144,13 @@ export class GenticsImageEditorComponent {
     }
 
     private enterResizeMode(): void {
+        let cropperData = this.cropperService.cropperData;
+        if (!cropperData) {
+            cropperData = getDefaultCropperData(this.sourceImage.nativeElement);
+        }
+        const { width, height } = getActualCroppedSize(cropperData);
+        this.resizeService.enable(width, height, this.resizeScale);
+        this.resizeRangeValue = width * this.resizeScale;
         console.log(`entering resize mode`);
     }
 

@@ -5,7 +5,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    SimpleChanges,
     ViewChild
 } from '@angular/core';
 import {DomSanitizer, SafeStyle} from "@angular/platform-browser";
@@ -14,12 +13,9 @@ import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {map} from "rxjs/operators";
 import {combineLatest} from "rxjs/observable/combineLatest";
-
-export type CropperData = {
-    imageData: Cropper.ImageData;
-    cropBoxData: Cropper.CropBoxData;
-    canvasData: Cropper.CanvasData;
-};
+import {CropperData} from "../../providers/cropper.service";
+import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
+import {Dimensions2D} from "../../models";
 
 @Component({
     selector: 'gentics-image-preview',
@@ -32,8 +28,6 @@ export class ImagePreviewComponent {
     @Input() width: number;
     @Input() height: number;
     @Input() visible: boolean = true;
-    @Input() scaleX: number = 1;
-    @Input() scaleY: number = 1;
 
     @HostBinding('class.hidden') get hidden(): boolean {
         return !this.visible;
@@ -51,21 +45,12 @@ export class ImagePreviewComponent {
     actualWidth$: Observable<number>;
 
     private cropperData$ = new Subject<CropperData>();
-    private maxDimensions$ = new Subject<{ width: number; height: number; }>();
+    private maxDimensions$ = new Subject<Dimensions2D>();
     private scaleX$ = new BehaviorSubject<number>(1);
     private scaleY$ = new BehaviorSubject<number>(1);
 
     constructor(private sanitizer: DomSanitizer,
                 private elementRef: ElementRef) {}
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['scaleX']) {
-            this.scaleX$.next(this.scaleX);
-        }
-        if (changes['scaleY']) {
-            this.scaleY$.next(this.scaleY);
-        }
-    }
 
     ngOnInit(): void {
 
@@ -113,22 +98,22 @@ export class ImagePreviewComponent {
             this.cropperData$,
             this.scaleX$
         ).pipe(
-            map(([{ imageData, cropBoxData }, scaleX]) =>
-                Math.round((imageData.naturalWidth / imageData.width) * cropBoxData.width * scaleX))
+            map(([cropperData, scaleX]) =>
+                Math.round(getActualCroppedSize(cropperData).width * scaleX))
         );
 
         this.actualHeight$ = combineLatest(
             this.cropperData$,
             this.scaleY$
         ).pipe(
-            map(([{ imageData, cropBoxData }, scaleY]) =>
-                Math.round((imageData.naturalHeight / imageData.height) * cropBoxData.height * scaleY))
+            map(([cropperData, scaleY]) =>
+                Math.round(getActualCroppedSize(cropperData).height * scaleY))
         );
     }
 
     imageLoaded(): void {
         const img = this.previewImage.nativeElement as HTMLImageElement;
-        this.cropperData$.next(this.getDefaultCropperData(img));
+        this.cropperData$.next(getDefaultCropperData(img));
         this.calculateMaxDimensions(img);
     }
 
@@ -138,18 +123,16 @@ export class ImagePreviewComponent {
         this.calculateMaxDimensions(img);
     }
 
-    updateCropperData(cropper: Cropper): void {
-        const imageData = cropper.getImageData();
-        const cropBoxData = cropper.getCropBoxData();
-        const canvasData = cropper.getCanvasData();
-        this.cropperData$.next({
-            imageData,
-            cropBoxData,
-            canvasData
-        });
+    updateCropperData(cropperData: CropperData): void {
+        this.cropperData$.next(cropperData);
     }
 
-    private calculateCropBoxDimensions(cropBoxData: Cropper.CropBoxData): { width: number; height: number; } {
+    updateScale(scaleX: number, scaleY: number): void {
+        this.scaleX$.next(scaleX);
+        this.scaleY$.next(scaleY);
+    }
+
+    private calculateCropBoxDimensions(cropBoxData: Cropper.CropBoxData): Dimensions2D {
         const { width: cropBoxWidth, height: cropBoxHeight } = cropBoxData;
         const originalWidth = cropBoxData.width;
         const originalHeight = cropBoxData.height;
@@ -191,43 +174,5 @@ export class ImagePreviewComponent {
         const width = img.naturalWidth * ratio;
         const height = img.naturalHeight * ratio;
         this.maxDimensions$.next({ width, height });
-    }
-
-    private getDefaultCropperData(img: HTMLImageElement): CropperData {
-        const height = img.naturalHeight;
-        const width = img.naturalWidth;
-        const naturalHeight = img.naturalHeight;
-        const naturalWidth = img.naturalWidth;
-        const top = 0;
-        const left = 0;
-
-        return {
-            canvasData: {
-                height,
-                width,
-                naturalHeight,
-                naturalWidth,
-                left,
-                top,
-            },
-            cropBoxData: {
-                width,
-                height,
-                left,
-                top,
-            },
-            imageData: {
-                naturalWidth,
-                naturalHeight,
-                width,
-                height,
-                left,
-                top,
-                aspectRatio: NaN,
-                scaleX: 1,
-                scaleY: 1,
-                rotate: 0
-            }
-        };
     }
 }

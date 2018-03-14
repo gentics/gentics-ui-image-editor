@@ -6,6 +6,7 @@ import { GenticsUICoreModule, OverlayHostService } from 'gentics-ui-core';
 import { GenticsImageEditorComponent } from './components/gentics-image-editor/gentics-image-editor.component';
 import { ImagePreviewComponent } from "./components/image-preview/image-preview.component";
 import { CropperService } from "./providers/cropper.service";
+import { ResizeService } from "./providers/resize.service";
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { CropperService } from "./providers/cropper.service";
     ],
     providers: [
         OverlayHostService,
-        CropperService
+        CropperService,
+        ResizeService
     ],
     exports: [
         GenticsImageEditorComponent

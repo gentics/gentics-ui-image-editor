@@ -3,6 +3,12 @@ import { Injectable } from '@angular/core';
 import { AspectRatio } from "../models";
 import Cropper from "cropperjs";
 
+export type CropperData = {
+    imageData: Cropper.ImageData;
+    cropBoxData: Cropper.CropBoxData;
+    canvasData: Cropper.CanvasData;
+};
+
 /**
  * The CropperService encapsulates the instance of Cropper (https://github.com/fengyuanchen/cropperjs)
  * and exposes crop-related methods used by the image editor.
@@ -10,7 +16,23 @@ import Cropper from "cropperjs";
 @Injectable()
 export class CropperService {
 
-    cropper: Cropper;
+    private cropper: Cropper;
+
+    /**
+     * Returns a CropperData object
+     */
+    get cropperData(): CropperData | undefined {
+        if (this.cropper) {
+            const imageData = this.cropper.getImageData();
+            const cropBoxData = this.cropper.getCropBoxData();
+            const canvasData = this.cropper.getCanvasData();
+            return {
+                imageData,
+                cropBoxData,
+                canvasData
+            };
+        }
+    }
 
     /**
      * Enable the cropper. If this is the first call, the Cropper object will be instantiated.

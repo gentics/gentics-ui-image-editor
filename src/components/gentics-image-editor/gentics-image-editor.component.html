@@ -19,6 +19,7 @@
             <icon>filter_center_focus</icon>
         </gtx-button>
     </div>
+
     <div class="sub-controls crop-controls" *ngIf="mode === 'crop'">
         <gtx-select label="(i18n) Aspect Ratio"
                     [(ngModel)]="cropAspectRatio"
@@ -35,11 +36,24 @@
         <gtx-button flat type="secondary" (click)="cancelCrop()">Cancel</gtx-button>
         <gtx-button type="primary" (click)="applyCrop()"><icon left>check</icon> Crop</gtx-button>
     </div>
+
     <div class="sub-controls resize-controls" *ngIf="mode === 'resize'">
-        Resize controls...
+        <div class="resize-dimensions">{{ resizeDimensions$ | async }}</div>
+        <div class="range-container">
+            <icon>photo_size_select_large</icon>
+            <gtx-range [min]="resizeMin$ | async"
+                       [max]="resizeMax$ | async"
+                       [(ngModel)]="resizeRangeValue"
+                       (change)="previewResize($event)"></gtx-range>
+            <icon>photo_size_select_actual</icon>
+        </div>
+        <gtx-button flat type="secondary" (click)="cancelResize()">Cancel</gtx-button>
+        <gtx-button type="primary" (click)="applyResize()"><icon left>check</icon> Resize</gtx-button>
     </div>
+
     <div class="sub-controls focalpoint-controls" *ngIf="mode === 'focalPoint'">
         Focal point controls...
     </div>
+
 </div>
 <gtx-overlay-host></gtx-overlay-host>
