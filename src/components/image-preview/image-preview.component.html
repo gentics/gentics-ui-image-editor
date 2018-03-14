@@ -13,11 +13,13 @@
              [style.transform]="previewImageTransform$ | async">
     </div>
     <div class="scale scale-x"
+         [class.less-than-actual]="previewWidthIsLessThanActual$ | async"
          [style.marginLeft.px]="margin"
          [style.width.px]="previewWidth$ | async">
         <div class="scale-value">{{ actualWidth$ | async }}px</div>
     </div>
     <div class="scale scale-y"
+         [class.less-than-actual]="previewHeightIsLessThanActual$ | async"
          [style.marginTop.px]="margin"
          [style.height.px]="previewHeight$ | async">
         <div class="scale-value">{{ actualHeight$ | async }}px</div>

@@ -43,6 +43,8 @@ export class ImagePreviewComponent {
     previewImageHeight$: Observable<number>;
     actualHeight$: Observable<number>;
     actualWidth$: Observable<number>;
+    previewWidthIsLessThanActual$: Observable<boolean>;
+    previewHeightIsLessThanActual$: Observable<boolean>;
 
     private cropperData$ = new Subject<CropperData>();
     private maxDimensions$ = new Subject<Dimensions2D>();
@@ -54,27 +56,29 @@ export class ImagePreviewComponent {
 
     ngOnInit(): void {
 
-        const cropBoxDimensions$ = this.cropperData$.pipe(
-            map(({ cropBoxData }) => this.calculateCropBoxDimensions(cropBoxData))
+        const actualDimensions$ = combineLatest(
+            this.cropperData$,
+            this.scaleX$,
+            this.scaleY$
+        ).pipe(
+            map(([cropperData, scaleX, scaleY]) => {
+                return {
+                    width: Math.round(getActualCroppedSize(cropperData).width * scaleX),
+                    height: Math.round(getActualCroppedSize(cropperData).height * scaleY)
+                };
+            })
         );
 
+        const cropBoxDimensions$ = this.cropperData$.pipe(
+            map(({ cropBoxData }) => this.calculateCropBoxDimensions(cropBoxData)));
+
         const viewableDimensions$ = combineLatest(
+            actualDimensions$,
             cropBoxDimensions$,
             this.maxDimensions$
-        )
-            .pipe(
-                map(([cropBox, maxDimension]) => {
-                    let ratio = 1;
-                    if (maxDimension.width < cropBox.width) {
-                        ratio = maxDimension.width / cropBox.width;
-                    }
-                    return {
-                        width: cropBox.width,
-                        height: cropBox.height,
-                        ratio
-                    };
-                })
-            );
+        ).pipe(
+            map(([actual, cropBox, max]) => this.calculateViewableDimensions(actual, cropBox, max))
+        );
 
         const ratioAndCropperData$ = combineLatest(
             viewableDimensions$.pipe(map(dimensions => dimensions.ratio)),
@@ -83,6 +87,8 @@ export class ImagePreviewComponent {
 
         this.previewWidth$ = viewableDimensions$.map(data => data.width * data.ratio);
         this.previewHeight$ = viewableDimensions$.map(data => data.height * data.ratio);
+        this.actualWidth$ = actualDimensions$.pipe(map(dimensions => dimensions.width));
+        this.actualHeight$ = actualDimensions$.pipe(map(dimensions => dimensions.height));
 
         this.previewImageHeight$ = ratioAndCropperData$.pipe(
             map(([ratio, { imageData }]) => imageData.height * ratio));
@@ -94,21 +100,16 @@ export class ImagePreviewComponent {
             map(([ratio, cropperData]) => this.calculateImageTransform(ratio, cropperData))
         );
 
-        this.actualWidth$ = combineLatest(
-            this.cropperData$,
-            this.scaleX$
-        ).pipe(
-            map(([cropperData, scaleX]) =>
-                Math.round(getActualCroppedSize(cropperData).width * scaleX))
-        );
+        this.previewWidthIsLessThanActual$ = combineLatest(
+            this.previewWidth$,
+            this.actualWidth$
+        ).pipe(map(([previewWidth, actualWidth]) => previewWidth < actualWidth - 1));
 
-        this.actualHeight$ = combineLatest(
-            this.cropperData$,
-            this.scaleY$
-        ).pipe(
-            map(([cropperData, scaleY]) =>
-                Math.round(getActualCroppedSize(cropperData).height * scaleY))
-        );
+        this.previewHeightIsLessThanActual$ = combineLatest(
+            this.previewHeight$,
+            this.actualHeight$
+        ).pipe(map(([previewHeight, actualHeight]) => previewHeight < actualHeight - 1));
+
     }
 
     imageLoaded(): void {
@@ -130,6 +131,20 @@ export class ImagePreviewComponent {
     updateScale(scaleX: number, scaleY: number): void {
         this.scaleX$.next(scaleX);
         this.scaleY$.next(scaleY);
+    }
+
+    private calculateViewableDimensions(actual: Dimensions2D, cropBox: Dimensions2D, max: Dimensions2D): Dimensions2D & { ratio: number } {
+        let ratio = 1;
+        let maxWidth = Math.min(max.width, actual.width);
+        if (maxWidth < cropBox.width) {
+            ratio = maxWidth / cropBox.width;
+        }
+
+        return {
+            width: cropBox.width,
+            height: cropBox.height,
+            ratio
+        };
     }
 
     private calculateCropBoxDimensions(cropBoxData: Cropper.CropBoxData): Dimensions2D {
