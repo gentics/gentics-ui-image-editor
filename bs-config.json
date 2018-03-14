@@ -7,5 +7,7 @@
       "/.playground": ".playground"
     }
   },
-  "online": false
+  "online": false,
+  "reloadDelay": 1000,
+  "reloadDebounce": 2000
 }
