@@ -1,9 +1,50 @@
 :host {
   display: flex;
+  background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACuoAAArqAVDM774AAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTZEaa/1AAAAK0lEQVQ4T2P4jwP8xgFGNSADqDwGIF0DlMYAUH0YYFQDMoDKYwASNfz/DwB/JvcficphowAAAABJRU5ErkJggg==');
 
   &.hidden {
     height: 0;
     overflow: hidden;
     visibility: hidden;
+  }
+}
+
+.image-preview {}
+
+.scale-wrapper {
+  margin: auto;
+  position: relative;
+}
+
+.scale {
+  position: absolute;
+  display: flex;
+  border: 2px solid #2c72d0;
+}
+
+.scale-value {
+  font-size: 16px;
+  color: #2c72d0;
+}
+
+.scale-x {
+  height: 10px;
+  border-bottom-width: 0;
+  left: 0;
+  bottom: 30px;
+  justify-content: center;
+  .scale-value {
+    margin-top: 2px;
+  }
+}
+
+.scale-y {
+  width: 10px;
+  border-right-width: 0;
+  right: 80px;
+  top: 0;
+  align-items: center;
+  .scale-value {
+    margin-left: 5px;
   }
 }

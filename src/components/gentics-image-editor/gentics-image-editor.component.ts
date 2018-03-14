@@ -42,7 +42,7 @@ export class GenticsImageEditorComponent {
     }
 
     applyCrop(): void {
-        this.imagePreview.recalculatePreview(this.cropperService.cropper);
+        this.imagePreview.updateCropperData(this.cropperService.cropper);
         this.setMode('preview');
     }
 
