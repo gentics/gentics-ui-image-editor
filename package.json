@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "cropperjs": "^1.3.2",
-    "gentics-ui-core": "^6.0.3"
+    "gentics-ui-core": "^6.1.0"
   },
   "devDependencies": {
     "@angular/animations": "^5.2.8",
