@@ -1,12 +1,12 @@
 import {Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 
-import { ImagePreviewComponent } from "../image-preview/image-preview.component";
-import { AspectRatio, Mode } from "../../models";
-import { CropperService } from "../../providers/cropper.service";
-import { ResizeService } from "../../providers/resize.service";
+import {ImagePreviewComponent} from "../image-preview/image-preview.component";
+import {AspectRatio, Mode} from "../../models";
+import {CropperService} from "../../providers/cropper.service";
+import {ResizeService} from "../../providers/resize.service";
 import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
 import {Observable} from "rxjs/Observable";
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 
 @Component({
     selector: 'gentics-image-editor',
@@ -17,8 +17,10 @@ import {map, tap} from "rxjs/operators";
 export class GenticsImageEditorComponent {
 
     @Input() src: string;
+    @Input() maxHeight: 'container' | 'none' = 'container';
 
     @ViewChild('sourceImage') sourceImage: ElementRef;
+    @ViewChild('controlPanel') controlPanel: ElementRef;
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
 
     mode: Mode = 'preview';
@@ -35,7 +37,21 @@ export class GenticsImageEditorComponent {
     resizeMax$: Observable<number>;
     resizeDimensions$: Observable<string>;
 
+    private closestAncestorWithHeight: HTMLElement;
+
+    get parentHeight(): number {
+        return this.closestAncestorWithHeight ? this.closestAncestorWithHeight.offsetHeight: 0;
+    }
+
+    get imageAreaHeight(): number {
+        const controlPanelHeight = this.controlPanel ? this.controlPanel.nativeElement.offsetHeight : 0;
+        const realHeight = this.parentHeight - controlPanelHeight;
+        const minHeight = 300;
+        return Math.max(realHeight, minHeight);
+    }
+
     constructor(private cropperService: CropperService,
+                private elementRef: ElementRef,
                 private resizeService: ResizeService) {}
 
     ngOnInit(): void {
@@ -43,6 +59,8 @@ export class GenticsImageEditorComponent {
         this.resizeMax$ = this.resizeService.max$;
         this.resizeDimensions$ = this.resizeService.resizeDimensions$.pipe(
             map(dimensions => `${dimensions.width}px x ${dimensions.height}px`));
+
+        this.closestAncestorWithHeight = this.getClosestAncestorWithHeight(this.elementRef.nativeElement);
     }
 
     setMode(modeClicked: Mode): void {
@@ -164,5 +182,17 @@ export class GenticsImageEditorComponent {
 
     private exitFocalPointMode(): void {
         console.log(`exiting focal point mode`);
+    }
+
+    /**
+     * Walks up the DOM tree from the starting element and returns the first ancestor element with a non-zero
+     * offsetHeight.
+     */
+    private getClosestAncestorWithHeight(startingElement: HTMLElement): HTMLElement {
+        let currentEl = startingElement.parentElement;
+        while (currentEl.offsetHeight === 0 && currentEl !== document.body) {
+            currentEl = currentEl.parentElement;
+        }
+        return currentEl;
     }
 }

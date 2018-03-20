@@ -30,10 +30,10 @@ export class ResizeService {
         );
 
         this.min$ = this.initialDimensions$.pipe(
-            map(initialDimensions => initialDimensions.width * 0.1));
+            map(initialDimensions => initialDimensions.width * 0.01));
 
         this.max$ = this.initialDimensions$.pipe(
-            map(initialDimensions => initialDimensions.width * 3));
+            map(initialDimensions => initialDimensions.width * 2));
 
         combineLatest(this.previewWidth$, this.initialDimensions$).pipe(
             map(([previewWidth, initialDimensions]) => previewWidth / initialDimensions.width)

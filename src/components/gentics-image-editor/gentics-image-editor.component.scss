@@ -3,9 +3,17 @@
 
 gentics-image-editor {
   border: 3px dotted pink;
-  display: block;
+  display: flex;
+  flex-direction: column;
   background-color: white;
 
+  .image-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACuoAAArqAVDM774AAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTZEaa/1AAAAK0lEQVQ4T2P4jwP8xgFGNSADqDwGIF0DlMYAUH0YYFQDMoDKYwASNfz/DwB/JvcficphowAAAABJRU5ErkJggg==');
+  }
 
   .crop-area {
     overflow: hidden;

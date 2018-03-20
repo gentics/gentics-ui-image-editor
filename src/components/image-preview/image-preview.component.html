@@ -6,7 +6,7 @@
          [style.width.px]="previewWidth$ | async"
          [style.height.px]="previewHeight$ | async">
         <img #previewImage [src]="src"
-             class="preview-image"
+             class="preview-image-element"
              (load)="imageLoaded()"
              [style.width.px]="previewImageWidth$ | async"
              [style.height.px]="previewImageHeight$ | async"

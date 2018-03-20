@@ -1,13 +1,14 @@
-<div class="crop-area" [class.hidden]="mode !== 'crop'">
-    <img #sourceImage [src]="src" class="source-image">
+<div class="image-area" [style.height.px]="imageAreaHeight">
+    <div class="crop-area" [class.hidden]="mode !== 'crop'">
+        <img #sourceImage [src]="src" class="source-image">
+    </div>
+
+    <gentics-image-preview [visible]="mode !== 'crop'"
+                           [src]="src"
+                           [maxHeight]="imageAreaHeight"></gentics-image-preview>
 </div>
 
-<gentics-image-preview [visible]="mode !== 'crop'"
-                       [src]="src"
-                       [width]="previewWidth"
-                       [height]="previewHeight"></gentics-image-preview>
-
-<div class="control-panel">
+<div class="control-panel" #controlPanel>
     <div class="mode-selector">
         <gtx-button icon size="large" (click)="setMode('crop')" [disabled]="mode !== 'preview' && mode !== 'crop'">
             <icon>crop</icon>
@@ -43,6 +44,7 @@
             <icon>photo_size_select_large</icon>
             <gtx-range [min]="resizeMin$ | async"
                        [max]="resizeMax$ | async"
+                       [thumbLabel]="false"
                        [(ngModel)]="resizeRangeValue"
                        (change)="previewResize($event)"></gtx-range>
             <icon>photo_size_select_actual</icon>
