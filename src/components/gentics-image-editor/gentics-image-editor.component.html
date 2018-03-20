@@ -1,17 +1,23 @@
 <div class="image-area" [style.height.px]="imageAreaHeight">
-    <div class="crop-area"
-         [class.hidden]="mode !== 'crop'"
-         [class.loading]="imageIsLoading">
-        <img #sourceImage [src]="src" class="source-image">
-    </div>
+
+    <gentics-image-cropper [class.hidden]="mode !== 'crop'"
+                           [class.loading]="imageIsLoading"
+                           [src]="src"
+                           [enabled]="mode === 'crop'"
+                           [aspectRatio]="cropAspectRatio"
+                           (imageLoad)="imageIsLoading = false"></gentics-image-cropper>
 
     <gentics-image-preview [class.hidden]="mode === 'crop'"
                            [class.loading]="imageIsLoading"
+                           [scaleX]="resizeScale"
+                           [scaleY]="resizeScale"
+                           [cropperData]="cropperData"
                            [src]="src"
                            [maxHeight]="imageAreaHeight"
                            (imageLoad)="imageIsLoading = false"></gentics-image-preview>
 
 </div>
+
 <div class="control-panel" #controlPanel>
     <gtx-progress-bar [active]="imageIsLoading"></gtx-progress-bar>
     <div class="mode-selector">
@@ -31,7 +37,7 @@
                     [(ngModel)]="cropAspectRatio"
                     (change)="setCropAspectRatio($event)">
             <gtx-option value="original">Original</gtx-option>
-            <gtx-option value="square">1:1</gtx-option>
+            <gtx-option value="square">Square</gtx-option>
             <gtx-option value="free">Free</gtx-option>
         </gtx-select>
 

@@ -12,7 +12,7 @@ import {map} from "rxjs/operators";
 
 import {ImagePreviewComponent} from "../image-preview/image-preview.component";
 import {AspectRatio, Mode} from "../../models";
-import {CropperService} from "../../providers/cropper.service";
+import {CropperData, CropperService} from "../../providers/cropper.service";
 import {ResizeService} from "../../providers/resize.service";
 import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
 
@@ -28,7 +28,6 @@ export class GenticsImageEditorComponent {
     @Input() src: string;
     @Input() maxHeight: 'container' | 'none' = 'container';
 
-    @ViewChild('sourceImage') sourceImage: ElementRef;
     @ViewChild('controlPanel') controlPanel: ElementRef;
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
 
@@ -37,6 +36,7 @@ export class GenticsImageEditorComponent {
 
     // crop-related state
     cropAspectRatio: AspectRatio = 'original';
+    cropperData: CropperData;
 
     // resize-related state
     resizeScale = 1;
@@ -44,6 +44,7 @@ export class GenticsImageEditorComponent {
     resizeMin$: Observable<number>;
     resizeMax$: Observable<number>;
     resizeDimensions$: Observable<string>;
+    private lastAppliedScale = 1;
 
     private closestAncestorWithHeight: HTMLElement;
 
@@ -74,12 +75,6 @@ export class GenticsImageEditorComponent {
     ngOnChanges(changes: SimpleChanges): void {
         if ('src' in changes) {
             this.imageIsLoading = true;
-            if (this.mode === 'crop') {
-                setTimeout(() => {
-                    this.cropperService.enable(this.sourceImage.nativeElement, this.cropAspectRatio)
-                        .then(() => this.imageIsLoading = false);
-                });
-            }
         }
     }
 
@@ -91,17 +86,13 @@ export class GenticsImageEditorComponent {
         }
     }
 
-    setCropAspectRatio(value: AspectRatio) {
-        this.cropperService.setCropAspectRatio(value);
-    }
-
     resetCrop(): void {
         this.cropAspectRatio = 'original';
         this.cropperService.resetCrop();
     }
 
     applyCrop(): void {
-        this.imagePreview.updateCropperData(this.cropperService.cropperData);
+        this.cropperData = this.cropperService.cropperData;
         this.setMode('preview');
     }
 
@@ -111,96 +102,78 @@ export class GenticsImageEditorComponent {
 
     previewResize(width: number): void {
         this.resizeService.update(width);
-        const scale = this.resizeService.getNormalizedScaleValue();
-        this.imagePreview.updateScale(scale, scale);
+        this.resizeScale = this.resizeService.getNormalizedScaleValue();
     }
 
     applyResize(): void {
         const scale = this.resizeService.getNormalizedScaleValue();
         this.resizeScale = scale;
-        this.imagePreview.updateScale(scale, scale);
+        this.lastAppliedScale = scale;
         this.setMode('preview');
     }
 
     cancelResize(): void {
-        this.imagePreview.updateScale(1, 1);
+        this.resizeScale = this.lastAppliedScale;
         this.setMode('preview');
     }
 
     private enterMode(mode: Mode): void {
         switch (mode) {
             case 'crop':
-                this.enterCropMode();
+                this.onEnterCropMode();
                 break;
             case 'resize':
-                this.enterResizeMode();
+                this.onEnterResizeMode();
                 break;
             case 'focalPoint':
-                this.enterFocalPointMode();
+                this.onEnterFocalPointMode();
                 break;
             default:
-                this.enterPreviewMode();
+                this.onEnterPreviewMode();
         }
     }
 
     private exitMode(mode: Mode): void {
         switch (mode) {
             case 'crop':
-                this.exitCropMode();
+                this.onExitCropMode();
                 break;
             case 'resize':
-                this.exitResizeMode();
+                this.onExitResizeMode();
                 break;
             case 'focalPoint':
-                this.exitFocalPointMode();
+                this.onExitFocalPointMode();
                 break;
             default:
-                this.exitPreviewMode();
+                this.onExitPreviewMode();
         }
     }
 
-    private enterPreviewMode(): void {
-        console.log(`entering preview mode`);
-    }
+    private onEnterPreviewMode(): void {}
 
-    private exitPreviewMode(): void {
-        console.log(`exiting preview mode`);
-    }
+    private onExitPreviewMode(): void {}
 
-    private enterCropMode(): void {
-        console.log(`entering crop mode`);
+    private onEnterCropMode(): void {
         this.imageIsLoading = true;
-        this.cropperService.enable(this.sourceImage.nativeElement, this.cropAspectRatio)
-            .then(() => this.imageIsLoading = false);
     }
 
-    private exitCropMode(): void {
-        console.log(`exiting crop mode`);
-        this.cropperService.disable();
-    }
+    private onExitCropMode(): void {}
 
-    private enterResizeMode(): void {
+    private onEnterResizeMode(): void {
         let cropperData = this.cropperService.cropperData;
         if (!cropperData) {
-            cropperData = getDefaultCropperData(this.sourceImage.nativeElement);
+            cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement);
         }
         const { width, height } = getActualCroppedSize(cropperData);
         this.resizeService.enable(width, height, this.resizeScale);
         this.resizeRangeValue = width * this.resizeScale;
-        console.log(`entering resize mode`);
     }
 
-    private exitResizeMode(): void {
-        console.log(`exiting resize mode`);
-    }
+    private onExitResizeMode(): void {}
 
-    private enterFocalPointMode(): void {
-        console.log(`entering focal point mode`);
-    }
+    private onEnterFocalPointMode(): void {}
 
-    private exitFocalPointMode(): void {
-        console.log(`exiting focal point mode`);
-    }
+    private onExitFocalPointMode(): void {}
 
     /**
      * Walks up the DOM tree from the starting element and returns the first ancestor element with a non-zero

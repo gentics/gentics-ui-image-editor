@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { AspectRatio } from "../models";
+import {AspectRatio} from "../models";
 import Cropper from "cropperjs";
 
 export type CropperData = {
@@ -18,6 +18,9 @@ export class CropperService {
 
     private cropper: Cropper;
     private lastImageSrc: string;
+    private lastData: Cropper.Data;
+    private resizeTimer: number;
+    resizing = false;
 
     /**
      * Returns a CropperData object
@@ -32,6 +35,26 @@ export class CropperService {
                 cropBoxData,
                 canvasData
             };
+        }
+    }
+
+    /**
+     * Re-renders the cropper image and restores the cropBox position.
+     */
+    resizeHandler(debounceDelay, onComplete?: () => void): void {
+        if (this.lastData && this.cropper) {
+            const data = this.lastData;
+            this.resizing = true;
+            clearTimeout(this.resizeTimer);
+            this.resizeTimer = setTimeout(() => {
+                (this.cropper as any).resize();
+                this.cropper.reset();
+                this.cropper.setData(data);
+                this.resizing = false;
+                if (typeof onComplete === 'function') {
+                    onComplete();
+                }
+            }, debounceDelay);
         }
     }
 
@@ -51,14 +74,21 @@ export class CropperService {
                     viewMode: 1,
                     autoCrop: true,
                     zoomable: false,
+                    responsive: true,
                     ready: () => {
                         this.setCropAspectRatio(aspectRatio);
                         resolve(this.cropper.getImageData());
+                    },
+                    crop: data => {
+                        if (!this.resizing) {
+                            this.lastData = data.detail
+                        }
                     }
                 });
             });
         } else {
             this.cropper.enable();
+            this.resizeHandler(0);
             return Promise.resolve(this.cropper.getImageData());
         }
     }

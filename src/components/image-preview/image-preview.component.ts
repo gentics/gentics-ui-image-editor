@@ -20,6 +20,10 @@ import {CropperData} from "../../providers/cropper.service";
 import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
 import {Dimensions2D} from "../../models";
 
+/**
+ * An image preview component which accepts crop and scale data and renders the resulting
+ * image with width and height scales.
+ */
 @Component({
     selector: 'gentics-image-preview',
     templateUrl: 'image-preview.component.html',
@@ -29,6 +33,9 @@ import {Dimensions2D} from "../../models";
 export class ImagePreviewComponent {
     @Input() src: string;
     @Input() maxHeight: number;
+    @Input() scaleX: number;
+    @Input() scaleY: number;
+    @Input() cropperData: CropperData;
     @Output() imageLoad = new EventEmitter<void>();
 
     @ViewChild('previewImage') previewImage: ElementRef;
@@ -125,6 +132,15 @@ export class ImagePreviewComponent {
         if ('maxHeight' in changes) {
             this.resizeHandler();
         }
+        if ('scaleX' in changes) {
+            this.scaleX$.next(this.scaleX);
+        }
+        if ('scaleY' in changes) {
+            this.scaleY$.next(this.scaleY);
+        }
+        if ('cropperData' in changes) {
+            this.cropperData$.next(this.cropperData);
+        }
     }
 
     imageLoaded(): void {
@@ -136,15 +152,6 @@ export class ImagePreviewComponent {
     @HostListener('window:resize')
     resizeHandler(): void {
         this.resize$.next(null);
-    }
-
-    updateCropperData(cropperData: CropperData): void {
-        this.cropperData$.next(cropperData);
-    }
-
-    updateScale(scaleX: number, scaleY: number): void {
-        this.scaleX$.next(scaleX);
-        this.scaleY$.next(scaleY);
     }
 
     private calculateViewableDimensions(actual: Dimensions2D, cropBox: Dimensions2D, max: Dimensions2D): Dimensions2D & { ratio: number } {
