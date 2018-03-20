@@ -9,5 +9,12 @@
   },
   "online": false,
   "reloadDelay": 1000,
-  "reloadDebounce": 2000
+  "reloadDebounce": 2000,
+  "ui": false,
+  "ghostMode": false,
+  "notify": false,
+  "scrollProportionally": false,
+  "injectChanges": false,
+  "minify": false,
+  "codeSync": false
 }
