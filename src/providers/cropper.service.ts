@@ -17,6 +17,7 @@ export type CropperData = {
 export class CropperService {
 
     private cropper: Cropper;
+    private lastImageSrc: string;
 
     /**
      * Returns a CropperData object
@@ -38,7 +39,13 @@ export class CropperService {
      * Enable the cropper. If this is the first call, the Cropper object will be instantiated.
      */
     enable(imageElement: HTMLImageElement, aspectRatio: AspectRatio): Promise<Cropper.ImageData> {
+        if (this.lastImageSrc !== imageElement.src && this.cropper) {
+            this.cropper.destroy();
+            this.cropper = undefined;
+        }
+
         if (!this.cropper) {
+            this.lastImageSrc = imageElement.src;
             return new Promise(resolve => {
                 this.cropper = new Cropper(imageElement, {
                     viewMode: 1,

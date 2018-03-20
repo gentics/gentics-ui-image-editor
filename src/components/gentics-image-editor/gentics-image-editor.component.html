@@ -1,10 +1,12 @@
 <div class="image-area" [style.height.px]="imageAreaHeight">
-    <div class="crop-area" [class.hidden]="mode !== 'crop'">
+    <div class="crop-area"
+         [class.hidden]="mode !== 'crop'"
+         [class.loading]="imageIsLoading">
         <img #sourceImage [src]="src" class="source-image">
     </div>
 
-    <gentics-image-preview [visible]="mode !== 'crop'"
-                           [class.hidden]="imageIsLoading"
+    <gentics-image-preview [class.hidden]="mode === 'crop'"
+                           [class.loading]="imageIsLoading"
                            [src]="src"
                            [maxHeight]="imageAreaHeight"
                            (imageLoad)="imageIsLoading = false"></gentics-image-preview>

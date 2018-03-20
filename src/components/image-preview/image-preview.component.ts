@@ -3,7 +3,6 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    HostBinding,
     HostListener,
     Input,
     Output,
@@ -29,13 +28,8 @@ import {Dimensions2D} from "../../models";
 })
 export class ImagePreviewComponent {
     @Input() src: string;
-    @Input() visible: boolean = true;
     @Input() maxHeight: number;
     @Output() imageLoad = new EventEmitter<void>();
-
-    @HostBinding('class.hidden') get hidden(): boolean {
-        return !this.visible;
-    };
 
     @ViewChild('previewImage') previewImage: ElementRef;
 

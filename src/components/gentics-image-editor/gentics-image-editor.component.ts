@@ -1,18 +1,27 @@
-import {Component, ElementRef, Input, SimpleChanges, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Input,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import {Observable} from "rxjs/Observable";
+import {map} from "rxjs/operators";
 
 import {ImagePreviewComponent} from "../image-preview/image-preview.component";
 import {AspectRatio, Mode} from "../../models";
 import {CropperService} from "../../providers/cropper.service";
 import {ResizeService} from "../../providers/resize.service";
 import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
-import {Observable} from "rxjs/Observable";
-import {map} from "rxjs/operators";
 
 @Component({
     selector: 'gentics-image-editor',
     templateUrl: './gentics-image-editor.component.html',
     styleUrls: ['./gentics-image-editor.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class GenticsImageEditorComponent {
 
@@ -28,8 +37,6 @@ export class GenticsImageEditorComponent {
 
     // crop-related state
     cropAspectRatio: AspectRatio = 'original';
-    previewWidth: number;
-    previewHeight: number;
 
     // resize-related state
     resizeScale = 1;
@@ -67,6 +74,12 @@ export class GenticsImageEditorComponent {
     ngOnChanges(changes: SimpleChanges): void {
         if ('src' in changes) {
             this.imageIsLoading = true;
+            if (this.mode === 'crop') {
+                setTimeout(() => {
+                    this.cropperService.enable(this.sourceImage.nativeElement, this.cropAspectRatio)
+                        .then(() => this.imageIsLoading = false);
+                });
+            }
         }
     }
 
@@ -156,11 +169,9 @@ export class GenticsImageEditorComponent {
 
     private enterCropMode(): void {
         console.log(`entering crop mode`);
+        this.imageIsLoading = true;
         this.cropperService.enable(this.sourceImage.nativeElement, this.cropAspectRatio)
-            .then(imageData => {
-                this.previewWidth = imageData.naturalWidth;
-                this.previewHeight = imageData.naturalHeight;
-            });
+            .then(() => this.imageIsLoading = false);
     }
 
     private exitCropMode(): void {

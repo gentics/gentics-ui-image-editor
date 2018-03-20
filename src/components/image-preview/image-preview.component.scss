@@ -2,12 +2,6 @@
 
 :host {
   display: flex;
-
-  &.hidden {
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
-  }
 }
 
 .image-preview {
