@@ -2,17 +2,21 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    EventEmitter,
     HostBinding,
     HostListener,
-    Input, SimpleChanges,
+    Input,
+    Output,
+    SimpleChanges,
     ViewChild
 } from '@angular/core';
 import {DomSanitizer, SafeStyle} from "@angular/platform-browser";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {combineLatest} from "rxjs/observable/combineLatest";
+
 import {CropperData} from "../../providers/cropper.service";
 import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
 import {Dimensions2D} from "../../models";
@@ -27,6 +31,7 @@ export class ImagePreviewComponent {
     @Input() src: string;
     @Input() visible: boolean = true;
     @Input() maxHeight: number;
+    @Output() imageLoad = new EventEmitter<void>();
 
     @HostBinding('class.hidden') get hidden(): boolean {
         return !this.visible;
@@ -129,6 +134,7 @@ export class ImagePreviewComponent {
     }
 
     imageLoaded(): void {
+        this.imageLoad.emit();
         const img = this.previewImage.nativeElement as HTMLImageElement;
         this.cropperData$.next(getDefaultCropperData(img));
     }

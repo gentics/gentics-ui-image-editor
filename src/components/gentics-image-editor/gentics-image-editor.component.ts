@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, SimpleChanges, ViewChild, ViewEncapsulation} from '@angular/core';
 
 import {ImagePreviewComponent} from "../image-preview/image-preview.component";
 import {AspectRatio, Mode} from "../../models";
@@ -24,6 +24,7 @@ export class GenticsImageEditorComponent {
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
 
     mode: Mode = 'preview';
+    imageIsLoading = false;
 
     // crop-related state
     cropAspectRatio: AspectRatio = 'original';
@@ -61,6 +62,12 @@ export class GenticsImageEditorComponent {
             map(dimensions => `${dimensions.width}px x ${dimensions.height}px`));
 
         this.closestAncestorWithHeight = this.getClosestAncestorWithHeight(this.elementRef.nativeElement);
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if ('src' in changes) {
+            this.imageIsLoading = true;
+        }
     }
 
     setMode(modeClicked: Mode): void {

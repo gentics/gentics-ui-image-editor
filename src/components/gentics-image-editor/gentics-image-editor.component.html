@@ -4,11 +4,14 @@
     </div>
 
     <gentics-image-preview [visible]="mode !== 'crop'"
+                           [class.hidden]="imageIsLoading"
                            [src]="src"
-                           [maxHeight]="imageAreaHeight"></gentics-image-preview>
-</div>
+                           [maxHeight]="imageAreaHeight"
+                           (imageLoad)="imageIsLoading = false"></gentics-image-preview>
 
+</div>
 <div class="control-panel" #controlPanel>
+    <gtx-progress-bar [active]="imageIsLoading"></gtx-progress-bar>
     <div class="mode-selector">
         <gtx-button icon size="large" (click)="setMode('crop')" [disabled]="mode !== 'preview' && mode !== 'crop'">
             <icon>crop</icon>
