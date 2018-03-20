@@ -1,8 +1,9 @@
-const connect = require('connect');
 const path = require('path');
+const connect = require('connect');
 const slow = require('connect-slow');
 const serveStatic = require('serve-static');
 const morgan = require('morgan');
+const cors = require('cors');
 
 /**
  * A very simple static server which adds latency to the response to simulate a slow network / large image file
@@ -13,6 +14,7 @@ const logger = morgan('Slowly serving :method :url :status (response took :respo
 
 const app = connect()
     .use(logger)
+    .use(cors())
     .use(slow({
         delay: LATENCY
     }))
