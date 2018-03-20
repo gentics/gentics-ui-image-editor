@@ -1,21 +1,18 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {Component, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
+import {FormsModule} from "@angular/forms";
+import {GenticsUICoreModule} from "gentics-ui-core";
 
 import {GenticsImageEditorModule} from '../dist/index.js';
+import {PlaygroundAppComponent} from "./playground.component";
 
 declare const require: any;
-require('./playground.scss');
-
-@Component({
-    selector: 'app',
-    templateUrl: './playground.html'
-})
-class PlaygroundAppComponent {}
+require('./styles.scss');
 
 @NgModule({
     bootstrap: [ PlaygroundAppComponent ],
     declarations: [ PlaygroundAppComponent ],
-    imports: [ BrowserModule, GenticsImageEditorModule ]
+    imports: [ BrowserModule, FormsModule, GenticsImageEditorModule, GenticsUICoreModule ]
 })
 export class PlaygroundModule {}
  

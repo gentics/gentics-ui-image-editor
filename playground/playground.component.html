@@ -1,0 +1,18 @@
+<div class="editor-container">
+    <gentics-image-editor [src]="sourceUrl" [maxHeight]="maxHeight"></gentics-image-editor>
+</div>
+
+<div class="input-options">
+    <gtx-select [(ngModel)]="maxHeight" label="maxHeight">
+        <gtx-option value="none">none</gtx-option>
+        <gtx-option value="container">container</gtx-option>
+    </gtx-select>
+
+    <gtx-select [(ngModel)]="sourceImage" label="Source Image">
+        <gtx-option value="test-image.png">test-image.png</gtx-option>
+        <gtx-option value="portrait.jpg">portrait.jpg</gtx-option>
+        <gtx-option value="landscape.jpg">landscape.jpg</gtx-option>
+    </gtx-select>
+
+    <gtx-checkbox [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>
+</div>

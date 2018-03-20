@@ -1,0 +1,15 @@
+:host {
+}
+
+.editor-container {
+  height: calc(100vh - 150px);
+  flex: 1;
+  border: 2px solid beige;
+}
+
+.input-options {
+  display: flex;
+  background-color: aliceblue;
+  justify-content: space-evenly;
+  align-items: center;
+}
