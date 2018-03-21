@@ -1,0 +1,46 @@
+.focal-point-overlay {
+  position: absolute;
+  cursor: crosshair;
+  &.hidden {
+    display: none;
+  }
+}
+
+.x-line, .y-line {
+  box-sizing: content-box;
+  border: 0 solid rgba(0, 0, 0, 0.3);
+  position: absolute;
+  cursor: crosshair;
+  &.hidden {
+    display: none;
+  }
+}
+
+.y-line {
+  height: 0;
+  border-bottom-width: thin;
+}
+
+.x-line {
+  width: 0;
+  border-left-width: thin;
+}
+
+.focal-point-cross-y {
+  box-sizing: content-box;
+  position: absolute;
+  width: 20px;
+  height: 0;
+  border-bottom: thin solid rgba(0, 0, 0, 0.2);
+}
+.focal-point-cross-x {
+  box-sizing: content-box;
+  position: absolute;
+  width: 0;
+  height: 20px;
+  border-left: thin solid rgba(0, 0, 0, 0.2);
+}
+.emphasize {
+  border-color: #ffffff;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
+}

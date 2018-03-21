@@ -3,6 +3,7 @@
      [style.paddingRight.px]="2 * margin">
 
     <div class="image-preview"
+         [genticsFocalPointTarget]="previewWidth$"
          [style.width.px]="previewWidth$ | async"
          [style.height.px]="previewHeight$ | async">
         <img #previewImage [src]="src"

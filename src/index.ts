@@ -9,6 +9,9 @@ import {CropperService} from "./providers/cropper.service";
 import {ResizeService} from "./providers/resize.service";
 import {ImageCropperComponent} from "./components/image-cropper/image-cropper.component";
 import {ControlPanelComponent} from "./components/control-panel/control-panel.component";
+import {FocalPointSelectorComponent} from "./components/focal-point-selector/focal-point-selector.component";
+import {FocalPointTargetDirective} from "./components/focal-point-selector/focal-point-target.directive";
+import {FocalPointService} from "./providers/focal-point.service";
 
 @NgModule({
     imports: [
@@ -18,13 +21,16 @@ import {ControlPanelComponent} from "./components/control-panel/control-panel.co
     ],
     declarations: [
         ControlPanelComponent,
+        FocalPointSelectorComponent,
+        FocalPointTargetDirective,
         GenticsImageEditorComponent,
         ImagePreviewComponent,
         ImageCropperComponent
     ],
     providers: [
-        OverlayHostService,
         CropperService,
+        FocalPointService,
+        OverlayHostService,
         ResizeService
     ],
     exports: [

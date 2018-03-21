@@ -26,6 +26,8 @@ import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
 export class GenticsImageEditorComponent {
 
     @Input() src: string;
+    @Input() focalPointX: number = 0.5;
+    @Input() focalPointY: number = 0.5;
     @Input() maxHeight: 'container' | 'none' = 'container';
 
     @ViewChild('controlPanel') controlPanel: ElementRef;
@@ -46,6 +48,11 @@ export class GenticsImageEditorComponent {
     resizeDimensions$: Observable<string>;
     private lastAppliedScale = 1;
 
+    // focal point-related state
+    private lastAppliedFocalPointX: number;
+    private lastAppliedFocalPointY: number;
+
+
     private closestAncestorWithHeight: HTMLElement;
 
     get parentHeight(): number {
@@ -53,6 +60,8 @@ export class GenticsImageEditorComponent {
     }
 
     get imageAreaHeight(): number {
+        // TODO: this is inefficient and is causing CD errors.
+        // console.log(`get imageAreaHeight`);
         const controlPanelHeight = this.controlPanel ? this.controlPanel.nativeElement.offsetHeight : 0;
         const realHeight = this.parentHeight - controlPanelHeight;
         const minHeight = 300;
@@ -70,6 +79,8 @@ export class GenticsImageEditorComponent {
             map(dimensions => `${dimensions.width}px x ${dimensions.height}px`));
 
         this.closestAncestorWithHeight = this.getClosestAncestorWithHeight(this.elementRef.nativeElement);
+        this.lastAppliedFocalPointX = this.focalPointX;
+        this.lastAppliedFocalPointY = this.focalPointY;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -120,6 +131,23 @@ export class GenticsImageEditorComponent {
 
     cancelResize(): void {
         this.resizeScale = this.lastAppliedScale;
+        this.setMode('preview');
+    }
+
+    focalPointSelected(focalPoint: { x: number; y: number; }): void {
+        this.focalPointX = focalPoint.x;
+        this.focalPointY = focalPoint.y;
+    }
+
+    applyFocalPoint(): void {
+        this.lastAppliedFocalPointX = this.focalPointX;
+        this.lastAppliedFocalPointY = this.focalPointY;
+        this.setMode('preview');
+    }
+
+    cancelFocalPoint(): void {
+        this.focalPointX = this.lastAppliedFocalPointX;
+        this.focalPointY = this.lastAppliedFocalPointY;
         this.setMode('preview');
     }
 
