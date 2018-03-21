@@ -100,6 +100,12 @@ export class GenticsImageEditorComponent {
         this.setMode('preview');
     }
 
+    resetScale(): void {
+        this.resizeService.reset();
+        this.resizeRangeValue = this.resizeService.currentWidth;
+        this.resizeScale = 1;
+    }
+
     previewResize(width: number): void {
         this.resizeService.update(width);
         this.resizeScale = this.resizeService.getNormalizedScaleValue();
