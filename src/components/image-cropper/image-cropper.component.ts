@@ -1,7 +1,16 @@
 import {
-    Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, SimpleChanges,
+    ChangeDetectionStrategy, ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    Output,
+    SimpleChanges,
     ViewChild
 } from '@angular/core';
+
 import {CropperService} from "../../providers/cropper.service";
 import {AspectRatio} from "../../models";
 
@@ -11,7 +20,8 @@ import {AspectRatio} from "../../models";
 @Component({
     selector: 'gentics-image-cropper',
     templateUrl: 'image-cropper.component.html',
-    styleUrls: ['image-cropper.component.scss']
+    styleUrls: ['image-cropper.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageCropperComponent {
 
@@ -25,7 +35,8 @@ export class ImageCropperComponent {
     @HostBinding('class.resizing')
     resizing = false;
 
-    constructor(private cropperService: CropperService) {}
+    constructor(private cropperService: CropperService,
+                private changeDetector: ChangeDetectorRef) {}
 
     ngOnChanges(changes: SimpleChanges): void {
         if ('enabled' in changes) {
@@ -52,6 +63,10 @@ export class ImageCropperComponent {
     @HostListener('window:resize')
     resizeHandler(): void {
         this.resizing = true;
-        this.cropperService.resizeHandler(300, () => this.resizing = false);
+        const onComplete = () => {
+            this.resizing = false;
+            this.changeDetector.markForCheck();
+        };
+        this.cropperService.resizeHandler(300, onComplete);
     }
 }

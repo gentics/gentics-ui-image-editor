@@ -2,6 +2,7 @@
     <ng-content></ng-content>
 </div>
 <div class="action-buttons">
-    <gtx-button flat type="secondary" (click)="this.cancel.emit()"><icon left>close</icon> Cancel</gtx-button>
-    <gtx-button type="primary" (click)="this.apply.emit()"><icon left>check</icon> {{ applyLabel }}</gtx-button>
+    <gtx-button icon type="secondary" (click)="this.reset.emit()" title="Reset"><icon>refresh</icon></gtx-button>
+    <gtx-button icon type="warning" (click)="this.cancel.emit()" title="Cancel"><icon>close</icon></gtx-button>
+    <gtx-button icon type="success" (click)="this.apply.emit()" [title]="applyLabel"><icon>check</icon></gtx-button>
 </div>

@@ -25,64 +25,66 @@
 
 <div class="control-panel" #controlPanel>
     <gtx-progress-bar [active]="imageIsLoading"></gtx-progress-bar>
-    <div class="mode-selector">
-        <gtx-button icon size="large" (click)="setMode('crop')" [disabled]="mode !== 'preview' && mode !== 'crop'">
-            <icon>crop</icon>
-        </gtx-button>
-        <gtx-button icon size="large" (click)="setMode('resize')" [disabled]="mode !== 'preview' && mode !== 'resize'">
-            <icon>photo_size_select_large</icon>
-        </gtx-button>
-        <gtx-button icon size="large" (click)="setMode('focalPoint')" [disabled]="mode !== 'preview' && mode !== 'focalPoint'">
-            <icon>filter_center_focus</icon>
-        </gtx-button>
-    </div>
-
-    <gentics-control-panel *ngIf="mode === 'crop'"
-                           applyLabel="Crop"
-                           (apply)="applyCrop()"
-                           (cancel)="cancelCrop()">
-        <gtx-select label="(i18n) Aspect Ratio"
-                    [(ngModel)]="cropAspectRatio"
-                    (change)="setCropAspectRatio($event)">
-            <gtx-option value="original">Original</gtx-option>
-            <gtx-option value="square">Square</gtx-option>
-            <gtx-option value="free">Free</gtx-option>
-        </gtx-select>
-        <gtx-button size="small" type="secondary" (click)="resetCrop()">
-            <icon left>refresh</icon> Reset
-        </gtx-button>
-    </gentics-control-panel>
-
-    <gentics-control-panel *ngIf="mode === 'resize'"
-                           applyLabel="Resize"
-                           (apply)="applyResize()"
-                           (cancel)="cancelResize()">
-        <div class="resize-factor">{{ resizeScale | number:'1.3-3' }}x</div>
-        <div class="range-container">
-            <icon>photo_size_select_large</icon>
-            <gtx-range [min]="resizeMin$ | async"
-                       [max]="resizeMax$ | async"
-                       [thumbLabel]="false"
-                       [(ngModel)]="resizeRangeValue"
-                       (change)="previewResize($event)"></gtx-range>
-            <icon>photo_size_select_actual</icon>
-            <div>
-                <gtx-button size="small"
-                            type="secondary"
-                            [disabled]="resizeScale === 1"
-                            (click)="resetScale()">
-                    <icon left>refresh</icon> Reset
-                </gtx-button>
-            </div>
+    <div class="controls">
+        <div class="mode-selector">
+            <gtx-button icon size="large"
+                        type="secondary"
+                        (click)="setMode('crop')"
+                        [class.hidden]="mode !== 'preview' && mode !== 'crop'">
+                <icon>crop</icon>
+            </gtx-button>
+            <gtx-button icon size="large"
+                        type="secondary"
+                        (click)="setMode('resize')"
+                        [class.hidden]="mode !== 'preview' && mode !== 'resize'">
+                <icon>photo_size_select_large</icon>
+            </gtx-button>
+            <gtx-button icon size="large"
+                        type="secondary"
+                        (click)="setMode('focalPoint')"
+                        [class.hidden]="mode !== 'preview' && mode !== 'focalPoint'">
+                <icon>filter_center_focus</icon>
+            </gtx-button>
         </div>
 
-    </gentics-control-panel>
+        <gentics-control-panel *ngIf="mode === 'crop'"
+                               applyLabel="Crop"
+                               (reset)="resetCrop()"
+                               (apply)="applyCrop()"
+                               (cancel)="cancelCrop()">
+            <div gtx-radio-group [(ngModel)]="cropAspectRatio" class="aspect-ratio-controls">
+                <div class="aspect-ratio-label">Aspect ratio:</div>
+                <gtx-radio-button value="original" label="Original"></gtx-radio-button>
+                <gtx-radio-button value="square" label="Square"></gtx-radio-button>
+                <gtx-radio-button value="free" label="Free"></gtx-radio-button>
+            </div>
+        </gentics-control-panel>
 
-    <gentics-control-panel *ngIf="mode === 'focalPoint'"
-                           applyLabel="Set Focal Point"
-                           (apply)="applyFocalPoint()"
-                           (cancel)="cancelFocalPoint()">
-    </gentics-control-panel>
+        <gentics-control-panel *ngIf="mode === 'resize'"
+                               applyLabel="Resize"
+                               (reset)="resetScale()"
+                               (apply)="applyResize()"
+                               (cancel)="cancelResize()">
+            <div class="resize-controls">
+                <div class="resize-factor">{{ resizeScale | number:'1.3-3' }}x</div>
+                <div class="range-container">
+                    <icon>photo_size_select_small</icon>
+                    <gtx-range [min]="resizeMin$ | async"
+                               [max]="resizeMax$ | async"
+                               [thumbLabel]="false"
+                               [(ngModel)]="resizeRangeValue"
+                               (change)="previewResize($event)"></gtx-range>
+                    <icon>photo_size_select_actual</icon>
+                </div>
+            </div>
+        </gentics-control-panel>
+
+        <gentics-control-panel *ngIf="mode === 'focalPoint'"
+                               applyLabel="Set Focal Point"
+                               (reset)="resetFocalPoint()"
+                               (apply)="applyFocalPoint()"
+                               (cancel)="cancelFocalPoint()">
+        </gentics-control-panel>
+    </div>
 
 </div>
-<gtx-overlay-host></gtx-overlay-host>

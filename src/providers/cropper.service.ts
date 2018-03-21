@@ -97,40 +97,46 @@ export class CropperService {
      * Disable the cropper.
      */
     disable(): void {
-        this.cropper.disable();
+        if (this.cropper) {
+            this.cropper.disable();
+        }
     }
 
     /**
      * Set the aspect ratio of the crop box.
      */
     setCropAspectRatio(value: AspectRatio) {
-        const imageData = this.cropper.getImageData();
-        let aspectRatioNumber: number;
-        switch (value) {
-            case 'original':
-                aspectRatioNumber = imageData.naturalWidth / imageData.naturalHeight;
-                break;
-            case 'square':
-                aspectRatioNumber = 1;
-                break;
-            default:
-                aspectRatioNumber = NaN;
-                break;
+        if (this.cropper) {
+            const imageData = this.cropper.getImageData();
+            let aspectRatioNumber: number;
+            switch (value) {
+                case 'original':
+                    aspectRatioNumber = imageData.naturalWidth / imageData.naturalHeight;
+                    break;
+                case 'square':
+                    aspectRatioNumber = 1;
+                    break;
+                default:
+                    aspectRatioNumber = NaN;
+                    break;
+            }
+            this.cropper.setAspectRatio(aspectRatioNumber);
         }
-        this.cropper.setAspectRatio(aspectRatioNumber);
     }
 
     /**
      * Reset the crop box to the dimensions of the original image.
      */
     resetCrop(): void {
-        const imageData = this.cropper.getImageData();
-        this.setCropAspectRatio('original');
-        this.cropper.setData({
-            x: 0,
-            y: 0,
-            width: imageData.naturalWidth,
-            height: imageData.naturalHeight
-        });
+        if (this.cropper) {
+            const imageData = this.cropper.getImageData();
+            this.setCropAspectRatio('original');
+            this.cropper.setData({
+                x: 0,
+                y: 0,
+                width: imageData.naturalWidth,
+                height: imageData.naturalHeight
+            });
+        }
     }
 }

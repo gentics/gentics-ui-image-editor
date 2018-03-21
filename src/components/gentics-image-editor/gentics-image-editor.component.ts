@@ -21,7 +21,7 @@ import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
     templateUrl: './gentics-image-editor.component.html',
     styleUrls: ['./gentics-image-editor.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenticsImageEditorComponent {
 
@@ -52,7 +52,6 @@ export class GenticsImageEditorComponent {
     private lastAppliedFocalPointX: number;
     private lastAppliedFocalPointY: number;
 
-
     private closestAncestorWithHeight: HTMLElement;
 
     get parentHeight(): number {
@@ -60,8 +59,6 @@ export class GenticsImageEditorComponent {
     }
 
     get imageAreaHeight(): number {
-        // TODO: this is inefficient and is causing CD errors.
-        // console.log(`get imageAreaHeight`);
         const controlPanelHeight = this.controlPanel ? this.controlPanel.nativeElement.offsetHeight : 0;
         const realHeight = this.parentHeight - controlPanelHeight;
         const minHeight = 300;
@@ -137,6 +134,11 @@ export class GenticsImageEditorComponent {
     focalPointSelected(focalPoint: { x: number; y: number; }): void {
         this.focalPointX = focalPoint.x;
         this.focalPointY = focalPoint.y;
+    }
+
+    resetFocalPoint(): void {
+        this.focalPointX = 0.5;
+        this.focalPointY = 0.5;
     }
 
     applyFocalPoint(): void {

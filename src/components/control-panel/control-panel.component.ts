@@ -10,4 +10,5 @@ export class ControlPanelComponent {
     @Input() applyLabel: string = 'Apply';
     @Output() cancel = new EventEmitter<void>();
     @Output() apply = new EventEmitter<void>();
+    @Output() reset = new EventEmitter<void>();
 }

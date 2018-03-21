@@ -1,5 +1,6 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     HostListener,
@@ -8,7 +9,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {Subject} from "rxjs/Subject";
-import {startWith, takeUntil} from "rxjs/operators";
+import {delay, takeUntil} from "rxjs/operators";
 
 import {FocalPointService} from "../../providers/focal-point.service";
 
@@ -37,7 +38,8 @@ export class FocalPointSelectorComponent {
     private target: HTMLElement;
     private destroy$ = new Subject<void>();
 
-    constructor(private focalPointService: FocalPointService) {}
+    constructor(private focalPointService: FocalPointService,
+                private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.focalPointService.getTarget()
@@ -78,9 +80,14 @@ export class FocalPointSelectorComponent {
         // (possibly with Zone.js) whereby it's use here causes an infinite loop.
         this.focalPointService.update$
             .pipe(
-                startWith(),
+                // The delay is required to allow the changes to the target styles to be
+                // reflected in the DOM
+                delay(1),
                 takeUntil(this.destroy$))
-            .subscribe(() => this.updatePositions());
+            .subscribe(() => {
+                this.updatePositions();
+                this.changeDetector.markForCheck();
+            });
     }
 
     @HostListener('window:resize')

@@ -13,7 +13,7 @@ import {DomSanitizer, SafeStyle} from "@angular/platform-browser";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {map} from "rxjs/operators";
+import {map, share} from "rxjs/operators";
 import {combineLatest} from "rxjs/observable/combineLatest";
 
 import {CropperData} from "../../providers/cropper.service";
@@ -61,7 +61,7 @@ export class ImagePreviewComponent {
 
     ngOnInit(): void {
 
-        const round = (value: number): number => Math.round(value);
+        const round = (value: number): number => value;
 
         const actualDimensions$ = combineLatest(
             this.cropperData$,
@@ -93,7 +93,8 @@ export class ImagePreviewComponent {
             cropBoxDimensions$,
             maxDimensions$
         ).pipe(
-            map(([actual, cropBox, max]) => this.calculateViewableDimensions(actual, cropBox, max))
+            map(([actual, cropBox, max]) => this.calculateViewableDimensions(actual, cropBox, max)),
+            share()
         );
 
         const ratioAndCropperData$ = combineLatest(
