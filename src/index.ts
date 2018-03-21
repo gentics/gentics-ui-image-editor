@@ -8,6 +8,7 @@ import {ImagePreviewComponent} from "./components/image-preview/image-preview.co
 import {CropperService} from "./providers/cropper.service";
 import {ResizeService} from "./providers/resize.service";
 import {ImageCropperComponent} from "./components/image-cropper/image-cropper.component";
+import {ControlPanelComponent} from "./components/control-panel/control-panel.component";
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {ImageCropperComponent} from "./components/image-cropper/image-cropper.co
         GenticsUICoreModule
     ],
     declarations: [
+        ControlPanelComponent,
         GenticsImageEditorComponent,
         ImagePreviewComponent,
         ImageCropperComponent

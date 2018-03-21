@@ -1,0 +1,7 @@
+<div class="controls">
+    <ng-content></ng-content>
+</div>
+<div class="action-buttons">
+    <gtx-button flat type="secondary" (click)="this.cancel.emit()"><icon left>close</icon> Cancel</gtx-button>
+    <gtx-button type="primary" (click)="this.apply.emit()"><icon left>check</icon> {{ applyLabel }}</gtx-button>
+</div>

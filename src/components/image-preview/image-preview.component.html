@@ -16,12 +16,12 @@
          [class.less-than-actual]="previewWidthIsLessThanActual$ | async"
          [style.marginLeft.px]="margin"
          [style.width.px]="previewWidth$ | async">
-        <div class="scale-value">{{ actualWidth$ | async }}px</div>
+        <div class="scale-value">{{ actualWidth$ | async | number:'1.0-0' }}px</div>
     </div>
     <div class="scale scale-y"
          [class.less-than-actual]="previewHeightIsLessThanActual$ | async"
          [style.marginTop.px]="margin"
          [style.height.px]="previewHeight$ | async">
-        <div class="scale-value">{{ actualHeight$ | async }}px</div>
+        <div class="scale-value">{{ actualHeight$ | async | number:'1.0-0' }}px</div>
     </div>
 </div>

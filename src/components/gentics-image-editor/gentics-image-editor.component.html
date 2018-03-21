@@ -32,7 +32,10 @@
         </gtx-button>
     </div>
 
-    <div class="sub-controls crop-controls" *ngIf="mode === 'crop'">
+    <gentics-control-panel *ngIf="mode === 'crop'"
+                           applyLabel="Crop"
+                           (apply)="applyCrop()"
+                           (cancel)="cancelCrop()">
         <gtx-select label="(i18n) Aspect Ratio"
                     [(ngModel)]="cropAspectRatio"
                     (change)="setCropAspectRatio($event)">
@@ -40,17 +43,16 @@
             <gtx-option value="square">Square</gtx-option>
             <gtx-option value="free">Free</gtx-option>
         </gtx-select>
-
         <gtx-button size="small" type="secondary" (click)="resetCrop()">
             <icon left>refresh</icon> Reset
         </gtx-button>
+    </gentics-control-panel>
 
-        <gtx-button flat type="secondary" (click)="cancelCrop()">Cancel</gtx-button>
-        <gtx-button type="primary" (click)="applyCrop()"><icon left>check</icon> Crop</gtx-button>
-    </div>
-
-    <div class="sub-controls resize-controls" *ngIf="mode === 'resize'">
-        <div class="resize-dimensions">{{ resizeDimensions$ | async }}</div>
+    <gentics-control-panel *ngIf="mode === 'resize'"
+                           applyLabel="Resize"
+                           (apply)="applyResize()"
+                           (cancel)="cancelResize()">
+        <div class="resize-factor">{{ resizeScale | number:'1.3-3' }}x</div>
         <div class="range-container">
             <icon>photo_size_select_large</icon>
             <gtx-range [min]="resizeMin$ | async"
@@ -59,14 +61,24 @@
                        [(ngModel)]="resizeRangeValue"
                        (change)="previewResize($event)"></gtx-range>
             <icon>photo_size_select_actual</icon>
+            <div>
+                <gtx-button size="small"
+                            type="secondary"
+                            [disabled]="resizeScale === 1"
+                            (click)="resetScale()">
+                    <icon left>refresh</icon> Reset
+                </gtx-button>
+            </div>
         </div>
-        <gtx-button flat type="secondary" (click)="cancelResize()">Cancel</gtx-button>
-        <gtx-button type="primary" (click)="applyResize()"><icon left>check</icon> Resize</gtx-button>
-    </div>
 
-    <div class="sub-controls focalpoint-controls" *ngIf="mode === 'focalPoint'">
-        Focal point controls...
-    </div>
+    </gentics-control-panel>
+
+    <gentics-control-panel *ngIf="mode === 'focalPoint'"
+                           applyLabel="Set Focal Point"
+                           (apply)="setMode('preview')"
+                           (cancel)="setMode('preview')">
+        (Focal point controls)
+    </gentics-control-panel>
 
 </div>
 <gtx-overlay-host></gtx-overlay-host>
