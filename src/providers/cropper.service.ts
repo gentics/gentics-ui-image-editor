@@ -76,7 +76,7 @@ export class CropperService {
     /**
      * Enable the cropper. If this is the first call, the Cropper object will be instantiated.
      */
-    enable(imageElement: HTMLImageElement, aspectRatio: AspectRatio): Promise<Cropper.ImageData> {
+    enable(imageElement: HTMLImageElement, aspectRatio: AspectRatio): Promise<void> {
         if (this.lastImageSrc !== imageElement.src && this.cropper) {
             this.cropper.destroy();
             this.cropper = undefined;
@@ -92,7 +92,7 @@ export class CropperService {
                     responsive: true,
                     ready: () => {
                         this.setCropAspectRatio(aspectRatio);
-                        resolve(this.cropper.getImageData());
+                        resolve();
                     },
                     crop: data => {
                         if (!this.resizing) {
@@ -105,7 +105,7 @@ export class CropperService {
         } else {
             this.cropper.enable();
             this.resizeHandler(0);
-            return Promise.resolve(this.cropper.getImageData());
+            return Promise.resolve();
         }
     }
 
