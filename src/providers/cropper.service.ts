@@ -1,7 +1,10 @@
 import {Injectable} from '@angular/core';
+import {Observable} from "rxjs/Observable";
+import {Subject} from "rxjs/Subject";
+import {map} from "rxjs/operators";
+import Cropper from "cropperjs";
 
 import {AspectRatio} from "../models";
-import Cropper from "cropperjs";
 
 export type CropperData = {
     imageData: Cropper.ImageData;
@@ -16,11 +19,23 @@ export type CropperData = {
 @Injectable()
 export class CropperService {
 
+    cropBoxMatchesImage$: Observable<boolean>;
+    resizing = false;
     private cropper: Cropper;
     private lastImageSrc: string;
     private lastData: Cropper.Data;
     private resizeTimer: number;
-    resizing = false;
+    private crop$ = new Subject<Cropper.Data>();
+
+    constructor() {
+        this.cropBoxMatchesImage$ = this.crop$.pipe(
+            map(cropperData => {
+                const imageData = this.cropper.getImageData();
+                return Math.round(cropperData.width) === Math.round(imageData.naturalWidth) &&
+                    Math.round(cropperData.height) === Math.round(imageData.naturalHeight);
+            })
+        );
+    }
 
     /**
      * Returns a CropperData object
@@ -81,7 +96,8 @@ export class CropperService {
                     },
                     crop: data => {
                         if (!this.resizing) {
-                            this.lastData = data.detail
+                            this.lastData = data.detail;
+                            this.crop$.next(data.detail);
                         }
                     }
                 });
@@ -129,13 +145,16 @@ export class CropperService {
      */
     resetCrop(): void {
         if (this.cropper) {
-            const imageData = this.cropper.getImageData();
-            this.setCropAspectRatio('original');
-            this.cropper.setData({
-                x: 0,
-                y: 0,
-                width: imageData.naturalWidth,
-                height: imageData.naturalHeight
+            // setTimeout is required because if the aspect ratio is also changed,
+            // then the dimensions of the cropBox will be reset to the default autoCropArea (80% of image size)
+            setTimeout(() => {
+                const imageData = this.cropper.getImageData();
+                this.cropper.setData({
+                    x: 0,
+                    y: 0,
+                    width: imageData.naturalWidth,
+                    height: imageData.naturalHeight
+                });
             });
         }
     }

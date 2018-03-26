@@ -7,7 +7,8 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ControlPanelComponent {
-    @Input() applyLabel: string = 'Apply';
+    @Input() applyLabel = 'Apply';
+    @Input() displayResetButton = false;
     @Output() cancel = new EventEmitter<void>();
     @Output() apply = new EventEmitter<void>();
     @Output() reset = new EventEmitter<void>();

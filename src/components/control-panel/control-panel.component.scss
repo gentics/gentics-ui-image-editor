@@ -19,6 +19,18 @@
   gtx-button {
     margin-right: 5px;
   }
+
+  .reset {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0s 0.3s;
+
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s, visibility 0s;
+    }
+  }
 }
 
 @keyframes fadeIn {

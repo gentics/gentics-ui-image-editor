@@ -49,6 +49,7 @@
 
         <gentics-control-panel *ngIf="mode === 'crop'"
                                applyLabel="Crop"
+                               [displayResetButton]="!(cropperService.cropBoxMatchesImage$ | async)"
                                (reset)="resetCrop()"
                                (apply)="applyCrop()"
                                (cancel)="cancelCrop()">
@@ -62,6 +63,7 @@
 
         <gentics-control-panel *ngIf="mode === 'resize'"
                                applyLabel="Resize"
+                               [displayResetButton]="resizeScale !== 1"
                                (reset)="resetScale()"
                                (apply)="applyResize()"
                                (cancel)="cancelResize()">
@@ -81,6 +83,7 @@
 
         <gentics-control-panel *ngIf="mode === 'focalPoint'"
                                applyLabel="Set Focal Point"
+                               [displayResetButton]="focalPointX !== 0.5 || focalPointY !== 0.5"
                                (reset)="resetFocalPoint()"
                                (apply)="applyFocalPoint()"
                                (cancel)="cancelFocalPoint()">

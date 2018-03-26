@@ -65,7 +65,7 @@ export class GenticsImageEditorComponent {
         return Math.max(realHeight, minHeight);
     }
 
-    constructor(private cropperService: CropperService,
+    constructor(public cropperService: CropperService,
                 private elementRef: ElementRef,
                 private resizeService: ResizeService) {}
 
