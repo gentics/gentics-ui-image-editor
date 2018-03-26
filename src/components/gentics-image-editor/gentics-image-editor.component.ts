@@ -45,7 +45,6 @@ export class GenticsImageEditorComponent {
     resizeRangeValue = 0;
     resizeMin$: Observable<number>;
     resizeMax$: Observable<number>;
-    resizeDimensions$: Observable<string>;
     private lastAppliedScale = 1;
 
     // focal point-related state
@@ -72,8 +71,6 @@ export class GenticsImageEditorComponent {
     ngOnInit(): void {
         this.resizeMin$ = this.resizeService.min$;
         this.resizeMax$ = this.resizeService.max$;
-        this.resizeDimensions$ = this.resizeService.resizeDimensions$.pipe(
-            map(dimensions => `${dimensions.width}px x ${dimensions.height}px`));
 
         this.closestAncestorWithHeight = this.getClosestAncestorWithHeight(this.elementRef.nativeElement);
         this.lastAppliedFocalPointX = this.focalPointX;

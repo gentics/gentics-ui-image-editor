@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
-import {map, tap} from "rxjs/operators";
-import {Dimensions2D} from "../models";
 import {combineLatest} from "rxjs/observable/combineLatest";
+import {map} from "rxjs/operators";
+
+import {Dimensions2D} from "../models";
 
 @Injectable()
 export class ResizeService {
 
-    resizeDimensions$: Observable<Dimensions2D>;
     min$: Observable<number>;
     max$: Observable<number>;
 
@@ -22,18 +22,6 @@ export class ResizeService {
     }
 
     constructor() {
-        this.resizeDimensions$ = combineLatest(
-            this.previewWidth$,
-            this.initialDimensions$
-        ).pipe(
-            map(([previewWidth, initialDimensions]) => {
-               return {
-                   width: Math.round(previewWidth),
-                   height: Math.round((previewWidth / initialDimensions.width) * initialDimensions.height)
-               };
-            })
-        );
-
         this.min$ = this.initialDimensions$.pipe(
             map(initialDimensions => initialDimensions.width * 0.01));
 
