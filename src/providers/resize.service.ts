@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {Subject} from "rxjs/Subject";
 import {combineLatest} from "rxjs/observable/combineLatest";
-import {map} from "rxjs/operators";
+import {map, takeUntil} from "rxjs/operators";
 
 import {Dimensions2D} from "../models";
 
@@ -16,6 +17,7 @@ export class ResizeService {
     private initialDimensions$ = new BehaviorSubject<Dimensions2D>({ width: 0, height: 0 });
     private normalizedScaleValue$ = new BehaviorSubject<number>(1);
     private initialWidth: number;
+    private destroy$ = new Subject<void>();
 
     get currentWidth(): number {
         return this.previewWidth$.value;
@@ -29,8 +31,14 @@ export class ResizeService {
             map(initialDimensions => initialDimensions.width * 2));
 
         combineLatest(this.previewWidth$, this.initialDimensions$).pipe(
-            map(([previewWidth, initialDimensions]) => previewWidth / initialDimensions.width)
+            map(([previewWidth, initialDimensions]) => previewWidth / initialDimensions.width),
+            takeUntil(this.destroy$)
         ).subscribe(this.normalizedScaleValue$);
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     enable(imageWidth: number, imageHeight: number, initialScale = 1): void {
