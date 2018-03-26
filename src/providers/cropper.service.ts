@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, Type} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {map} from "rxjs/operators";
-import Cropper from "cropperjs";
 
-import {AspectRatio} from "../models";
+import {AspectRatio, CropperConstructor} from "../models";
 
 export type CropperData = {
     imageData: Cropper.ImageData;
@@ -20,14 +19,15 @@ export type CropperData = {
 export class CropperService {
 
     cropBoxMatchesImage$: Observable<boolean>;
-    resizing = false;
+
+    private resizing = false;
     private cropper: Cropper;
     private lastImageSrc: string;
     private lastData: Cropper.Data;
     private resizeTimer: number;
     private crop$ = new Subject<Cropper.Data>();
 
-    constructor() {
+    constructor(@Inject(CropperConstructor) private cropperConstructor: Type<Cropper>) {
         this.cropBoxMatchesImage$ = this.crop$.pipe(
             map(cropperData => {
                 const imageData = this.cropper.getImageData();
@@ -85,7 +85,7 @@ export class CropperService {
         if (!this.cropper) {
             this.lastImageSrc = imageElement.src;
             return new Promise(resolve => {
-                this.cropper = new Cropper(imageElement, {
+                this.cropper = new this.cropperConstructor(imageElement, {
                     viewMode: 1,
                     autoCrop: true,
                     zoomable: false,

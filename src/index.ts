@@ -2,6 +2,7 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
 import {GenticsUICoreModule, OverlayHostService} from 'gentics-ui-core';
+import Cropper from "cropperjs";
 
 import {GenticsImageEditorComponent} from './components/gentics-image-editor/gentics-image-editor.component';
 import {ImagePreviewComponent} from "./components/image-preview/image-preview.component";
@@ -12,6 +13,7 @@ import {ControlPanelComponent} from "./components/control-panel/control-panel.co
 import {FocalPointSelectorComponent} from "./components/focal-point-selector/focal-point-selector.component";
 import {FocalPointTargetDirective} from "./components/focal-point-selector/focal-point-target.directive";
 import {FocalPointService} from "./providers/focal-point.service";
+import {CropperConstructor} from "./models";
 
 @NgModule({
     imports: [
@@ -31,7 +33,8 @@ import {FocalPointService} from "./providers/focal-point.service";
         CropperService,
         FocalPointService,
         OverlayHostService,
-        ResizeService
+        ResizeService,
+        { provide: CropperConstructor, useValue: Cropper }
     ],
     exports: [
         GenticsImageEditorComponent
