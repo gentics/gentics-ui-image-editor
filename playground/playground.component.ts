@@ -6,7 +6,7 @@ import {Component} from "@angular/core";
     styleUrls: ['./playground.component.css']
 })
 export class PlaygroundAppComponent {
-    maxHeight: 'container';
+    language = 'en';
     sourceImage = 'portrait.jpg';
     slowConnection = false;
 

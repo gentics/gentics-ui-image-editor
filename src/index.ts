@@ -14,6 +14,8 @@ import {FocalPointSelectorComponent} from "./components/focal-point-selector/foc
 import {FocalPointTargetDirective} from "./components/focal-point-selector/focal-point-target.directive";
 import {FocalPointService} from "./providers/focal-point.service";
 import {CropperConstructor} from "./models";
+import {LanguageService} from "./providers/language.service";
+import {TranslatePipe} from "./pipes/translate.pipe";
 
 @NgModule({
     imports: [
@@ -27,13 +29,15 @@ import {CropperConstructor} from "./models";
         FocalPointTargetDirective,
         GenticsImageEditorComponent,
         ImagePreviewComponent,
-        ImageCropperComponent
+        ImageCropperComponent,
+        TranslatePipe
     ],
     providers: [
         CropperService,
         FocalPointService,
         OverlayHostService,
         ResizeService,
+        LanguageService,
         { provide: CropperConstructor, useValue: Cropper }
     ],
     exports: [

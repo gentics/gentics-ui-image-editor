@@ -27,42 +27,51 @@
     <gtx-progress-bar [active]="imageIsLoading"></gtx-progress-bar>
     <div class="controls">
         <div class="mode-selector">
-            <gtx-button icon size="large"
-                        type="secondary"
-                        (click)="setMode('crop')"
-                        [class.hidden]="mode !== 'preview' && mode !== 'crop'">
-                <icon>crop</icon>
-            </gtx-button>
-            <gtx-button icon size="large"
-                        type="secondary"
-                        (click)="setMode('resize')"
-                        [class.hidden]="mode !== 'preview' && mode !== 'resize'">
-                <icon>photo_size_select_large</icon>
-            </gtx-button>
-            <gtx-button icon size="large"
-                        type="secondary"
-                        (click)="setMode('focalPoint')"
-                        [class.hidden]="mode !== 'preview' && mode !== 'focalPoint'">
-                <icon>filter_center_focus</icon>
-            </gtx-button>
+            <div class="mode-button" [class.hidden]="mode !== 'preview' && mode !== 'crop'">
+                <gtx-button icon size="large"
+                            type="secondary"
+                            (click)="setMode('crop')"
+                            [title]="'crop' | translate">
+                    <icon>crop</icon>
+                </gtx-button>
+                <div class="button-label">{{ 'crop' | translate }}</div>
+            </div>
+            <div class="mode-button" [class.hidden]="mode !== 'preview' && mode !== 'resize'">
+                <gtx-button icon size="large"
+                            type="secondary"
+                            (click)="setMode('resize')"
+                            [title]="'resize' | translate">
+                    <icon>photo_size_select_large</icon>
+                </gtx-button>
+                <div class="button-label">{{ 'resize' | translate }}</div>
+            </div>
+            <div class="mode-button" [class.hidden]="mode !== 'preview' && mode !== 'focalPoint'">
+                <gtx-button icon size="large"
+                            type="secondary"
+                            (click)="setMode('focalPoint')"
+                            [title]="'set_focal_point' | translate">
+                    <icon>filter_center_focus</icon>
+                </gtx-button>
+                <div class="button-label">{{ 'focal_point' | translate }}</div>
+            </div>
         </div>
 
         <gentics-control-panel *ngIf="mode === 'crop'"
-                               applyLabel="Crop"
+                               [applyLabel]="'crop' | translate"
                                [displayResetButton]="!(cropperService.cropBoxMatchesImage$ | async)"
                                (reset)="resetCrop()"
                                (apply)="applyCrop()"
                                (cancel)="cancelCrop()">
             <div gtx-radio-group [(ngModel)]="cropAspectRatio" class="aspect-ratio-controls">
-                <div class="aspect-ratio-label">Aspect ratio:</div>
-                <gtx-radio-button value="original" label="Original"></gtx-radio-button>
-                <gtx-radio-button value="square" label="Square"></gtx-radio-button>
-                <gtx-radio-button value="free" label="Free"></gtx-radio-button>
+                <div class="aspect-ratio-label">{{ 'aspect_ratio' | translate }}</div>
+                <gtx-radio-button value="original" [label]="'aspect_ratio_original' | translate"></gtx-radio-button>
+                <gtx-radio-button value="square" [label]="'aspect_ratio_square' | translate"></gtx-radio-button>
+                <gtx-radio-button value="free" [label]="'aspect_ratio_free' | translate"></gtx-radio-button>
             </div>
         </gentics-control-panel>
 
         <gentics-control-panel *ngIf="mode === 'resize'"
-                               applyLabel="Resize"
+                               [applyLabel]="'resize' | translate"
                                [displayResetButton]="resizeScale !== 1"
                                (reset)="resetScale()"
                                (apply)="applyResize()"
@@ -82,7 +91,7 @@
         </gentics-control-panel>
 
         <gentics-control-panel *ngIf="mode === 'focalPoint'"
-                               applyLabel="Set Focal Point"
+                               [applyLabel]="'set_focal_point' | translate"
                                [displayResetButton]="focalPointX !== 0.5 || focalPointY !== 0.5"
                                (reset)="resetFocalPoint()"
                                (apply)="applyFocalPoint()"

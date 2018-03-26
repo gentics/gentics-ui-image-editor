@@ -8,13 +8,13 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Observable} from "rxjs/Observable";
-import {map} from "rxjs/operators";
 
 import {ImagePreviewComponent} from "../image-preview/image-preview.component";
 import {AspectRatio, Mode} from "../../models";
 import {CropperData, CropperService} from "../../providers/cropper.service";
 import {ResizeService} from "../../providers/resize.service";
 import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
+import {LanguageService, UILanguage} from "../../providers/language.service";
 
 @Component({
     selector: 'gentics-image-editor',
@@ -28,7 +28,7 @@ export class GenticsImageEditorComponent {
     @Input() src: string;
     @Input() focalPointX: number = 0.5;
     @Input() focalPointY: number = 0.5;
-    @Input() maxHeight: 'container' | 'none' = 'container';
+    @Input() language: UILanguage = 'en';
 
     @ViewChild('controlPanel') controlPanel: ElementRef;
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
@@ -53,18 +53,8 @@ export class GenticsImageEditorComponent {
 
     private closestAncestorWithHeight: HTMLElement;
 
-    get parentHeight(): number {
-        return this.closestAncestorWithHeight ? this.closestAncestorWithHeight.offsetHeight: 0;
-    }
-
-    get imageAreaHeight(): number {
-        const controlPanelHeight = this.controlPanel ? this.controlPanel.nativeElement.offsetHeight : 0;
-        const realHeight = this.parentHeight - controlPanelHeight;
-        const minHeight = 300;
-        return Math.max(realHeight, minHeight);
-    }
-
     constructor(public cropperService: CropperService,
+                private languageService: LanguageService,
                 private elementRef: ElementRef,
                 private resizeService: ResizeService) {}
 
@@ -81,6 +71,20 @@ export class GenticsImageEditorComponent {
         if ('src' in changes) {
             this.imageIsLoading = true;
         }
+        if ('language' in changes) {
+            this.languageService.currentLanguage = this.language;
+        }
+    }
+
+    get parentHeight(): number {
+        return this.closestAncestorWithHeight ? this.closestAncestorWithHeight.offsetHeight: 0;
+    }
+
+    get imageAreaHeight(): number {
+        const controlPanelHeight = this.controlPanel ? this.controlPanel.nativeElement.offsetHeight : 0;
+        const realHeight = this.parentHeight - controlPanelHeight;
+        const minHeight = 300;
+        return Math.max(realHeight, minHeight);
     }
 
     setMode(modeClicked: Mode): void {

@@ -62,11 +62,12 @@ gentics-image-editor {
   }
 
   .mode-selector {
-    padding: 10px;
+    padding: 4px 0 2px 0;
     display: flex;
 
-    gtx-button {
-      width: 44px;
+    .mode-button {
+      width: 70px;
+      text-align: center;
       margin-right: 10px;
       transition: width 0.3s, margin 0.3s, opacity 0.3s 0.3s;
       &.hidden {
@@ -76,6 +77,15 @@ gentics-image-editor {
         overflow: hidden;
         transition: width 0.3s 0.3s, margin 0.3s 0.3s, opacity 0.3s
       }
+    }
+
+    .button-label {
+      text-transform: uppercase;
+      font-size: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: $gtx-color-mid-gray;
     }
   }
 
