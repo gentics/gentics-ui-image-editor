@@ -10,6 +10,6 @@
       "dom"
     ],
     "skipLibCheck": true,
-    "types": []
+    "types": ["jasmine", "node"]
   }
 }
