@@ -1,6 +1,15 @@
+:host {
+  display: block;
+  position: absolute;
+}
+
 .focal-point-overlay {
   position: absolute;
   cursor: crosshair;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   &.hidden {
     display: none;
   }
@@ -18,11 +27,13 @@
 
 .y-line {
   height: 0;
+  left: 0;
   border-bottom-width: thin;
 }
 
 .x-line {
   width: 0;
+  top: 0;
   border-left-width: thin;
 }
 

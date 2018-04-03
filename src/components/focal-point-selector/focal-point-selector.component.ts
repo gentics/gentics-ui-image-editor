@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    HostBinding,
     HostListener,
     Input,
     Output,
@@ -26,12 +27,16 @@ export class FocalPointSelectorComponent {
     @Input() enabled = false;
     @Output() focalPointSelect = new EventEmitter<{ x: number; y: number; }>();
 
+    @HostBinding('style.width.px')
     width: number;
-    yLineLeft: number;
-    yLineTop: number;
+    @HostBinding('style.height.px')
     height: number;
+    @HostBinding('style.left.px')
+    targetLeft: number;
+    @HostBinding('style.top.px')
+    targetTop: number;
+    yLineTop: number;
     xLineLeft: number;
-    xLineTop: number;
     focalPointLeft: number;
     focalPointTop: number;
 
@@ -66,8 +71,8 @@ export class FocalPointSelectorComponent {
     }
 
     overlayClick(e: MouseEvent): void {
-        const xInPixels = e.clientX - this.yLineLeft;
-        const yInPixels = e.clientY - this.xLineTop;
+        const xInPixels = e.clientX - this.targetLeft + window.scrollX;
+        const yInPixels = e.clientY - this.targetTop + window.scrollY;
         const xNormalized = xInPixels / this.width;
         const yNormalized = yInPixels / this.height;
         this.focalPointSelect.emit({ x: xNormalized, y: yNormalized });
@@ -90,17 +95,20 @@ export class FocalPointSelectorComponent {
             });
     }
 
+    @HostListener('window:scroll')
     @HostListener('window:resize')
-    private updatePositions(crosshairX?: number, crosshairY?: number): void {
+    private updatePositions(mouseX?: number, mouseY?: number): void {
         if (this.target) {
-            const rect = this.target.getBoundingClientRect();
+            const { width, height, top, left } = this.target.getBoundingClientRect();
+            const crosshairX = mouseX - left;
+            const crosshairY = mouseY - top;
 
-            this.width = rect.width;
-            this.height = rect.height;
-            this.focalPointTop = rect.top + (rect.height * this.focalPointY);
-            this.focalPointLeft = rect.left + (rect.width * this.focalPointX);
-            this.yLineLeft = rect.left;
-            this.xLineTop = rect.top;
+            this.width = width;
+            this.height = height;
+            this.focalPointTop = height * this.focalPointY;
+            this.focalPointLeft = width * this.focalPointX;
+            this.targetLeft = left + window.scrollX;
+            this.targetTop = top + window.scrollY;
             this.xLineLeft = crosshairX || this.focalPointLeft;
             this.yLineTop = crosshairY || this.focalPointTop;
         }

@@ -1,14 +1,12 @@
 <div class="y-line"
      [class.hidden]="!enabled"
      [style.width.px]="width"
-     [style.left.px]="yLineLeft"
      [style.top.px]="yLineTop"
 ></div>
 <div class="x-line"
      [class.hidden]="!enabled"
      [style.height.px]="height"
      [style.left.px]="xLineLeft"
-     [style.top.px]="xLineTop"
 ></div>
 <div class="focal-point-cross-x"
      [class.emphasize]="enabled"
@@ -22,11 +20,7 @@
 </div>
 <div class="focal-point-overlay"
      [class.hidden]="!enabled"
-     [style.width.px]="width"
-     [style.height.px]="height"
-     [style.left.px]="yLineLeft"
-     [style.top.px]="xLineTop"
      (mousemove)="overlayMouseMove($event)"
      (mouseleave)="overlayMouseLeave()"
-     (click)="overlayClick($event)"
-></div>
+     (click)="overlayClick($event)">
+</div>
