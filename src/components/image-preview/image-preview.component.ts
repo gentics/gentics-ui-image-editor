@@ -17,7 +17,7 @@ import {map, share} from "rxjs/operators";
 import {combineLatest} from "rxjs/observable/combineLatest";
 
 import {CropperData} from "../../providers/cropper.service";
-import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
+import {getDefaultCropperData} from "../../utils";
 import {Dimensions2D} from "../../models";
 
 /**
@@ -70,8 +70,8 @@ export class ImagePreviewComponent {
         ).pipe(
             map(([cropperData, scaleX, scaleY]) => {
                 return {
-                    width: round(getActualCroppedSize(cropperData).width * scaleX),
-                    height: round(getActualCroppedSize(cropperData).height * scaleY)
+                    width: round(cropperData.outputData.width * scaleX),
+                    height: round(cropperData.outputData.height * scaleY)
                 };
             })
         );

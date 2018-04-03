@@ -9,6 +9,7 @@ export type CropperData = {
     imageData: Cropper.ImageData;
     cropBoxData: Cropper.CropBoxData;
     canvasData: Cropper.CanvasData;
+    outputData: Cropper.Data;
 };
 
 /**
@@ -45,10 +46,12 @@ export class CropperService {
             const imageData = this.cropper.getImageData();
             const cropBoxData = this.cropper.getCropBoxData();
             const canvasData = this.cropper.getCanvasData();
+            const outputData = this.cropper.getData();
             return {
                 imageData,
                 cropBoxData,
-                canvasData
+                canvasData,
+                outputData
             };
         }
     }

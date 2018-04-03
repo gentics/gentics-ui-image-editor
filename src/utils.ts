@@ -1,16 +1,4 @@
 import {CropperData} from "./providers/cropper.service";
-import {Dimensions2D} from "./models";
-
-/**
- * Returns the actual physical dimensions of a cropped image.
- */
-export function getActualCroppedSize(cropperData: CropperData): Dimensions2D {
-    const { imageData, cropBoxData } = cropperData;
-    return {
-        width: (imageData.naturalWidth / imageData.width) * cropBoxData.width,
-        height: (imageData.naturalHeight / imageData.height) * cropBoxData.height
-    };
-}
 
 /**
  * Returns a CropperData object with default values based on the natural dimensions of
@@ -50,6 +38,15 @@ export function getDefaultCropperData(img: HTMLImageElement): CropperData {
             scaleX: 1,
             scaleY: 1,
             rotate: 0
+        },
+        outputData: {
+            x: 0,
+            y: 0,
+            rotate: 0,
+            width,
+            height,
+            scaleX: 1,
+            scaleY: 1
         }
     };
 }

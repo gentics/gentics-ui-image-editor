@@ -2,7 +2,9 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    EventEmitter,
     Input,
+    Output,
     SimpleChanges,
     ViewChild,
     ViewEncapsulation
@@ -10,10 +12,10 @@ import {
 import {Observable} from "rxjs/Observable";
 
 import {ImagePreviewComponent} from "../image-preview/image-preview.component";
-import {AspectRatio, Mode} from "../../models";
+import {AspectRatio, ImageTransformParams, Mode} from "../../models";
 import {CropperData, CropperService} from "../../providers/cropper.service";
 import {ResizeService} from "../../providers/resize.service";
-import {getActualCroppedSize, getDefaultCropperData} from "../../utils";
+import {getDefaultCropperData} from "../../utils";
 import {LanguageService, UILanguage} from "../../providers/language.service";
 
 @Component({
@@ -29,6 +31,7 @@ export class GenticsImageEditorComponent {
     @Input() focalPointX: number = 0.5;
     @Input() focalPointY: number = 0.5;
     @Input() language: UILanguage = 'en';
+    @Output() transform = new EventEmitter<ImageTransformParams>();
 
     @ViewChild('controlPanel') controlPanel: ElementRef;
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
@@ -103,6 +106,7 @@ export class GenticsImageEditorComponent {
     applyCrop(): void {
         this.cropperData = this.cropperService.cropperData;
         this.setMode('preview');
+        this.emitImageTransformParams();
     }
 
     cancelCrop(): void {
@@ -125,6 +129,7 @@ export class GenticsImageEditorComponent {
         this.resizeScale = scale;
         this.lastAppliedScale = scale;
         this.setMode('preview');
+        this.emitImageTransformParams();
     }
 
     cancelResize(): void {
@@ -146,12 +151,43 @@ export class GenticsImageEditorComponent {
         this.lastAppliedFocalPointX = this.focalPointX;
         this.lastAppliedFocalPointY = this.focalPointY;
         this.setMode('preview');
+        this.emitImageTransformParams();
     }
 
     cancelFocalPoint(): void {
         this.focalPointX = this.lastAppliedFocalPointX;
         this.focalPointY = this.lastAppliedFocalPointY;
         this.setMode('preview');
+    }
+
+    /**
+     * Emit the ImageTransformParams resulting from the currently-applied transformations.
+     */
+    private emitImageTransformParams(): void {
+        const toPrecision = x => parseFloat(x.toFixed(5));
+        let cropperData: CropperData;
+        if (this.cropperData) {
+            cropperData = this.cropperData;
+        } else {
+            cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement);
+        }
+        const { outputData } = cropperData;
+
+
+        this.transform.emit({
+            width: toPrecision(outputData.width * this.resizeScale),
+            height: toPrecision(outputData.height * this.resizeScale),
+            scaleX: toPrecision(this.resizeScale),
+            scaleY: toPrecision(this.resizeScale),
+            cropRect: {
+                startX: toPrecision(outputData.x),
+                startY: toPrecision(outputData.y),
+                width: toPrecision(outputData.width),
+                height: toPrecision(outputData.height)
+            },
+            focalPointX: toPrecision(this.focalPointX),
+            focalPointY: toPrecision(this.focalPointY)
+        });
     }
 
     private enterMode(mode: Mode): void {
@@ -201,7 +237,7 @@ export class GenticsImageEditorComponent {
         if (!cropperData) {
             cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement);
         }
-        const { width, height } = getActualCroppedSize(cropperData);
+        const { width, height } = cropperData.outputData;
         this.resizeService.enable(width, height, this.resizeScale);
         this.resizeRangeValue = width * this.resizeScale;
     }

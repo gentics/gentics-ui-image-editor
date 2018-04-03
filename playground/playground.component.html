@@ -1,19 +1,30 @@
 <div class="editor-container">
-    <gentics-image-editor [src]="sourceUrl" [language]="language"></gentics-image-editor>
+    <gentics-image-editor [src]="sourceUrl"
+                          [language]="language"
+                          (transform)="transformParams = $event"></gentics-image-editor>
 </div>
 
-<div class="input-options">
-    <gtx-select [(ngModel)]="language" label="language">
-        <gtx-option value="en">English</gtx-option>
-        <gtx-option value="de">Deutsch</gtx-option>
-    </gtx-select>
+<div class="inputs-outputs">
+    <div class="input-options">
+        <gtx-select [(ngModel)]="language" label="language">
+            <gtx-option value="en">English</gtx-option>
+            <gtx-option value="de">Deutsch</gtx-option>
+        </gtx-select>
 
-    <gtx-select [(ngModel)]="sourceImage" label="Source Image">
-        <gtx-option value="test-image.png">test-image.png</gtx-option>
-        <gtx-option value="portrait.jpg">portrait.jpg</gtx-option>
-        <gtx-option value="landscape.jpg">landscape.jpg</gtx-option>
-    </gtx-select>
+        <gtx-select [(ngModel)]="sourceImage" label="Source Image">
+            <gtx-option value="test-image.png">test-image.png</gtx-option>
+            <gtx-option value="portrait.jpg">portrait.jpg</gtx-option>
+            <gtx-option value="landscape.jpg">landscape.jpg</gtx-option>
+        </gtx-select>
 
-    <gtx-checkbox [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>
+        <gtx-checkbox [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>
+    </div>
+    <div class="output">
+        <h3>Output:</h3>
+        <pre *ngIf="transformParams; else noTransform">{{ transformParams | json }}</pre>
+        <ng-template #noTransform>
+            <pre>No transform has been performed</pre>
+        </ng-template>
+    </div>
 </div>
 <gtx-overlay-host></gtx-overlay-host>

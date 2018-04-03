@@ -6,9 +6,30 @@
   flex: 1;
 }
 
+.inputs-outputs {
+  display: flex;
+  padding-top: 10px;
+}
 .input-options {
   padding-top: 20px;
   display: flex;
   justify-content: space-evenly;
-  align-items: center;
+  flex: 1;
+}
+.input-options gtx-checkbox {
+  margin-top: 25px;
+}
+.output {
+  border: 1px solid #cccccc;
+  padding: 10px;
+  overflow: hidden;
+}
+.output h3 {
+  font-size: 16px;
+  margin: 0;
+}
+.output pre {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: #005bab;
 }

@@ -9,6 +9,7 @@ export class PlaygroundAppComponent {
     language = 'en';
     sourceImage = 'portrait.jpg';
     slowConnection = false;
+    transformParams: any;
 
     get sourceUrl(): string {
         const base = this.slowConnection ? 'http://localhost:4000/' : './test-images/';
