@@ -57,6 +57,14 @@ export const translationTable: TranslationTable = {
         de: 'Fokuspunkt',
         en: 'focal point'
     },
+    'ratio_locked': {
+        de: 'Seitenverhältnis gesperrt',
+        en: 'Aspect ratio is locked'
+    },
+    'ratio_unlocked': {
+        de: 'Seitenverhältnis nicht gesperrt',
+        en: 'Aspect ratio is unlocked'
+    },
     'resize': {
         de: 'Anpassen',
         en: 'Resize'

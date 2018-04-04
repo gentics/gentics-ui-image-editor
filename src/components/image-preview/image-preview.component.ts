@@ -60,37 +60,37 @@ export class ImagePreviewComponent {
                 private elementRef: ElementRef) {}
 
     ngOnInit(): void {
+        const scale$ = combineLatest(this.scaleX$, this.scaleY$).pipe(map(([x, y]) => ({ x, y })));
 
-        const round = (value: number): number => value;
-
-        const actualDimensions$ = combineLatest(
-            this.cropperData$,
-            this.scaleX$,
-            this.scaleY$
-        ).pipe(
-            map(([cropperData, scaleX, scaleY]) => {
+        const actualDimensions$ = combineLatest(this.cropperData$, scale$).pipe(
+            map(([cropperData, scale]) => {
                 return {
-                    width: round(cropperData.outputData.width * scaleX),
-                    height: round(cropperData.outputData.height * scaleY)
+                    width: cropperData.outputData.width * scale.x,
+                    height: cropperData.outputData.height * scale.y
                 };
             })
         );
 
         const cropBoxDimensions$ = this.cropperData$.pipe(
-            map(({ cropBoxData }) => this.calculateCropBoxDimensions(cropBoxData)));
+            map(({ cropBoxData }) => ({ width: cropBoxData.width, height: cropBoxData.height })));
+
+        const scaledDimensions$ = combineLatest(cropBoxDimensions$, scale$).pipe(
+            map(([dimensions, scale]) => ({
+                width: dimensions.width * scale.x,
+                height: dimensions.height * scale.y
+            }))
+        );
 
         const maxDimensions$ = combineLatest(
             actualDimensions$,
             this.resize$
         ).pipe(
-            map(([actual]) => {
-                return this.calculateMaxDimensions(actual);
-            })
+            map(([actual]) => this.calculateMaxDimensions(actual))
         );
 
         const viewableDimensions$ = combineLatest(
             actualDimensions$,
-            cropBoxDimensions$,
+            scaledDimensions$,
             maxDimensions$
         ).pipe(
             map(([actual, cropBox, max]) => this.calculateViewableDimensions(actual, cropBox, max)),
@@ -102,19 +102,19 @@ export class ImagePreviewComponent {
             this.cropperData$
         );
 
-        this.previewWidth$ = viewableDimensions$.pipe(map(data => round(data.width * data.ratio)));
-        this.previewHeight$ = viewableDimensions$.pipe(map(data => round(data.height * data.ratio)));
-        this.actualWidth$ = actualDimensions$.pipe(map(dimensions => round(dimensions.width)));
-        this.actualHeight$ = actualDimensions$.pipe(map(dimensions => round(dimensions.height)));
+        this.previewWidth$ = viewableDimensions$.pipe(map(data => data.width * data.ratio));
+        this.previewHeight$ = viewableDimensions$.pipe(map(data => data.height * data.ratio));
+        this.actualWidth$ = actualDimensions$.pipe(map(dimensions => dimensions.width));
+        this.actualHeight$ = actualDimensions$.pipe(map(dimensions => dimensions.height));
 
-        this.previewImageHeight$ = ratioAndCropperData$.pipe(
-            map(([ratio, { imageData }]) => round(imageData.height * ratio)));
+        this.previewImageHeight$ = combineLatest(ratioAndCropperData$, scale$).pipe(
+            map(([[ratio, { imageData }], scale]) => imageData.height * ratio * scale.y));
 
-        this.previewImageWidth$ = ratioAndCropperData$.pipe(
-            map(([ratio, { imageData }]) => round(imageData.width * ratio)));
+        this.previewImageWidth$ = combineLatest(ratioAndCropperData$, scale$).pipe(
+            map(([[ratio, { imageData }], scale]) => imageData.width * ratio * scale.x));
 
-        this.previewImageTransform$ =  ratioAndCropperData$.pipe(
-            map(([ratio, cropperData]) => this.calculateImageTransform(ratio, cropperData))
+        this.previewImageTransform$ =  combineLatest(ratioAndCropperData$, scale$).pipe(
+            map(([[ratio, cropperData], scale]) => this.calculateImageTransform(ratio, cropperData, scale))
         );
 
         this.previewWidthIsLessThanActual$ = combineLatest(
@@ -178,34 +178,10 @@ export class ImagePreviewComponent {
         };
     }
 
-    private calculateCropBoxDimensions(cropBoxData: Cropper.CropBoxData): Dimensions2D {
-        const { width: cropBoxWidth, height: cropBoxHeight } = cropBoxData;
-        const originalWidth = cropBoxData.width;
-        const originalHeight = cropBoxData.height;
-        let newWidth = originalWidth;
-        let newHeight = originalHeight;
-
-        if (cropBoxWidth) {
-            const ratio = originalWidth / cropBoxWidth;
-            newHeight = cropBoxHeight * ratio;
-        }
-
-        if (cropBoxHeight && newHeight > originalHeight) {
-            const ratio = originalHeight / cropBoxHeight;
-            newWidth = cropBoxWidth * ratio;
-            newHeight = originalHeight;
-        }
-
-        return {
-            width: newWidth,
-            height: newHeight
-        };
-    }
-
-    private calculateImageTransform(ratio: number, cropperData: CropperData): SafeStyle {
+    private calculateImageTransform(ratio: number, cropperData: CropperData, scale: { x: number; y: number; }): SafeStyle {
         const { cropBoxData, canvasData, imageData } = cropperData;
-        const left = cropBoxData.left - canvasData.left - imageData.left;
-        const top = cropBoxData.top - canvasData.top - imageData.top;
+        const left = (cropBoxData.left - canvasData.left - imageData.left) * scale.x;
+        const top = (cropBoxData.top - canvasData.top - imageData.top) * scale.y;
 
         return this.sanitizer
             .bypassSecurityTrustStyle(`translateX(-${Math.round(left * ratio)}px) translateY(-${Math.round(top * ratio)}px)`);
@@ -214,16 +190,18 @@ export class ImagePreviewComponent {
     private calculateMaxDimensions(imageDimensions: Dimensions2D): Dimensions2D {
         const availableWidth = this.elementRef.nativeElement.offsetWidth - 3 * this.margin;
         const availableHeight = this.calculateMaxHeight();
+        const scaledImageWidth = imageDimensions.width;
+        const scaledImageHeight = imageDimensions.height;
 
         let ratio = 1;
-        if (availableWidth < imageDimensions.width) {
-            ratio = availableWidth / imageDimensions.width;
+        if (availableWidth < scaledImageWidth) {
+            ratio = availableWidth / scaledImageWidth;
         }
-        if (availableHeight < imageDimensions.height * ratio) {
-            ratio = availableHeight / imageDimensions.height;
+        if (availableHeight < scaledImageHeight * ratio) {
+            ratio = availableHeight / scaledImageHeight;
         }
-        const width = imageDimensions.width * ratio;
-        const height = imageDimensions.height * ratio;
+        const width = scaledImageWidth * ratio;
+        const height = scaledImageHeight * ratio;
         return { width, height };
     }
 

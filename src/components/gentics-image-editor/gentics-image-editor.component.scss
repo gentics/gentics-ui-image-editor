@@ -1,6 +1,21 @@
 @import "../../../node_modules/cropperjs/dist/cropper.css";
 @import "../../../node_modules/gentics-ui-core/dist/styles/variables";
 
+@mixin range-thumb-color($color) {
+  input[type=range]::-ms-thumb {
+    background-color: $color;
+  }
+  input[type=range]::-moz-range-thumb {
+    background-color: $color;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    background-color: $color;
+  }
+}
+
+$resize-x-color: #10a0e3;
+$resize-y-color: #53e04c;
+
 gentics-image-editor {
   display: flex;
   flex-direction: column;
@@ -123,18 +138,75 @@ gentics-image-editor {
     justify-content: center;
   }
 
+  .resize-controls.ratio-locked {
+    .resize-factor {
+      top: 2px;
+
+      .scale-x:before {
+        display: none;
+      }
+
+      .scale-y {
+        max-width: 0;
+        margin-left: 0;
+        opacity: 0;
+      }
+    }
+
+    .range-controls {
+      .x {
+        top: 23px;
+      }
+      .y {
+        height: 0;
+        opacity: 0;
+      }
+    }
+  }
+
   .resize-factor {
     text-align: center;
     position: absolute;
-    top: 2px;
+    top: 22px;
+    z-index: 1;
     width: 100%;
     font-size: $gtx-font-size-lead;
     color: $gtx-color-dark-gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: top 0.2s;
+
+    .scale-y {
+      overflow: hidden;
+      max-width: 100px;
+      margin-left: 30px;
+      transition: max-width 0.2s, margin 0.2s, opacity 0.4s;
+
+      &:before {
+        content: 'y:';
+        margin-right: 3px;
+        color: darken($resize-y-color, 15%);
+      }
+    }
+
+    .scale-x {
+      &:before {
+        content: 'x:';
+        margin-right: 3px;
+        color: darken($resize-x-color, 10%);
+      }
+    }
+
+    gtx-button {
+      margin-left: 10px;
+    }
   }
 
   .range-container {
     display: flex;
     align-items: center;
+    height: 100%;
     gtx-range {
       flex: 1;
       .range-field {
@@ -148,6 +220,24 @@ gentics-image-editor {
       font-size: 32px;
     }
 
+    .range-controls {
+      flex: 1;
+      height: 100%;
+
+      .x {
+        top: 0;
+        transition: top 0.2s;
+        @include range-thumb-color($resize-x-color);
+      }
+
+      .y {
+        overflow: hidden;
+        opacity: 1;
+        height: 30px;
+        transition: height 0.2s, opacity 0.4s;
+        @include range-thumb-color($resize-y-color);
+      }
+    }
   }
 }
 

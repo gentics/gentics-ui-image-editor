@@ -44,11 +44,13 @@ export class GenticsImageEditorComponent {
     cropperData: CropperData;
 
     // resize-related state
-    resizeScale = 1;
-    resizeRangeValue = 0;
-    resizeMin$: Observable<number>;
-    resizeMax$: Observable<number>;
-    private lastAppliedScale = 1;
+    resizeScaleX = 1;
+    resizeScaleY = 1;
+    scaleRatioLocked = true;
+    resizeRangeValueX = 0;
+    resizeRangeValueY = 0;
+    private lastAppliedScaleX = 1;
+    private lastAppliedScaleY = 1;
 
     // focal point-related state
     private lastAppliedFocalPointX: number;
@@ -57,14 +59,11 @@ export class GenticsImageEditorComponent {
     private closestAncestorWithHeight: HTMLElement;
 
     constructor(public cropperService: CropperService,
+                public resizeService: ResizeService,
                 private languageService: LanguageService,
-                private elementRef: ElementRef,
-                private resizeService: ResizeService) {}
+                private elementRef: ElementRef) {}
 
     ngOnInit(): void {
-        this.resizeMin$ = this.resizeService.min$;
-        this.resizeMax$ = this.resizeService.max$;
-
         this.closestAncestorWithHeight = this.getClosestAncestorWithHeight(this.elementRef.nativeElement);
         this.lastAppliedFocalPointX = this.focalPointX;
         this.lastAppliedFocalPointY = this.focalPointY;
@@ -115,25 +114,52 @@ export class GenticsImageEditorComponent {
 
     resetScale(): void {
         this.resizeService.reset();
-        this.resizeRangeValue = this.resizeService.currentWidth;
-        this.resizeScale = 1;
+        this.resizeRangeValueX = this.resizeService.currentWidth;
+        this.resizeRangeValueY = this.resizeService.currentHeight;
+        this.resizeScaleX = 1;
+        this.resizeScaleY = 1;
     }
 
-    previewResize(width: number): void {
-        this.resizeService.update(width);
-        this.resizeScale = this.resizeService.getNormalizedScaleValue();
+    previewResizeWidth(width: number): void {
+        this.resizeService.updateWidth(width);
+        this.resizeScaleX = this.resizeService.getNormalizedScaleValueX();
+        if (this.scaleRatioLocked) {
+            this.synchronizeHeightScale();
+        }
+    }
+
+    previewResizeHeight(height: number): void {
+        this.resizeService.updateHeight(height);
+        this.resizeScaleY = this.resizeService.getNormalizedScaleValueY();
+    }
+
+    toggleScaleRatioLock(): void {
+        this.scaleRatioLocked = !this.scaleRatioLocked;
+        if (this.scaleRatioLocked) {
+            this.synchronizeHeightScale();
+        }
+    }
+
+    private synchronizeHeightScale(): void {
+        this.resizeScaleY = this.resizeScaleX;
+        this.resizeService.updateScaleY(this.resizeScaleY);
+        this.resizeRangeValueY = this.resizeService.currentHeight;
     }
 
     applyResize(): void {
-        const scale = this.resizeService.getNormalizedScaleValue();
-        this.resizeScale = scale;
-        this.lastAppliedScale = scale;
+        const scaleX = this.resizeService.getNormalizedScaleValueX();
+        const scaleY = this.resizeService.getNormalizedScaleValueY();
+        this.resizeScaleX = scaleX;
+        this.lastAppliedScaleX = scaleX;
+        this.resizeScaleY = scaleY;
+        this.lastAppliedScaleY = scaleY;
         this.setMode('preview');
         this.emitImageTransformParams();
     }
 
     cancelResize(): void {
-        this.resizeScale = this.lastAppliedScale;
+        this.resizeScaleX = this.lastAppliedScaleX;
+        this.resizeScaleY = this.lastAppliedScaleY;
         this.setMode('preview');
     }
 
@@ -175,10 +201,10 @@ export class GenticsImageEditorComponent {
 
 
         this.transform.emit({
-            width: toPrecision(outputData.width * this.resizeScale),
-            height: toPrecision(outputData.height * this.resizeScale),
-            scaleX: toPrecision(this.resizeScale),
-            scaleY: toPrecision(this.resizeScale),
+            width: toPrecision(outputData.width * this.resizeScaleX),
+            height: toPrecision(outputData.height * this.resizeScaleY),
+            scaleX: toPrecision(this.resizeScaleX),
+            scaleY: toPrecision(this.resizeScaleY),
             cropRect: {
                 startX: toPrecision(outputData.x),
                 startY: toPrecision(outputData.y),
@@ -238,8 +264,9 @@ export class GenticsImageEditorComponent {
             cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement);
         }
         const { width, height } = cropperData.outputData;
-        this.resizeService.enable(width, height, this.resizeScale);
-        this.resizeRangeValue = width * this.resizeScale;
+        this.resizeService.enable(width, height, this.resizeScaleX, this.resizeScaleY);
+        this.resizeRangeValueX = width * this.resizeScaleX;
+        this.resizeRangeValueY = height * this.resizeScaleY;
     }
 
     private onExitResizeMode(): void {}

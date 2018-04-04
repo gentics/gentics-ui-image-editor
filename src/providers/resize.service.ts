@@ -10,30 +10,50 @@ import {Dimensions2D} from "../models";
 @Injectable()
 export class ResizeService {
 
-    min$: Observable<number>;
-    max$: Observable<number>;
+    minWidth$: Observable<number>;
+    maxWidth$: Observable<number>;
+    minHeight$: Observable<number>;
+    maxHeight$: Observable<number>;
 
     private previewWidth$ = new BehaviorSubject<number>(0);
+    private previewHeight$ = new BehaviorSubject<number>(0);
     private initialDimensions$ = new BehaviorSubject<Dimensions2D>({ width: 0, height: 0 });
-    private normalizedScaleValue$ = new BehaviorSubject<number>(1);
+    private normalizedScaleValueX$ = new BehaviorSubject<number>(1);
+    private normalizedScaleValueY$ = new BehaviorSubject<number>(1);
     private initialWidth: number;
+    private initialHeight: number;
     private destroy$ = new Subject<void>();
 
     get currentWidth(): number {
         return this.previewWidth$.value;
     }
 
+    get currentHeight(): number {
+        return this.previewHeight$.value;
+    }
+
     constructor() {
-        this.min$ = this.initialDimensions$.pipe(
+        this.minWidth$ = this.initialDimensions$.pipe(
             map(initialDimensions => initialDimensions.width * 0.01));
 
-        this.max$ = this.initialDimensions$.pipe(
+        this.maxWidth$ = this.initialDimensions$.pipe(
             map(initialDimensions => initialDimensions.width * 2));
+
+        this.minHeight$ = this.initialDimensions$.pipe(
+            map(initialDimensions => initialDimensions.height * 0.01));
+
+        this.maxHeight$ = this.initialDimensions$.pipe(
+            map(initialDimensions => initialDimensions.height * 2));
 
         combineLatest(this.previewWidth$, this.initialDimensions$).pipe(
             map(([previewWidth, initialDimensions]) => previewWidth / initialDimensions.width),
             takeUntil(this.destroy$)
-        ).subscribe(this.normalizedScaleValue$);
+        ).subscribe(this.normalizedScaleValueX$);
+
+        combineLatest(this.previewHeight$, this.initialDimensions$).pipe(
+            map(([previewHeight, initialDimensions]) => previewHeight / initialDimensions.height),
+            takeUntil(this.destroy$)
+        ).subscribe(this.normalizedScaleValueY$);
     }
 
     ngOnDestroy(): void {
@@ -41,25 +61,41 @@ export class ResizeService {
         this.destroy$.complete();
     }
 
-    enable(imageWidth: number, imageHeight: number, initialScale = 1): void {
+    enable(imageWidth: number, imageHeight: number, initialScaleX = 1, initialScaleY = 1): void {
         this.initialDimensions$.next({
             width: imageWidth,
             height: imageHeight
         });
         this.previewWidth$.next(imageWidth);
-        this.update(imageWidth * initialScale);
+        this.previewHeight$.next(imageHeight);
+        this.updateWidth(imageWidth * initialScaleX);
+        this.updateHeight(imageHeight * initialScaleY);
         this.initialWidth = imageWidth;
+        this.initialHeight = imageHeight;
     }
 
     reset(): void {
-        this.update(this.initialWidth);
+        this.updateWidth(this.initialWidth);
+        this.updateHeight(this.initialHeight);
     }
 
-    update(width: number): void {
+    updateWidth(width: number): void {
         this.previewWidth$.next(width);
     }
 
-    getNormalizedScaleValue(): number {
-        return this.normalizedScaleValue$.value;
+    updateHeight(height: number): void {
+        this.previewHeight$.next(height);
+    }
+
+    updateScaleY(scale: number): void {
+        this.updateHeight(this.initialHeight * scale);
+    }
+
+    getNormalizedScaleValueX(): number {
+        return this.normalizedScaleValueX$.value;
+    }
+
+    getNormalizedScaleValueY(): number {
+        return this.normalizedScaleValueY$.value;
     }
 }

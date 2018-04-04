@@ -9,8 +9,8 @@
 
     <gentics-image-preview [class.hidden]="mode === 'crop'"
                            [class.loading]="imageIsLoading"
-                           [scaleX]="resizeScale"
-                           [scaleY]="resizeScale"
+                           [scaleX]="resizeScaleX"
+                           [scaleY]="resizeScaleY"
                            [cropperData]="cropperData"
                            [src]="src"
                            [maxHeight]="imageAreaHeight"
@@ -72,19 +72,40 @@
 
         <gentics-control-panel *ngIf="mode === 'resize'"
                                [applyLabel]="'resize' | translate"
-                               [displayResetButton]="resizeScale !== 1"
+                               [displayResetButton]="resizeScaleX !== 1 || resizeScaleY !== 1"
                                (reset)="resetScale()"
                                (apply)="applyResize()"
                                (cancel)="cancelResize()">
-            <div class="resize-controls">
-                <div class="resize-factor">{{ resizeScale | number:'1.3-3' }}x</div>
+            <div class="resize-controls" [class.ratio-locked]="scaleRatioLocked">
+                <div class="resize-factor">
+                    <span class="scale-x">{{ resizeScaleX | number:'1.3-3' }}x</span>
+                    <span class="scale-y">{{ resizeScaleY | number:'1.3-3' }}x</span>
+                    <gtx-button icon
+                                type="secondary"
+                                (click)="toggleScaleRatioLock()"
+                                [class.visible]="scaleRatioLocked"
+                                size="small">
+                        <icon *ngIf="scaleRatioLocked" [title]="'ratio_locked' | translate">lock</icon>
+                        <icon *ngIf="!scaleRatioLocked" [title]="'ratio_unlocked' | translate">lock_open</icon>
+                    </gtx-button>
+                </div>
                 <div class="range-container">
                     <icon>photo_size_select_small</icon>
-                    <gtx-range [min]="resizeMin$ | async"
-                               [max]="resizeMax$ | async"
-                               [thumbLabel]="false"
-                               [(ngModel)]="resizeRangeValue"
-                               (change)="previewResize($event)"></gtx-range>
+                    <div class="range-controls">
+                        <gtx-range [min]="resizeService.minWidth$ | async"
+                                   [max]="resizeService.maxWidth$ | async"
+                                   class="x"
+                                   [thumbLabel]="false"
+                                   [(ngModel)]="resizeRangeValueX"
+                                   (change)="previewResizeWidth($event)"></gtx-range>
+                        <gtx-range [min]="resizeService.minHeight$ | async"
+                                   [max]="resizeService.maxHeight$ | async"
+                                   [thumbLabel]="false"
+                                   class="y"
+                                   [disabled]="scaleRatioLocked"
+                                   [(ngModel)]="resizeRangeValueY"
+                                   (change)="previewResizeHeight($event)"></gtx-range>
+                    </div>
                     <icon>photo_size_select_actual</icon>
                 </div>
             </div>
