@@ -1,26 +1,28 @@
-<div class="y-line"
-     [class.hidden]="!enabled"
-     [style.width.px]="width"
-     [style.top.px]="yLineTop"
-></div>
-<div class="x-line"
-     [class.hidden]="!enabled"
-     [style.height.px]="height"
-     [style.left.px]="xLineLeft"
-></div>
-<div class="focal-point-cross-x"
-     [class.emphasize]="enabled"
-     [style.left.px]="focalPointLeft"
-     [style.top.px]="focalPointTop - 10">
-</div>
-<div class="focal-point-cross-y"
-     [class.emphasize]="enabled"
-     [style.top.px]="focalPointTop"
-     [style.left.px]="focalPointLeft - 10">
-</div>
-<div class="focal-point-overlay"
-     [class.hidden]="!enabled"
-     (mousemove)="overlayMouseMove($event)"
-     (mouseleave)="overlayMouseLeave()"
-     (click)="overlayClick($event)">
+<div class="target-mask" [style.width.px]="width" [style.height.px]="height">
+    <div class="y-line"
+         [class.hidden]="!enabled"
+         [style.width.px]="width"
+         [style.top.px]="yLineTop"
+    ></div>
+    <div class="x-line"
+         [class.hidden]="!enabled"
+         [style.height.px]="height"
+         [style.left.px]="xLineLeft"
+    ></div>
+    <div class="focal-point-cross-x"
+         [class.emphasize]="enabled"
+         [style.left.px]="focalPointLeft"
+         [style.top.px]="focalPointTop - 10">
+    </div>
+    <div class="focal-point-cross-y"
+         [class.emphasize]="enabled"
+         [style.top.px]="focalPointTop"
+         [style.left.px]="focalPointLeft - 10">
+    </div>
+    <div class="focal-point-overlay"
+         [class.hidden]="!enabled"
+         (mousemove)="overlayMouseMove($event)"
+         (mouseleave)="overlayMouseLeave()"
+         (click)="overlayClick($event)">
+    </div>
 </div>

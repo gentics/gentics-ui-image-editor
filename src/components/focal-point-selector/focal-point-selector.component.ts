@@ -28,13 +28,9 @@ export class FocalPointSelectorComponent implements OnInit, OnChanges, OnDestroy
     @Input() enabled = false;
     @Output() focalPointSelect = new EventEmitter<{ x: number; y: number; }>();
 
-    @HostBinding('style.width.px')
     width: number;
-    @HostBinding('style.height.px')
     height: number;
-    @HostBinding('style.left.px')
     targetLeft: number;
-    @HostBinding('style.top.px')
     targetTop: number;
     yLineTop: number;
     xLineLeft: number;
