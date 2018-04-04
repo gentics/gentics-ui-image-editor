@@ -22,8 +22,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-    "flatModuleOutFile": "gentics-image-editor.js",
-    "flatModuleId": "gentics-image-editor"
+    "flatModuleOutFile": "gentics-ui-image-editor.js",
+    "flatModuleId": "gentics-ui-image-editor"
   },
   "files": [
     "./index.ts"

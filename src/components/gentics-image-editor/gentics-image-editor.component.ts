@@ -20,7 +20,7 @@ import {coerceToBoolean, getDefaultCropperData} from '../../utils';
 import {LanguageService, UILanguage} from '../../providers/language.service';
 
 @Component({
-    selector: 'gentics-image-editor',
+    selector: 'gentics-ui-image-editor',
     templateUrl: './gentics-image-editor.component.html',
     styleUrls: ['./gentics-image-editor.component.scss'],
     encapsulation: ViewEncapsulation.None,

@@ -1,5 +1,5 @@
 {
-  "name": "gentics-image-editor",
+  "name": "gentics-ui-image-editor",
   "version": "0.1.0",
   "repository": {
     "type": "git",
@@ -16,10 +16,10 @@
   "bugs": {
     "url": "https://github.com/username/repo/issues"
   },
-  "main": "gentics-image-editor.umd.js",
-  "module": "gentics-image-editor.js",
-  "jsnext:main": "gentics-image-editor.js",
-  "typings": "gentics-image-editor.d.ts",
+  "main": "gentics-ui-image-editor.umd.js",
+  "module": "gentics-ui-image-editor.js",
+  "jsnext:main": "gentics-ui-image-editor.js",
+  "typings": "gentics-ui-image-editor.d.ts",
   "peerDependencies": {
     "@angular/core": "^4.0.0",
     "gentics-ui-core": "^6.0.3",
