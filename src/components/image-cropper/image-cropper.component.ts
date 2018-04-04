@@ -1,11 +1,14 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
-    Input, OnChanges,
+    Input,
+    OnChanges,
+    OnDestroy,
     Output,
     SimpleChanges,
     ViewChild
@@ -23,7 +26,7 @@ import {AspectRatio} from '../../models';
     styleUrls: ['image-cropper.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImageCropperComponent implements OnChanges {
+export class ImageCropperComponent implements OnChanges, OnDestroy {
 
     @Input() src: string;
     @Input() enabled = false;
@@ -58,6 +61,10 @@ export class ImageCropperComponent implements OnChanges {
         if ('aspectRatio' in changes) {
             this.cropperService.setCropAspectRatio(this.aspectRatio);
         }
+    }
+
+    ngOnDestroy(): void {
+        this.cropperService.destroy();
     }
 
     @HostListener('window:resize')

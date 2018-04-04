@@ -1,4 +1,4 @@
-import {Inject, Injectable, Type} from '@angular/core';
+import {Inject, Injectable, OnDestroy, Type} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {map} from 'rxjs/operators';
@@ -17,7 +17,7 @@ export type CropperData = {
  * and exposes crop-related methods used by the image editor.
  */
 @Injectable()
-export class CropperService {
+export class CropperService implements OnDestroy {
 
     cropBoxMatchesImage$: Observable<boolean>;
 
@@ -36,6 +36,10 @@ export class CropperService {
                     Math.round(cropperData.height) === Math.round(imageData.naturalHeight);
             })
         );
+    }
+
+    ngOnDestroy(): void {
+       this.destroy();
     }
 
     /**
@@ -80,9 +84,8 @@ export class CropperService {
      * Enable the cropper. If this is the first call, the Cropper object will be instantiated.
      */
     enable(imageElement: HTMLImageElement, aspectRatio: AspectRatio): Promise<void> {
-        if (this.lastImageSrc !== imageElement.src && this.cropper) {
-            this.cropper.destroy();
-            this.cropper = undefined;
+        if (this.lastImageSrc !== imageElement.src) {
+            this.destroy();
         }
 
         if (!this.cropper) {
@@ -118,6 +121,16 @@ export class CropperService {
     disable(): void {
         if (this.cropper) {
             this.cropper.disable();
+        }
+    }
+
+    /**
+     * Destroy the Cropperjs instance
+     */
+    destroy(): void {
+        if (this.cropper) {
+            this.cropper.destroy();
+            this.cropper = null;
         }
     }
 

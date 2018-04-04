@@ -18,13 +18,19 @@ import {CropperData, CropperService} from '../../providers/cropper.service';
 import {ResizeService} from '../../providers/resize.service';
 import {coerceToBoolean, getDefaultCropperData} from '../../utils';
 import {LanguageService, UILanguage} from '../../providers/language.service';
+import {FocalPointService} from '../../providers/focal-point.service';
 
 @Component({
     selector: 'gentics-ui-image-editor',
     templateUrl: './gentics-image-editor.component.html',
     styleUrls: ['./gentics-image-editor.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        CropperService,
+        FocalPointService,
+        ResizeService
+    ]
 })
 export class GenticsImageEditorComponent implements OnInit, OnChanges {
 

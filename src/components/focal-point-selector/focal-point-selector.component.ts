@@ -3,10 +3,11 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    HostBinding,
     HostListener,
     Input,
-    OnChanges, OnDestroy, OnInit,
+    OnChanges,
+    OnDestroy,
+    OnInit,
     Output,
     SimpleChanges
 } from '@angular/core';
