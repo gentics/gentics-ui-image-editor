@@ -5,14 +5,14 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    Input,
+    Input, OnChanges,
     Output,
     SimpleChanges,
     ViewChild
 } from '@angular/core';
 
-import {CropperService} from "../../providers/cropper.service";
-import {AspectRatio} from "../../models";
+import {CropperService} from '../../providers/cropper.service';
+import {AspectRatio} from '../../models';
 
 /**
  * A component which wraps the Cropperjs instance.
@@ -23,7 +23,7 @@ import {AspectRatio} from "../../models";
     styleUrls: ['image-cropper.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImageCropperComponent {
+export class ImageCropperComponent implements OnChanges {
 
     @Input() src: string;
     @Input() enabled = false;

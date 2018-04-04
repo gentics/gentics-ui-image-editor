@@ -1,4 +1,4 @@
-import {InjectionToken} from "@angular/core";
+import {InjectionToken} from '@angular/core';
 
 export type Mode = 'preview' | 'crop' | 'resize' | 'focalPoint';
 export type AspectRatio = 'original' | 'square' | 'free';

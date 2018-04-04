@@ -1,10 +1,11 @@
-import {Directive, ElementRef, Input} from '@angular/core';
-import {FocalPointService} from "../../providers/focal-point.service";
-import {Observable} from "rxjs/Observable";
+import {Directive, ElementRef, Input, OnInit} from '@angular/core';
+import {FocalPointService} from '../../providers/focal-point.service';
+import {Observable} from 'rxjs/Observable';
 
 @Directive({selector: '[genticsFocalPointTarget]'})
-export class FocalPointTargetDirective {
+export class FocalPointTargetDirective implements OnInit {
 
+    // tslint:disable-next-line
     @Input('genticsFocalPointTarget') updateStream$: Observable<any>;
 
     constructor(private elementRef: ElementRef,

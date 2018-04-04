@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Subject} from "rxjs/Subject";
-import {combineLatest} from "rxjs/observable/combineLatest";
-import {map, takeUntil} from "rxjs/operators";
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Subject} from 'rxjs/Subject';
+import {combineLatest} from 'rxjs/observable/combineLatest';
+import {map, takeUntil} from 'rxjs/operators';
 
-import {Dimensions2D} from "../models";
+import {Dimensions2D} from '../models';
 
 @Injectable()
-export class ResizeService {
+export class ResizeService implements OnDestroy {
 
     minWidth$: Observable<number>;
     maxWidth$: Observable<number>;

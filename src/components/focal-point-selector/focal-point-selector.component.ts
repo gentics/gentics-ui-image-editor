@@ -6,13 +6,14 @@ import {
     HostBinding,
     HostListener,
     Input,
+    OnChanges, OnDestroy, OnInit,
     Output,
     SimpleChanges
 } from '@angular/core';
-import {Subject} from "rxjs/Subject";
-import {delay, takeUntil} from "rxjs/operators";
+import {Subject} from 'rxjs/Subject';
+import {delay, takeUntil} from 'rxjs/operators';
 
-import {FocalPointService} from "../../providers/focal-point.service";
+import {FocalPointService} from '../../providers/focal-point.service';
 
 @Component({
     selector: 'gentics-focal-point-selector',
@@ -20,7 +21,7 @@ import {FocalPointService} from "../../providers/focal-point.service";
     styleUrls: ['focal-point-selector.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FocalPointSelectorComponent {
+export class FocalPointSelectorComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() focalPointX = 0.5;
     @Input() focalPointY = 0.5;

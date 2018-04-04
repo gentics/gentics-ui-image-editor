@@ -3,20 +3,19 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    Input,
+    Input, OnChanges, OnInit,
     Output,
     SimpleChanges,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {Observable} from "rxjs/Observable";
 
-import {ImagePreviewComponent} from "../image-preview/image-preview.component";
-import {AspectRatio, ImageTransformParams, Mode} from "../../models";
-import {CropperData, CropperService} from "../../providers/cropper.service";
-import {ResizeService} from "../../providers/resize.service";
-import {getDefaultCropperData} from "../../utils";
-import {LanguageService, UILanguage} from "../../providers/language.service";
+import {ImagePreviewComponent} from '../image-preview/image-preview.component';
+import {AspectRatio, ImageTransformParams, Mode} from '../../models';
+import {CropperData, CropperService} from '../../providers/cropper.service';
+import {ResizeService} from '../../providers/resize.service';
+import {getDefaultCropperData} from '../../utils';
+import {LanguageService, UILanguage} from '../../providers/language.service';
 
 @Component({
     selector: 'gentics-image-editor',
@@ -25,11 +24,11 @@ import {LanguageService, UILanguage} from "../../providers/language.service";
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GenticsImageEditorComponent {
+export class GenticsImageEditorComponent implements OnInit, OnChanges {
 
     @Input() src: string;
-    @Input() focalPointX: number = 0.5;
-    @Input() focalPointY: number = 0.5;
+    @Input() focalPointX = 0.5;
+    @Input() focalPointY = 0.5;
     @Input() language: UILanguage = 'en';
     @Output() transform = new EventEmitter<ImageTransformParams>();
 
@@ -79,7 +78,7 @@ export class GenticsImageEditorComponent {
     }
 
     get parentHeight(): number {
-        return this.closestAncestorWithHeight ? this.closestAncestorWithHeight.offsetHeight: 0;
+        return this.closestAncestorWithHeight ? this.closestAncestorWithHeight.offsetHeight : 0;
     }
 
     get imageAreaHeight(): number {

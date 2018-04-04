@@ -1,4 +1,4 @@
-import {CropperData} from "./providers/cropper.service";
+import {CropperData} from './providers/cropper.service';
 
 /**
  * Returns a CropperData object with default values based on the natural dimensions of

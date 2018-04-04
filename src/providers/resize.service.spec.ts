@@ -1,6 +1,6 @@
-import {skip, take} from "rxjs/operators";
+import {skip, take} from 'rxjs/operators';
 
-import {ResizeService} from "./resize.service";
+import {ResizeService} from './resize.service';
 
 describe('ResizeService', () => {
 

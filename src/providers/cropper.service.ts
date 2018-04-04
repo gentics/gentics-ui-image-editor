@@ -1,9 +1,9 @@
 import {Inject, Injectable, Type} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {Subject} from "rxjs/Subject";
-import {map} from "rxjs/operators";
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {map} from 'rxjs/operators';
 
-import {AspectRatio, CropperConstructor} from "../models";
+import {AspectRatio, CropperConstructor} from '../models';
 
 export type CropperData = {
     imageData: Cropper.ImageData;

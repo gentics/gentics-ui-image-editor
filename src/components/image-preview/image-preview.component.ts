@@ -4,21 +4,21 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
-    Input,
+    Input, OnChanges, OnInit,
     Output,
     SimpleChanges,
     ViewChild
 } from '@angular/core';
-import {DomSanitizer, SafeStyle} from "@angular/platform-browser";
-import {Observable} from "rxjs/Observable";
-import {Subject} from "rxjs/Subject";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {map, share} from "rxjs/operators";
-import {combineLatest} from "rxjs/observable/combineLatest";
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {map, share} from 'rxjs/operators';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 
-import {CropperData} from "../../providers/cropper.service";
-import {getDefaultCropperData} from "../../utils";
-import {Dimensions2D} from "../../models";
+import {CropperData} from '../../providers/cropper.service';
+import {getDefaultCropperData} from '../../utils';
+import {Dimensions2D} from '../../models';
 
 /**
  * An image preview component which accepts crop and scale data and renders the resulting
@@ -30,7 +30,7 @@ import {Dimensions2D} from "../../models";
     styleUrls: ['image-preview.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImagePreviewComponent {
+export class ImagePreviewComponent implements OnInit, OnChanges {
     @Input() src: string;
     @Input() maxHeight: number;
     @Input() scaleX: number;
