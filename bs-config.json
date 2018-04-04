@@ -16,5 +16,6 @@
   "scrollProportionally": false,
   "injectChanges": false,
   "minify": false,
-  "codeSync": false
+  "codeSync": false,
+  "open": false
 }
