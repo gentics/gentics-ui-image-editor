@@ -1,6 +1,12 @@
 @import "../../../node_modules/cropperjs/dist/cropper.css";
 @import "../../../node_modules/gentics-ui-core/dist/styles/variables";
 
+@mixin hide-for-mobile() {
+  @media screen and (max-width: 601px){
+    display: none;
+  }
+}
+
 @mixin range-thumb-color($color) {
   input[type=range]::-ms-thumb {
     background-color: $color;
@@ -43,6 +49,10 @@ gentics-image-editor {
     }
     opacity: 1;
     transition: opacity 0.5s;
+  }
+
+  gentics-focal-point-selector.hidden {
+    display: none;
   }
 
   img.source-image {
@@ -107,6 +117,7 @@ gentics-image-editor {
   .control-panel {
     position: relative;
     background-color: $gtx-color-off-black;
+    height: 65px;
   }
 
   .controls {
@@ -116,10 +127,12 @@ gentics-image-editor {
   .aspect-ratio-controls {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 
     .aspect-ratio-label {
       color: $gtx-color-dark-gray;
       margin-right: 15px;
+      @include hide-for-mobile;
     }
 
     gtx-radio-button {
@@ -218,6 +231,7 @@ gentics-image-editor {
       margin: 0 20px;
       color: $gtx-color-light-gray;
       font-size: 32px;
+      @include hide-for-mobile;
     }
 
     .range-controls {

@@ -16,7 +16,8 @@
                            [maxHeight]="imageAreaHeight"
                            (imageLoad)="imageIsLoading = false"></gentics-image-preview>
 
-    <gentics-focal-point-selector [enabled]="mode === 'focalPoint'"
+    <gentics-focal-point-selector [class.hidden]="mode === 'crop'"
+                                  [enabled]="mode === 'focalPoint'"
                                   [focalPointX]="focalPointX"
                                   [focalPointY]="focalPointY"
                                   (focalPointSelect)="focalPointSelected($event)"></gentics-focal-point-selector>
