@@ -1,6 +1,7 @@
 <div class="image-area" [style.height.px]="imageAreaHeight">
 
-    <gentics-image-cropper [class.hidden]="mode !== 'crop'"
+    <gentics-image-cropper *ngIf="canCrop"
+                           [class.hidden]="mode !== 'crop'"
                            [class.loading]="imageIsLoading"
                            [src]="src"
                            [enabled]="mode === 'crop'"
@@ -16,7 +17,8 @@
                            [maxHeight]="imageAreaHeight"
                            (imageLoad)="imageIsLoading = false"></gentics-image-preview>
 
-    <gentics-focal-point-selector [class.hidden]="mode === 'crop'"
+    <gentics-focal-point-selector *ngIf="canSetFocalPoint"
+                                  [class.hidden]="mode === 'crop'"
                                   [enabled]="mode === 'focalPoint'"
                                   [focalPointX]="focalPointX"
                                   [focalPointY]="focalPointY"
@@ -28,7 +30,9 @@
     <gtx-progress-bar [active]="imageIsLoading"></gtx-progress-bar>
     <div class="controls">
         <div class="mode-selector">
-            <div class="mode-button" [class.hidden]="mode !== 'preview' && mode !== 'crop'">
+            <div *ngIf="canCrop"
+                 class="mode-button"
+                 [class.hidden]="mode !== 'preview' && mode !== 'crop'">
                 <gtx-button icon size="large"
                             type="secondary"
                             (click)="setMode('crop')"
@@ -37,7 +41,9 @@
                 </gtx-button>
                 <div class="button-label">{{ 'crop' | translate }}</div>
             </div>
-            <div class="mode-button" [class.hidden]="mode !== 'preview' && mode !== 'resize'">
+            <div *ngIf="canResize"
+                 class="mode-button"
+                 [class.hidden]="mode !== 'preview' && mode !== 'resize'">
                 <gtx-button icon size="large"
                             type="secondary"
                             (click)="setMode('resize')"
@@ -46,7 +52,9 @@
                 </gtx-button>
                 <div class="button-label">{{ 'resize' | translate }}</div>
             </div>
-            <div class="mode-button" [class.hidden]="mode !== 'preview' && mode !== 'focalPoint'">
+            <div *ngIf="canSetFocalPoint"
+                 class="mode-button"
+                 [class.hidden]="mode !== 'preview' && mode !== 'focalPoint'">
                 <gtx-button icon size="large"
                             type="secondary"
                             (click)="setMode('focalPoint')"

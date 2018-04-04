@@ -3,7 +3,9 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    Input, OnChanges, OnInit,
+    Input,
+    OnChanges,
+    OnInit,
     Output,
     SimpleChanges,
     ViewChild,
@@ -14,7 +16,7 @@ import {ImagePreviewComponent} from '../image-preview/image-preview.component';
 import {AspectRatio, ImageTransformParams, Mode} from '../../models';
 import {CropperData, CropperService} from '../../providers/cropper.service';
 import {ResizeService} from '../../providers/resize.service';
-import {getDefaultCropperData} from '../../utils';
+import {coerceToBoolean, getDefaultCropperData} from '../../utils';
 import {LanguageService, UILanguage} from '../../providers/language.service';
 
 @Component({
@@ -30,6 +32,16 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     @Input() focalPointX = 0.5;
     @Input() focalPointY = 0.5;
     @Input() language: UILanguage = 'en';
+    @Input()
+    set canCrop(value: boolean) { this._canCrop = coerceToBoolean(value); }
+    get canCrop(): boolean { return this._canCrop }
+    @Input()
+    set canResize(value: boolean) { this._canResize = coerceToBoolean(value); }
+    get canResize(): boolean { return this._canResize }
+    @Input()
+    set canSetFocalPoint(value: boolean) { this._canSetFocalPoint = coerceToBoolean(value); }
+    get canSetFocalPoint(): boolean { return this._canSetFocalPoint }
+
     @Output() transform = new EventEmitter<ImageTransformParams>();
 
     @ViewChild('controlPanel') controlPanel: ElementRef;
@@ -56,6 +68,9 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     private lastAppliedFocalPointY: number;
 
     private closestAncestorWithHeight: HTMLElement;
+    private _canCrop = true;
+    private _canResize = true;
+    private _canSetFocalPoint = true;
 
     constructor(public cropperService: CropperService,
                 public resizeService: ResizeService,

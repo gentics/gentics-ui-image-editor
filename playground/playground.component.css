@@ -11,10 +11,13 @@
   padding-top: 10px;
 }
 .input-options {
-  padding-top: 20px;
+  flex: 1;
+  padding: 20px 10px;
+}
+.input-options .inputs-row {
   display: flex;
   justify-content: space-evenly;
-  flex: 1;
+  flex-wrap: wrap;
 }
 .input-options gtx-checkbox {
   margin-top: 25px;
