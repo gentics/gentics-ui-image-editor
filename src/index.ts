@@ -44,10 +44,10 @@ import {TranslatePipe} from './pipes/translate.pipe';
         GenticsImageEditorComponent
     ]
 })
-export class GenticsImageEditorModule {
+export class GenticsUIImageEditorModule {
     static forRoot(): ModuleWithProviders {
         return {
-            ngModule: GenticsImageEditorModule
+            ngModule: GenticsUIImageEditorModule
         };
     }
 }

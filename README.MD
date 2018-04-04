@@ -27,7 +27,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 // Import your library
-import { SampleModule } from 'gentics-image-editor';
+import { GenticsUIImageEditorModule } from 'gentics-ui-image-editor';
 
 @NgModule({
   declarations: [
@@ -36,8 +36,8 @@ import { SampleModule } from 'gentics-image-editor';
   imports: [
     BrowserModule,
 
-    // Specify your library as an import
-    LibraryModule
+    // Specify the library as an import
+    GenticsUIImageEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
