@@ -77,6 +77,8 @@ export class CropperService implements OnDestroy {
                     onComplete();
                 }
             }, debounceDelay);
+        } else if (typeof onComplete === 'function') {
+            onComplete();
         }
     }
 
