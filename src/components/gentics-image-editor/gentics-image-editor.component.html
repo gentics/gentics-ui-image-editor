@@ -1,4 +1,4 @@
-<div class="image-area" [style.height.px]="imageAreaHeight">
+<div class="image-area" [style.height.px]="imageAreaHeight" [style.minHeight.px]="imageAreaHeight">
 
     <gentics-image-cropper *ngIf="canCrop"
                            [class.hidden]="mode !== 'crop'"

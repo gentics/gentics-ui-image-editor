@@ -69,8 +69,8 @@ export class FocalPointSelectorComponent implements OnInit, OnChanges, OnDestroy
     }
 
     overlayClick(e: MouseEvent): void {
-        const xInPixels = e.clientX - this.targetLeft + window.scrollX;
-        const yInPixels = e.clientY - this.targetTop + window.scrollY;
+        const xInPixels = e.clientX - this.targetLeft + window.pageXOffset;
+        const yInPixels = e.clientY - this.targetTop + window.pageYOffset;
         const xNormalized = xInPixels / this.width;
         const yNormalized = yInPixels / this.height;
         this.focalPointSelect.emit({ x: xNormalized, y: yNormalized });
@@ -105,8 +105,8 @@ export class FocalPointSelectorComponent implements OnInit, OnChanges, OnDestroy
             this.height = height;
             this.focalPointTop = height * this.focalPointY;
             this.focalPointLeft = width * this.focalPointX;
-            this.targetLeft = left + window.scrollX;
-            this.targetTop = top + window.scrollY;
+            this.targetLeft = left + window.pageXOffset;
+            this.targetTop = top + window.pageYOffset;
             this.xLineLeft = crosshairX || this.focalPointLeft;
             this.yLineTop = crosshairY || this.focalPointTop;
         }
