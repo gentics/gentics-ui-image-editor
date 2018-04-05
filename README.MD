@@ -54,7 +54,7 @@ export class AppModule { }
 * **`canCrop`** [`boolean`] Enables the crop functionality. Defaults to `true`.
 * **`canResize`** [`boolean`] Enables the resize functionality. Defaults to `true`.
 * **`canSetFocalPoint`** [`boolean`] Enables the focal point functionality. Defaults to `true`.
-* **`language`** [`'en' | 'de'`] Specifies the language for labels used in the editor. Defauls to `'en'`.
+* **`language`** [`'en' | 'de'`] Specifies the language for labels used in the editor. Defaults to `'en'`.
 
 ### Outputs
 
@@ -106,3 +106,30 @@ $ npm run build
 ```
 
 These will be placed in the `/dist` directory, which contains all elements required for the npm package.
+
+### Publish to npm
+
+1. Make sure the version has been increased per SemVer in the **`src/package.json`** file, **not** the root package.json.
+2. Update the changelog with any features or fixes in this release.
+3. `$ npm run build`
+4. `$ cd dist`
+5. `$ npm publish`
+
+### Maintaining demo on GitHub pages
+
+The demo is built as a static Angular app into "demo" and maintained on the branch "gh-pages".
+The easiest way to manage the branch is to check it out in the "demo" subfolder:
+
+```sh
+# check out repo twice, master in ./ and gh-pages in ./demo
+$ git clone -o github -b gh-pages git@github.com:gentics/gentics-ui-core ./docs
+
+# build the demo
+$ npm run demo:build
+
+# commit and push gh-pages
+$ cd demo
+$ git add .
+$ git commit -m "Update demo to vX.Y.Z"
+$ git push github
+```
