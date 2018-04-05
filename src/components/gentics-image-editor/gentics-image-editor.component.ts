@@ -124,6 +124,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
 
     applyCrop(): void {
         this.cropperData = this.cropperService.cropperData;
+        this.resetFocalPoint();
         this.setMode('preview');
         this.emitImageTransformParams();
     }
