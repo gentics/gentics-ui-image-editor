@@ -1,4 +1,10 @@
-<h1>Gentics UI Image Editor: Playground</h1>
+<div class="header">
+    <h1>Gentics UI Image Editor</h1>
+    <p>
+        An Angular module for cropping, resizing and setting the focal point of images.
+        <a href="https://github.com/gentics/gentics-ui-image-editor">Source & docs on GitHub</a>
+    </p>
+</div>
 <div class="editor-container">
     <gentics-ui-image-editor [src]="sourceUrl"
                              [canCrop]="canCrop"
@@ -10,6 +16,7 @@
 
 <div class="inputs-outputs">
     <div class="input-options">
+        <h3>Component Inputs:</h3>
         <div class="inputs-row">
             <div gtx-radio-group [(ngModel)]="language">
                 <gtx-radio-button value="en" label="English"></gtx-radio-button>
@@ -22,7 +29,7 @@
                 <gtx-radio-button value="landscape.jpg" label="landscape.jpg"></gtx-radio-button>
             </div>
 
-            <gtx-checkbox [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>
+            <gtx-checkbox *ngIf="!prodMode" [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>
         </div>
         <div class="inputs-row">
             <gtx-checkbox [(ngModel)]="canCrop" label="canCrop"></gtx-checkbox>

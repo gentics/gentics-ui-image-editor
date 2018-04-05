@@ -13,6 +13,7 @@ export class PlaygroundAppComponent {
     canCrop = true;
     canResize = true;
     canSetFocalPoint = true;
+    prodMode = process.env.NODE_ENV === 'production';
 
     get sourceUrl(): string {
         const base = this.slowConnection ? 'http://localhost:4000/' : './test-images/';

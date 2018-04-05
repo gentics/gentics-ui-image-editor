@@ -12,7 +12,7 @@ Install from npm:
 $ npm install gentics-ui-image-editor --save
 ```
 
-and import the `GenticsUIImageEditorModule` into your Angular app. Note that this module depends on [Gentics UI Core](https://github.com/gentics/gentics-ui-core) v6.0.3 or above.
+and import the `GenticsUIImageEditorModule` into your Angular app. Note that this module depends on [Gentics UI Core](https://github.com/gentics/gentics-ui-core) v6.1.0 or above.
 
 ```TypeScript
 import { BrowserModule } from '@angular/platform-browser';
@@ -61,7 +61,7 @@ export class AppModule { }
 * **`transform`** [`ImageTransformParams`] Emits whenever a transformation is applied to the image. The `ImageTransformParams` type is given below.
 
 ```TypeScript
-export type ImageTransformParams = {
+type ImageTransformParams = {
     width: number;
     height: number;
     scaleX: number;

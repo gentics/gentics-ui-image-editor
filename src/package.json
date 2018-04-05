@@ -22,7 +22,7 @@
   "typings": "gentics-ui-image-editor.d.ts",
   "peerDependencies": {
     "@angular/core": "^4.0.0",
-    "gentics-ui-core": "^6.0.3",
+    "gentics-ui-core": "^6.1.0",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
   },
