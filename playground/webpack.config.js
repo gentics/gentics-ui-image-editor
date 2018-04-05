@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const outputDir =  path.resolve(__dirname, '../demo');
 
@@ -28,19 +27,23 @@ module.exports = env => {
                 {
                     test: /\.scss$/,
                     use: [{
-                        loader: "style-loader" // creates style nodes from JS strings
+                        loader: "style-loader"
                     }, {
-                        loader: "css-loader" // translates CSS into CommonJS
+                        loader: "css-loader"
                     }, {
-                        loader: "sass-loader", // compiles Sass to CSS
+                        loader: "sass-loader",
                         options: {
                             includePaths: [path.join(__dirname, '../node_modules')]
                         }
                     }]
                 },
                 {
-                    test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                    test: /\.(png|svg)$/,
                     loader: 'url-loader'
+                },
+                {
+                    test: /\.(eot|woff|woff2|ttf)$/,
+                    loader: 'file-loader?name=fonts/[name].[ext]?[hash]'
                 }
             ]
         },
@@ -55,8 +58,7 @@ module.exports = env => {
             ]),
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': JSON.stringify(env && env.production ? 'production' : 'development')
-            }),
-            new BundleAnalyzerPlugin()
+            })
         ]
     };
 };

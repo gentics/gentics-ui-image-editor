@@ -20,11 +20,15 @@
     height: calc(100vh - 150px);
     flex: 1;
     padding: 10px;
+    max-width: 1200px;
+    margin: auto;
 }
 
 .inputs-outputs {
     display: flex;
     padding: 30px 10px;
+    max-width: 1200px;
+    margin: auto;
 }
 .input-options {
     border: 1px solid #cccccc;
