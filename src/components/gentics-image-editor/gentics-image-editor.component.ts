@@ -332,6 +332,9 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         if (defined(transform.scaleY)) {
             this.resizeScaleY = transform.scaleY;
         }
+        if (this.resizeScaleX !== this.resizeScaleY) {
+            this.scaleRatioLocked = false;
+        }
 
         let cropData: Partial<Cropper.Data> = {};
         if (defined(transform.cropRect.width)) {
