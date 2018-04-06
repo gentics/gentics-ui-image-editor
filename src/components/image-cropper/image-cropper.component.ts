@@ -44,18 +44,14 @@ export class ImageCropperComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if ('enabled' in changes) {
             if (this.enabled) {
-                this.cropperService.enable(this.sourceImage.nativeElement, this.aspectRatio)
-                    .then(() => this.imageLoad.emit());
+                this.enableCropper();
             } else {
                 this.cropperService.disable();
             }
         }
         if ('src' in changes) {
             if (this.enabled) {
-                setTimeout(() => {
-                    this.cropperService.enable(this.sourceImage.nativeElement, this.aspectRatio)
-                        .then(() => this.imageLoad.emit());
-                });
+                setTimeout(() => this.enableCropper());
             }
         }
         if ('aspectRatio' in changes) {
@@ -75,5 +71,10 @@ export class ImageCropperComponent implements OnChanges, OnDestroy {
             this.changeDetector.markForCheck();
         };
         this.cropperService.resizeHandler(300, onComplete);
+    }
+
+    private enableCropper(): void {
+        this.cropperService.enable(this.sourceImage.nativeElement, this.aspectRatio)
+            .then(() => this.imageLoad.emit());
     }
 }

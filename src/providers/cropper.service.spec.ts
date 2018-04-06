@@ -15,8 +15,13 @@ describe('CropperService', () => {
     let mockCropperConstructor: jasmine.Spy;
 
     beforeEach(() => {
-        mockCropperConstructor = jasmine.createSpy('Cropper constructor').and.callFake(() => {
+        mockCropperConstructor = jasmine.createSpy('Cropper constructor').and.callFake((imageElement, options) => {
             cropper = new MockCropper();
+            if (typeof options.ready === 'function') {
+                setTimeout(() => {
+                    options.ready();
+                });
+            }
             return cropper;
         });
         TestBed.configureTestingModule({
@@ -112,6 +117,33 @@ describe('CropperService', () => {
             y: 0,
             width: mockImageData.naturalWidth,
             height: mockImageData.naturalHeight
+        });
+    }));
+
+    it('setCropData() calls cropper.setData() if the cropper is already enabled', fakeAsync(() => {
+        cropperService.enable({ src: 'foo' } as any, 'original');
+        tick();
+
+        const data: any = { width: 100, height: 100 };
+        cropperService.setCropData(data);
+
+        expect(cropper.setData).toHaveBeenCalledWith({
+            width: 100,
+            height: 100
+        });
+    }));
+
+    it('setCropData() stores the data and sets it once the cropper is ready', fakeAsync(() => {
+        const data: any = { width: 100, height: 100 };
+        cropperService.setCropData(data);
+
+        cropperService.enable({ src: 'foo' } as any, 'original');
+        tick();
+
+        expect(cropper.setAspectRatio).toHaveBeenCalledWith(NaN);
+        expect(cropper.setData).toHaveBeenCalledWith({
+            width: 100,
+            height: 100
         });
     }));
 

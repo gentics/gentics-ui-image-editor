@@ -19,4 +19,13 @@ export class PlaygroundAppComponent {
         const base = this.slowConnection ? 'http://localhost:4000/' : './test-images/';
         return base + this.sourceImage;
     }
+
+    parseParams(params: string) {
+        try {
+            const parsed = JSON.parse(params);
+            this.transformParams = parsed;
+        } catch (e) {
+            // ignore
+        }
+    }
 }

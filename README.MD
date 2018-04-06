@@ -41,16 +41,17 @@ export class AppModule { }
 
 ```HTML
 <gentics-ui-image-editor [src]="sourceUrl"
+                         [(transform)]="transformParams"
                          [canCrop]="canCrop"
                          [canResize]="canResize"
                          [canSetFocalPoint]="canSetFocalPoint"
-                         [language]="language"
-                         (transform)="transformParams = $event"></gentics-ui-image-editor>
+                         [language]="language"></gentics-ui-image-editor>
 ```
 
 ### Inputs
 
 * **`src`** [`string`] **required** The url of the image to be edited.
+* **`transform`** [`ImageTransformParams`] Sets the image transformation (see below).
 * **`canCrop`** [`boolean`] Enables the crop functionality. Defaults to `true`.
 * **`canResize`** [`boolean`] Enables the resize functionality. Defaults to `true`.
 * **`canSetFocalPoint`** [`boolean`] Enables the focal point functionality. Defaults to `true`.
@@ -58,7 +59,7 @@ export class AppModule { }
 
 ### Outputs
 
-* **`transform`** [`ImageTransformParams`] Emits whenever a transformation is applied to the image. The `ImageTransformParams` type is given below.
+* **`transformChange`** [`ImageTransformParams`] Emits whenever a transformation is applied to the image. The `ImageTransformParams` type is given below.
 
 ```TypeScript
 type ImageTransformParams = {

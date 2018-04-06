@@ -35,8 +35,7 @@ import {FocalPointService} from '../../providers/focal-point.service';
 export class GenticsImageEditorComponent implements OnInit, OnChanges {
 
     @Input() src: string;
-    @Input() focalPointX = 0.5;
-    @Input() focalPointY = 0.5;
+    @Input() transform: ImageTransformParams;
     @Input() language: UILanguage = 'en';
     @Input()
     set canCrop(value: boolean) { this._canCrop = coerceToBoolean(value); }
@@ -48,7 +47,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     set canSetFocalPoint(value: boolean) { this._canSetFocalPoint = coerceToBoolean(value); }
     get canSetFocalPoint(): boolean { return this._canSetFocalPoint }
 
-    @Output() transform = new EventEmitter<ImageTransformParams>();
+    @Output() transformChange = new EventEmitter<ImageTransformParams>();
 
     @ViewChild('controlPanel') controlPanel: ElementRef;
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
@@ -70,6 +69,8 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     private lastAppliedScaleY = 1;
 
     // focal point-related state
+    focalPointX = 0.5;
+    focalPointY = 0.5;
     private lastAppliedFocalPointX: number;
     private lastAppliedFocalPointY: number;
 
@@ -95,6 +96,12 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         }
         if ('language' in changes) {
             this.languageService.currentLanguage = this.language;
+        }
+        if ('transform' in changes) {
+            const transform: ImageTransformParams = changes.transform.currentValue;
+            if (transform) {
+                this.updateTransform(transform);
+            }
         }
     }
 
@@ -221,7 +228,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         const { outputData } = cropperData;
 
 
-        this.transform.emit({
+        this.transformChange.emit({
             width: toPrecision(outputData.width * this.resizeScaleX),
             height: toPrecision(outputData.height * this.resizeScaleY),
             scaleX: toPrecision(this.resizeScaleX),
@@ -306,5 +313,40 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
             currentEl = currentEl.parentElement;
         }
         return currentEl;
+    }
+
+    /**
+     * Safely updates local state based on changes to the transform input
+     */
+    private updateTransform(transform: ImageTransformParams): void {
+        const defined = val => val !== undefined && val !== null;
+
+        if (defined(transform.focalPointX)) {
+            this.focalPointX = transform.focalPointX;
+        }
+        if (defined(transform.focalPointY)) {
+            this.focalPointY = transform.focalPointY;
+        }
+        if (defined(transform.scaleX)) {
+            this.resizeScaleX = transform.scaleX;
+        }
+        if (defined(transform.scaleY)) {
+            this.resizeScaleY = transform.scaleY;
+        }
+
+        let cropData: Partial<Cropper.Data> = {};
+        if (defined(transform.cropRect.width)) {
+            cropData.width = transform.cropRect.width;
+        }
+        if (defined(transform.cropRect.height)) {
+            cropData.height = transform.cropRect.height;
+        }
+        if (defined(transform.cropRect.startX)) {
+            cropData.x = transform.cropRect.startX;
+        }
+        if (defined(transform.cropRect.startY)) {
+            cropData.y = transform.cropRect.startY;
+        }
+        this.cropperService.setCropData(cropData);
     }
 }

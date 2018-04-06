@@ -24,6 +24,7 @@ export class CropperService implements OnDestroy {
     private resizing = false;
     private cropper: Cropper;
     private lastImageSrc: string;
+    private initialData: Cropper.Data;
     private lastData: Cropper.Data;
     private resizeTimer: number;
     private crop$ = new Subject<Cropper.Data>();
@@ -99,7 +100,12 @@ export class CropperService implements OnDestroy {
                     zoomable: false,
                     responsive: true,
                     ready: () => {
-                        this.setCropAspectRatio(aspectRatio);
+                        if (this.initialData) {
+                            this.setCropAspectRatio('free');
+                            this.cropper.setData(this.initialData);
+                        } else {
+                            this.setCropAspectRatio(aspectRatio);
+                        }
                         resolve();
                     },
                     crop: data => {
@@ -155,6 +161,18 @@ export class CropperService implements OnDestroy {
                     break;
             }
             this.cropper.setAspectRatio(aspectRatioNumber);
+        }
+    }
+
+    /**
+     * Set the cropper data
+     */
+    setCropData(data: Partial<Cropper.Data>): void {
+        this.lastData = { ...this.lastData, ...data };
+        if (this.cropper) {
+            this.cropper.setData(data);
+        } else {
+            this.initialData = { ...this.lastData, ...data };
         }
     }
 

@@ -55,8 +55,7 @@
     font-size: 16px;
     margin: 0;
 }
-.output pre {
-    margin: 10px 0 0;
-    font-size: 14px;
-    color: #005bab;
+.output gtx-textarea {
+    font-family: "Consolas", monospace;
+    min-width: 25vw;
 }
