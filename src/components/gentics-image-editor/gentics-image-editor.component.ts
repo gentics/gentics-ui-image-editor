@@ -49,7 +49,6 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
 
     @Output() transformChange = new EventEmitter<ImageTransformParams>();
 
-    @ViewChild('controlPanel') controlPanel: ElementRef;
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
 
     mode: Mode = 'preview';
@@ -110,7 +109,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     }
 
     get imageAreaHeight(): number {
-        const controlPanelHeight = this.controlPanel ? this.controlPanel.nativeElement.offsetHeight : 0;
+        const controlPanelHeight = 65;
         const realHeight = this.parentHeight - controlPanelHeight;
         const minHeight = 300;
         return Math.max(realHeight, minHeight);
