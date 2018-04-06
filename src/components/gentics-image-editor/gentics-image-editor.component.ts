@@ -14,7 +14,7 @@ import {
 
 import {ImagePreviewComponent} from '../image-preview/image-preview.component';
 import {AspectRatio, ImageTransformParams, Mode} from '../../models';
-import {CropperData, CropperService} from '../../providers/cropper.service';
+import {CropperService} from '../../providers/cropper.service';
 import {ResizeService} from '../../providers/resize.service';
 import {coerceToBoolean, getDefaultCropperData} from '../../utils';
 import {LanguageService, UILanguage} from '../../providers/language.service';
@@ -56,7 +56,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
 
     // crop-related state
     cropAspectRatio: AspectRatio = 'original';
-    cropperData: CropperData;
+    cropperData: Cropper.Data;
 
     // resize-related state
     resizeScaleX = 1;
@@ -113,6 +113,11 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         const realHeight = this.parentHeight - controlPanelHeight;
         const minHeight = 300;
         return Math.max(realHeight, minHeight);
+    }
+
+    onImageLoad(): void {
+        this.imageIsLoading = false;
+        this.cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement, this.transform);
     }
 
     setMode(modeClicked: Mode): void {
@@ -218,25 +223,17 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
      */
     private emitImageTransformParams(): void {
         const toPrecision = x => parseFloat(x.toFixed(5));
-        let cropperData: CropperData;
-        if (this.cropperData) {
-            cropperData = this.cropperData;
-        } else {
-            cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement);
-        }
-        const { outputData } = cropperData;
-
 
         this.transformChange.emit({
-            width: toPrecision(outputData.width * this.resizeScaleX),
-            height: toPrecision(outputData.height * this.resizeScaleY),
+            width: toPrecision(this.cropperData.width * this.resizeScaleX),
+            height: toPrecision(this.cropperData.height * this.resizeScaleY),
             scaleX: toPrecision(this.resizeScaleX),
             scaleY: toPrecision(this.resizeScaleY),
             cropRect: {
-                startX: toPrecision(outputData.x),
-                startY: toPrecision(outputData.y),
-                width: toPrecision(outputData.width),
-                height: toPrecision(outputData.height)
+                startX: toPrecision(this.cropperData.x),
+                startY: toPrecision(this.cropperData.y),
+                width: toPrecision(this.cropperData.width),
+                height: toPrecision(this.cropperData.height)
             },
             focalPointX: toPrecision(this.focalPointX),
             focalPointY: toPrecision(this.focalPointY)
@@ -290,7 +287,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         if (!cropperData) {
             cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement);
         }
-        const { width, height } = cropperData.outputData;
+        const { width, height } = cropperData;
         this.resizeService.enable(width, height, this.resizeScaleX, this.resizeScaleY);
         this.resizeRangeValueX = width * this.resizeScaleX;
         this.resizeRangeValueY = height * this.resizeScaleY;
@@ -337,17 +334,21 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         }
 
         let cropData: Partial<Cropper.Data> = {};
-        if (defined(transform.cropRect.width)) {
-            cropData.width = transform.cropRect.width;
-        }
-        if (defined(transform.cropRect.height)) {
-            cropData.height = transform.cropRect.height;
-        }
-        if (defined(transform.cropRect.startX)) {
-            cropData.x = transform.cropRect.startX;
-        }
-        if (defined(transform.cropRect.startY)) {
-            cropData.y = transform.cropRect.startY;
+        const cropRect = transform.cropRect;
+        if (cropRect) {
+            if (defined(cropRect.width)) {
+                cropData.width = cropRect.width;
+            }
+            if (defined(cropRect.height)) {
+                cropData.height = cropRect.height;
+            }
+            if (defined(cropRect.startX)) {
+                cropData.x = cropRect.startX;
+            }
+            if (defined(cropRect.startY)) {
+                cropData.y = cropRect.startY;
+            }
+            this.cropperData = getDefaultCropperData(this.imagePreview.previewImage.nativeElement, transform);
         }
         this.cropperService.setCropData(cropData);
     }

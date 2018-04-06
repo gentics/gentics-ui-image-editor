@@ -24,9 +24,9 @@
             </div>
 
             <div gtx-radio-group [(ngModel)]="sourceImage">
-                <gtx-radio-button value="test-image.png" label="test-image.png"></gtx-radio-button>
-                <gtx-radio-button value="portrait.jpg" label="portrait.jpg"></gtx-radio-button>
-                <gtx-radio-button value="landscape.jpg" label="landscape.jpg"></gtx-radio-button>
+                <gtx-radio-button value="test-image.png" label="test-image.png" (change)="transformParams = {}"></gtx-radio-button>
+                <gtx-radio-button value="portrait.jpg" label="portrait.jpg" (change)="transformParams = {}"></gtx-radio-button>
+                <gtx-radio-button value="landscape.jpg" label="landscape.jpg" (change)="transformParams = {}"></gtx-radio-button>
             </div>
 
             <gtx-checkbox *ngIf="!prodMode" [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>

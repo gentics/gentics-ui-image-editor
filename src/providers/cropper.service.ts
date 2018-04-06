@@ -5,13 +5,6 @@ import {map} from 'rxjs/operators';
 
 import {AspectRatio, CropperConstructor} from '../models';
 
-export type CropperData = {
-    imageData: Cropper.ImageData;
-    cropBoxData: Cropper.CropBoxData;
-    canvasData: Cropper.CanvasData;
-    outputData: Cropper.Data;
-};
-
 /**
  * The CropperService encapsulates the instance of Cropper (https://github.com/fengyuanchen/cropperjs)
  * and exposes crop-related methods used by the image editor.
@@ -46,18 +39,9 @@ export class CropperService implements OnDestroy {
     /**
      * Returns a CropperData object
      */
-    get cropperData(): CropperData | undefined {
+    get cropperData(): Cropper.Data | undefined {
         if (this.cropper) {
-            const imageData = this.cropper.getImageData();
-            const cropBoxData = this.cropper.getCropBoxData();
-            const canvasData = this.cropper.getCanvasData();
-            const outputData = this.cropper.getData();
-            return {
-                imageData,
-                cropBoxData,
-                canvasData,
-                outputData
-            };
+            return this.cropper.getData();
         }
     }
 

@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {ImageTransformParams} from '../src/models';
 
 @Component({
     selector: 'app',
@@ -9,7 +10,7 @@ export class PlaygroundAppComponent {
     language = 'en';
     sourceImage = 'portrait.jpg';
     slowConnection = false;
-    transformParams: any;
+    transformParams: Partial<ImageTransformParams> = {};
     canCrop = true;
     canResize = true;
     canSetFocalPoint = true;

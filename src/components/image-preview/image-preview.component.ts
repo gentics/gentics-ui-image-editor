@@ -4,7 +4,9 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
-    Input, OnChanges, OnInit,
+    Input,
+    OnChanges,
+    OnInit,
     Output,
     SimpleChanges,
     ViewChild
@@ -16,8 +18,6 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {map, share} from 'rxjs/operators';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 
-import {CropperData} from '../../providers/cropper.service';
-import {getDefaultCropperData} from '../../utils';
 import {Dimensions2D} from '../../models';
 
 /**
@@ -35,7 +35,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
     @Input() maxHeight: number;
     @Input() scaleX: number;
     @Input() scaleY: number;
-    @Input() cropperData: CropperData;
+    @Input() cropperData: Cropper.Data;
     @Output() imageLoad = new EventEmitter<void>();
 
     @ViewChild('previewImage') previewImage: ElementRef;
@@ -51,10 +51,11 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
     previewWidthIsLessThanActual$: Observable<boolean>;
     previewHeightIsLessThanActual$: Observable<boolean>;
 
-    private cropperData$ = new Subject<CropperData>();
+    private cropperData$ = new Subject<Cropper.Data>();
     private scaleX$ = new BehaviorSubject<number>(1);
     private scaleY$ = new BehaviorSubject<number>(1);
     private resize$ = new BehaviorSubject<void>(null);
+    private imageNaturalDimensions$ = new BehaviorSubject<Dimensions2D>({ width: 0, height: 0 });
 
     constructor(private sanitizer: DomSanitizer,
                 private elementRef: ElementRef) {}
@@ -63,59 +64,36 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
         const scale$ = combineLatest(this.scaleX$, this.scaleY$).pipe(map(([x, y]) => ({ x, y })));
 
         const actualDimensions$ = combineLatest(this.cropperData$, scale$).pipe(
-            map(([cropperData, scale]) => {
-                return {
-                    width: cropperData.outputData.width * scale.x,
-                    height: cropperData.outputData.height * scale.y
-                };
-            })
-        );
-
-        const cropBoxDimensions$ = this.cropperData$.pipe(
-            map(({ cropBoxData }) => ({ width: cropBoxData.width, height: cropBoxData.height })));
-
-        const scaledDimensions$ = combineLatest(cropBoxDimensions$, scale$).pipe(
-            map(([dimensions, scale]) => ({
-                width: dimensions.width * scale.x,
-                height: dimensions.height * scale.y
-            }))
-        );
-
-        const maxDimensions$ = combineLatest(
-            actualDimensions$,
-            this.resize$
-        ).pipe(
-            map(([actual]) => this.calculateMaxDimensions(actual))
-        );
-
-        const viewableDimensions$ = combineLatest(
-            actualDimensions$,
-            scaledDimensions$,
-            maxDimensions$
-        ).pipe(
-            map(([actual, cropBox, max]) => this.calculateViewableDimensions(actual, cropBox, max)),
+            map(([cropperData, scale]) => ({
+                    width: cropperData.width * scale.x,
+                    height: cropperData.height * scale.y
+                })
+            ),
             share()
         );
 
-        const ratioAndCropperData$ = combineLatest(
-            viewableDimensions$.pipe(map(dimensions => dimensions.ratio)),
-            this.cropperData$
+        const maxDimensions$ = combineLatest(actualDimensions$, this.resize$).pipe(
+            map(([actual]) => this.calculateMaxDimensions(actual))
         );
 
-        this.previewWidth$ = viewableDimensions$.pipe(map(data => data.width * data.ratio));
-        this.previewHeight$ = viewableDimensions$.pipe(map(data => data.height * data.ratio));
-        this.actualWidth$ = actualDimensions$.pipe(map(dimensions => dimensions.width));
-        this.actualHeight$ = actualDimensions$.pipe(map(dimensions => dimensions.height));
-
-        this.previewImageHeight$ = combineLatest(ratioAndCropperData$, scale$).pipe(
-            map(([[ratio, { imageData }], scale]) => imageData.height * ratio * scale.y));
-
-        this.previewImageWidth$ = combineLatest(ratioAndCropperData$, scale$).pipe(
-            map(([[ratio, { imageData }], scale]) => imageData.width * ratio * scale.x));
-
-        this.previewImageTransform$ =  combineLatest(ratioAndCropperData$, scale$).pipe(
-            map(([[ratio, cropperData], scale]) => this.calculateImageTransform(ratio, cropperData, scale))
+        const previewRatio$ = combineLatest(actualDimensions$, maxDimensions$).pipe(
+            map(([actual, max]) => this.calculatePreviewRatio(actual, max)),
+            share()
         );
+
+        this.previewWidth$ = combineLatest(actualDimensions$, previewRatio$).pipe(map(([actual, ratio]) => actual.width * ratio));
+        this.previewHeight$ = combineLatest(actualDimensions$, previewRatio$).pipe(map(([actual, ratio]) => actual.height * ratio));
+        this.actualWidth$ = actualDimensions$.pipe(map(actual => actual.width));
+        this.actualHeight$ = actualDimensions$.pipe(map(actual => actual.height));
+
+        this.previewImageHeight$ = combineLatest(previewRatio$, this.imageNaturalDimensions$, scale$).pipe(
+            map(([ratio, natural, scale]) => natural.height * ratio * scale.y));
+
+        this.previewImageWidth$ = combineLatest(previewRatio$, this.imageNaturalDimensions$, scale$).pipe(
+            map(([ratio, natural, scale]) => natural.width * ratio * scale.x));
+
+        this.previewImageTransform$ = combineLatest(previewRatio$, this.cropperData$, scale$).pipe(
+            map(([ratio, cropperData, scale]) => this.calculateImageTransform(ratio, cropperData, scale)));
 
         this.previewWidthIsLessThanActual$ = combineLatest(
             this.previewWidth$,
@@ -147,7 +125,7 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
     imageLoaded(): void {
         this.imageLoad.emit();
         const img = this.previewImage.nativeElement as HTMLImageElement;
-        this.cropperData$.next(getDefaultCropperData(img));
+        this.imageNaturalDimensions$.next({ width: img.naturalWidth, height: img.naturalHeight });
     }
 
     @HostListener('window:resize')
@@ -155,36 +133,20 @@ export class ImagePreviewComponent implements OnInit, OnChanges {
         this.resize$.next(null);
     }
 
-    private calculateViewableDimensions(actual: Dimensions2D, cropBox: Dimensions2D, max: Dimensions2D): Dimensions2D & { ratio: number } {
+    private calculatePreviewRatio(actual: Dimensions2D, max: Dimensions2D): number {
+        const maxWidth = Math.min(max.width, actual.width);
         let ratio = 1;
-        let maxWidth = Math.min(max.width, actual.width);
-        let workingWidth = cropBox.width;
-        let workingHeight = cropBox.height;
-
-        if (maxWidth < workingWidth) {
-            ratio = maxWidth / workingWidth;
+        if (maxWidth < actual.width) {
+            ratio = maxWidth / actual.width;
         }
-        if (workingWidth < actual.width) {
-            if (maxWidth < actual.width) {
-                ratio = maxWidth / workingWidth;
-            } else {
-                ratio = actual.width / workingWidth;
-            }
-        }
-        return {
-            width: workingWidth,
-            height: workingHeight,
-            ratio
-        };
+        return ratio;
     }
 
-    private calculateImageTransform(ratio: number, cropperData: CropperData, scale: { x: number; y: number; }): SafeStyle {
-        const { cropBoxData, canvasData, imageData } = cropperData;
-        const left = (cropBoxData.left - canvasData.left - imageData.left) * scale.x;
-        const top = (cropBoxData.top - canvasData.top - imageData.top) * scale.y;
+    private calculateImageTransform(ratio: number, cropperData: Cropper.Data, scale: { x: number; y: number; }): SafeStyle {
+        const left = Math.round(cropperData.x * scale.x * ratio);
+        const top = Math.round(cropperData.y * scale.y * ratio);
 
-        return this.sanitizer
-            .bypassSecurityTrustStyle(`translateX(-${Math.round(left * ratio)}px) translateY(-${Math.round(top * ratio)}px)`);
+        return this.sanitizer.bypassSecurityTrustStyle(`translateX(-${left}px) translateY(-${top}px)`);
     }
 
     private calculateMaxDimensions(imageDimensions: Dimensions2D): Dimensions2D {

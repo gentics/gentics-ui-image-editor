@@ -15,7 +15,7 @@
                            [cropperData]="cropperData"
                            [src]="src"
                            [maxHeight]="imageAreaHeight"
-                           (imageLoad)="imageIsLoading = false"></gentics-image-preview>
+                           (imageLoad)="onImageLoad()"></gentics-image-preview>
 
     <gentics-focal-point-selector *ngIf="canSetFocalPoint"
                                   [class.hidden]="mode === 'crop'"
