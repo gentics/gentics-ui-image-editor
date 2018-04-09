@@ -6,6 +6,10 @@
 
 * Expose editing state with the `editing` output.
 
+### Fixes
+
+* Disable text select in editor controls
+
 ## 0.2.1 (2017-04-06)
 
 ### Features

@@ -29,7 +29,7 @@
 <div class="control-panel">
     <gtx-progress-bar [active]="imageIsLoading"></gtx-progress-bar>
     <div class="controls">
-        <div class="mode-selector">
+        <div class="mode-selector" [class.preview]="mode === 'preview'">
             <div *ngIf="canCrop"
                  class="mode-button"
                  [class.hidden]="mode !== 'preview' && mode !== 'crop'">

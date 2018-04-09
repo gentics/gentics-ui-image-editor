@@ -7,6 +7,15 @@
   }
 }
 
+@mixin no-select() {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+}
+
 @mixin range-thumb-color($color) {
   input[type=range]::-ms-thumb {
     background-color: $color;
@@ -105,6 +114,10 @@ gentics-ui-image-editor {
       }
     }
 
+    .mode-button gtx-button button {
+      cursor: default;
+    }
+
     .button-label {
       text-transform: uppercase;
       font-size: 10px;
@@ -112,6 +125,12 @@ gentics-ui-image-editor {
       overflow: hidden;
       text-overflow: ellipsis;
       color: $gtx-color-mid-gray;
+    }
+
+    &.preview {
+      .mode-button gtx-button button {
+        cursor: pointer;
+      }
     }
   }
 
@@ -123,6 +142,7 @@ gentics-ui-image-editor {
 
   .controls {
     display: flex;
+    @include no-select;
   }
 
   .aspect-ratio-controls {
