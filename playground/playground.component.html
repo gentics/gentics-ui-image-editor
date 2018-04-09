@@ -11,6 +11,7 @@
                              [canResize]="canResize"
                              [canSetFocalPoint]="canSetFocalPoint"
                              [language]="language"
+                             (editing)="isEditing = $event"
                              [(transform)]="transformParams"></gentics-ui-image-editor>
 </div>
 
@@ -39,7 +40,8 @@
 
     </div>
     <div class="output">
-        <h3>Output:</h3>
+        <h3>Outputs:</h3>
+        Editing: {{ isEditing }}
         <gtx-textarea [value]="transformParams | json" (change)="parseParams($event)"></gtx-textarea>
         <ng-template #noTransform>
             <pre>No transform has been performed</pre>

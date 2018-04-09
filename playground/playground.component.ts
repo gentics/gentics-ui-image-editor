@@ -14,6 +14,7 @@ export class PlaygroundAppComponent {
     canCrop = true;
     canResize = true;
     canSetFocalPoint = true;
+    isEditing = false;
     prodMode = process.env.NODE_ENV === 'production';
 
     get sourceUrl(): string {

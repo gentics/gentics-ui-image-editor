@@ -48,6 +48,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     get canSetFocalPoint(): boolean { return this._canSetFocalPoint }
 
     @Output() transformChange = new EventEmitter<ImageTransformParams>();
+    @Output() editing = new EventEmitter<boolean>();
 
     @ViewChild(ImagePreviewComponent) imagePreview: ImagePreviewComponent;
 
@@ -244,15 +245,19 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         switch (mode) {
             case 'crop':
                 this.onEnterCropMode();
+                this.editing.emit(true);
                 break;
             case 'resize':
                 this.onEnterResizeMode();
+                this.editing.emit(true);
                 break;
             case 'focalPoint':
                 this.onEnterFocalPointMode();
+                this.editing.emit(true);
                 break;
             default:
                 this.onEnterPreviewMode();
+                this.editing.emit(false);
         }
     }
 

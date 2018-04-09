@@ -1,5 +1,11 @@
 # Gentics UI Image Editor Changelog
 
+## 0.3.0 (in progress)
+
+### Features
+
+* Expose editing state with the `editing` output.
+
 ## 0.2.1 (2017-04-06)
 
 ### Features
