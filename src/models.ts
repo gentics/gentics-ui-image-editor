@@ -7,17 +7,19 @@ export type Dimensions2D = { width: number; height: number; };
 
 export const CropperConstructor = new InjectionToken<Cropper>('Cropper');
 
+export type CropRect = {
+    startX: number;
+    startY: number;
+    width: number;
+    height: number;
+};
+
 export type ImageTransformParams = {
     width: number;
     height: number;
     scaleX: number;
     scaleY: number;
-    cropRect: {
-        startX: number;
-        startY: number;
-        width: number;
-        height: number;
-    };
+    cropRect: CropRect;
     focalPointX: number;
     focalPointY: number;
 };

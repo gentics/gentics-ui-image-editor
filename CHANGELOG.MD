@@ -4,6 +4,7 @@
 
 ### Features
 
+* Export the `gentics-ui-image-preview` component.
 * Expose editing state with the `editing` output.
 
 ### Fixes

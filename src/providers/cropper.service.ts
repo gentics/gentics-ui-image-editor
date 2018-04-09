@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {map} from 'rxjs/operators';
 
-import {AspectRatio, CropperConstructor} from '../models';
+import {AspectRatio, CropperConstructor, CropRect} from '../models';
 
 /**
  * The CropperService encapsulates the instance of Cropper (https://github.com/fengyuanchen/cropperjs)
@@ -39,9 +39,15 @@ export class CropperService implements OnDestroy {
     /**
      * Returns a CropperData object
      */
-    get cropperData(): Cropper.Data | undefined {
+    get cropRect(): CropRect | undefined {
         if (this.cropper) {
-            return this.cropper.getData();
+            const data = this.cropper.getData();
+            return {
+                startX: data.x,
+                startY: data.y,
+                width: data.width,
+                height: data.height
+            };
         }
     }
 

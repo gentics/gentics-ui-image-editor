@@ -1,4 +1,4 @@
-import {ImageTransformParams} from './models';
+import {CropRect, ImageTransformParams} from './models';
 
 /**
  * Components with boolean inputs may receive the value as an actual boolean (if data-bound `[prop]="false"`) or as
@@ -13,15 +13,12 @@ export function coerceToBoolean(val: any): boolean {
  * Returns a CropperData object with default values based on the natural dimensions of
  * the supplied image element.
  */
-export function getDefaultCropperData(img: HTMLImageElement, params?: ImageTransformParams): Cropper.Data {
+export function getDefaultCropRect(img: HTMLImageElement, params?: ImageTransformParams): CropRect {
     const cropRect = params && params.cropRect;
     return {
-        x: cropRect ? cropRect.startX : 0,
-        y: cropRect ? cropRect.startY : 0,
-        width: cropRect ? cropRect.width : img.naturalWidth,
-        height: cropRect ? cropRect.height : img.naturalHeight,
-        rotate: 0,
-        scaleX: 1,
-        scaleY: 1
+        startX: cropRect ? cropRect.startX : 0,
+        startY: cropRect ? cropRect.startY : 0,
+        width: cropRect ? cropRect.width : img ? img.naturalWidth : 0,
+        height: cropRect ? cropRect.height : img ? img.naturalHeight : 0,
     };
 }

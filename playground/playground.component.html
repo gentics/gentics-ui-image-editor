@@ -41,10 +41,12 @@
     </div>
     <div class="output">
         <h3>Outputs:</h3>
-        Editing: {{ isEditing }}
-        <gtx-textarea [value]="transformParams | json" (change)="parseParams($event)"></gtx-textarea>
-        <ng-template #noTransform>
-            <pre>No transform has been performed</pre>
-        </ng-template>
+        <code>editing: {{ isEditing }}</code>
+        <gtx-textarea [value]="transformParams | json" (change)="parseParams($event)" label="transform"></gtx-textarea>
     </div>
+</div>
+
+<div class="image-preview">
+    <h3>Image preview:</h3>
+    <gentics-ui-image-preview [src]="sourceUrl" [transform]="transformParams" [maxHeight]="300"></gentics-ui-image-preview>
 </div>

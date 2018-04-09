@@ -37,18 +37,21 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ```
 
-## API
+## Components
+
+### `gentics-ui-image-editor`
 
 ```HTML
 <gentics-ui-image-editor [src]="sourceUrl"
                          [(transform)]="transformParams"
+                         (editing)="isEditing"
                          [canCrop]="canCrop"
                          [canResize]="canResize"
                          [canSetFocalPoint]="canSetFocalPoint"
                          [language]="language"></gentics-ui-image-editor>
 ```
 
-### Inputs
+#### Inputs
 
 * **`src`** [`string`] **required** The url of the image to be edited.
 * **`transform`** [`ImageTransformParams`] Sets the image transformation (see below).
@@ -57,9 +60,10 @@ export class AppModule { }
 * **`canSetFocalPoint`** [`boolean`] Enables the focal point functionality. Defaults to `true`.
 * **`language`** [`'en' | 'de'`] Specifies the language for labels used in the editor. Defaults to `'en'`.
 
-### Outputs
+#### Outputs
 
 * **`transformChange`** [`ImageTransformParams`] Emits whenever a transformation is applied to the image. The `ImageTransformParams` type is given below.
+* **`editing`** [`boolean`] Emits `true` whenever the editor transitions to crop/edit/focal point mode, and `false` when transitioning to preview mode.
 
 ```TypeScript
 type ImageTransformParams = {
@@ -79,6 +83,25 @@ type ImageTransformParams = {
 ```
 
 This module does not modify the source image in any way. It simply returns the above parameters which can then be used to process the image. This is typically done using an image manipulation API such as that offered by [Gentics Mesh](https://getmesh.io/docs/beta/features.html#imagemanipulation).
+
+
+## `gentics-ui-image-preview`
+
+```HTML
+<gentics-ui-image-preview [src]="sourceUrl"
+                          [transform]="transformParams"
+                          [maxHeight]="maxHeight"
+                          (imageLoad)="onImageLoad($event)"></gentics-ui-image-preview>
+```
+#### Inputs
+
+* **`src`** [`string`] **required** The url of the image to be previewed.
+* **`transform`** [`ImageTransformParams`] Any transformations applied to the preview image.
+* **`maxHeight`** [`number`] The maximum height of the preview image in pixels. The maximum width is defined by that of the containing element.
+
+#### Outputs
+
+* **`imageLoad`** [`HTMLImageElement`] Emits the image element when it has loaded.
 
 ## Development
 

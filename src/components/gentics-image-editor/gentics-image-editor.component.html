@@ -8,14 +8,14 @@
                            [aspectRatio]="cropAspectRatio"
                            (imageLoad)="imageIsLoading = false"></gentics-image-cropper>
 
-    <gentics-image-preview [class.hidden]="mode === 'crop'"
-                           [class.loading]="imageIsLoading"
-                           [scaleX]="resizeScaleX"
-                           [scaleY]="resizeScaleY"
-                           [cropperData]="cropperData"
-                           [src]="src"
-                           [maxHeight]="imageAreaHeight"
-                           (imageLoad)="onImageLoad()"></gentics-image-preview>
+    <gentics-image-preview-with-scales [class.hidden]="mode === 'crop'"
+                                       [class.loading]="imageIsLoading"
+                                       [scaleX]="resizeScaleX"
+                                       [scaleY]="resizeScaleY"
+                                       [cropRect]="cropRect"
+                                       [src]="src"
+                                       [maxHeight]="imageAreaHeight"
+                                       (imageLoad)="onImageLoad($event)"></gentics-image-preview-with-scales>
 
     <gentics-focal-point-selector *ngIf="canSetFocalPoint"
                                   [class.hidden]="mode === 'crop'"
