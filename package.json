@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/username/repo"
+    "url": "https://github.com/gentics/gentics-ui-image-editor"
   },
   "author": {
     "name": "Michael Bromley",
@@ -23,9 +23,9 @@
   "keywords": [
     "angular"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/username/repo/issues"
+    "url": "https://github.com/gentics/gentics-ui-image-editor/issues"
   },
   "dependencies": {
     "cropperjs": "^1.3.2",
