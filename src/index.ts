@@ -18,6 +18,18 @@ import {ImagePreviewWithScalesComponent} from './components/image-preview-with-s
 export {ImageTransformParams, CropRect} from './models';
 export {GenticsImageEditorComponent} from './components/gentics-image-editor/gentics-image-editor.component';
 export {GenticsImagePreviewComponent} from './components/image-preview/image-preview.component';
+export {ImageCropperComponent} from './components/image-cropper/image-cropper.component';
+export {ControlPanelComponent} from './components/control-panel/control-panel.component';
+export {FocalPointSelectorComponent} from './components/focal-point-selector/focal-point-selector.component';
+export {FocalPointTargetDirective} from './components/focal-point-selector/focal-point-target.directive';
+export {CropperConstructor} from './models';
+export {LanguageService} from './providers/language.service';
+export {TranslatePipe} from './pipes/translate.pipe';
+export {ImagePreviewWithScalesComponent} from './components/image-preview-with-scales/image-preview-with-scales.component';
+export {CropperService} from './providers/cropper.service';
+export {FocalPointService} from './providers/focal-point.service';
+export {ResizeService} from './providers/resize.service';
+export {ImagePreviewService} from './providers/preview.service';
 
 @NgModule({
     imports: [

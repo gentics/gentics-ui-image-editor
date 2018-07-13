@@ -1,5 +1,11 @@
 # Gentics UI Image Editor Changelog
 
+## 0.3.1 (in progress)
+
+### Fixes
+
+* Correctly export declarations & services to make this lib AoT-compatible.
+
 ## 0.3.0 (2017-04-19)
 
 ### Features
