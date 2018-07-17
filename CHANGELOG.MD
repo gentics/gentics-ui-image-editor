@@ -1,5 +1,11 @@
 # Gentics UI Image Editor Changelog
 
+## 0.3.2 (2017-07-17)
+
+### Fixes
+
+* Fix undefined CropperConstructor token when in AoT mode.
+
 ## 0.3.1 (2017-07-13)
 
 ### Fixes

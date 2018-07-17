@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {GenticsUICoreModule} from 'gentics-ui-core';
-import Cropper from 'cropperjs';
+import * as Cropper from 'cropperjs';
 
 import {GenticsImageEditorComponent} from './components/gentics-image-editor/gentics-image-editor.component';
 import {GenticsImagePreviewComponent} from './components/image-preview/image-preview.component';
@@ -31,6 +31,15 @@ export {FocalPointService} from './providers/focal-point.service';
 export {ResizeService} from './providers/resize.service';
 export {ImagePreviewService} from './providers/preview.service';
 
+/**
+ * The export behaviour of the Cropper lib leads to some issues when compiling
+ * in AoT mode. This factory is designed to ensure that the correct value is
+ * defined for the CropperConstuctor token.
+ */
+export function getCropperConstructor() {
+    return Cropper && Cropper.default || Cropper;
+}
+
 @NgModule({
     imports: [
         CommonModule,
@@ -49,7 +58,7 @@ export {ImagePreviewService} from './providers/preview.service';
     ],
     providers: [
         LanguageService,
-        { provide: CropperConstructor, useValue: Cropper }
+        { provide: CropperConstructor, useFactory: getCropperConstructor }
     ],
     exports: [
         GenticsImageEditorComponent,
