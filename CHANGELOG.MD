@@ -1,5 +1,9 @@
 # Gentics UI Image Editor Changelog
 
+## 0.3.3 (not yet released)
+
+### Fixes
+
 ## 0.3.2 (2017-07-17)
 
 ### Fixes
