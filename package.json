@@ -20,6 +20,12 @@
     "name": "Michael Bromley",
     "email": "m.bromley@gentics.com"
   },
+  "contributors": [
+    {
+      "name": "Thomas Pusztai",
+      "email": "t.pusztai@gentics.com"
+    }
+  ],
   "keywords": [
     "angular"
   ],

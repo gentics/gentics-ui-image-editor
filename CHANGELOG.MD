@@ -1,10 +1,12 @@
 # Gentics UI Image Editor Changelog
 
-## 0.3.3 (not yet released)
+## 0.3.3 (2018-09-27)
 
 ### Fixes
 
-## 0.3.2 (2017-07-17)
+* Fix initial misplacement of focal point selector when displaying the image editor inside a Gentics UI Core modal (GitHub issue #2).
+
+## 0.3.2 (2018-07-17)
 
 ### Fixes
 

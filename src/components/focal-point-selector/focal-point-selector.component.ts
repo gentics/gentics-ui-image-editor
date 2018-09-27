@@ -93,6 +93,18 @@ export class FocalPointSelectorComponent implements OnInit, OnChanges, OnDestroy
             });
     }
 
+    /**
+     * This is necessary to fix the initially misplaced focal point when the image editor
+     * is used in a Gentics UI Core modal, which uses CSS transitions for appearing.
+     *
+     * See https://github.com/gentics/gentics-ui-image-editor/issues/2
+     */
+    @HostListener('window:transitionend')
+    onTransitionEnd(): void {
+        this.updatePositions();
+        this.changeDetector.markForCheck();
+    }
+
     @HostListener('window:scroll')
     @HostListener('window:resize')
     private updatePositions(mouseX?: number, mouseY?: number): void {
