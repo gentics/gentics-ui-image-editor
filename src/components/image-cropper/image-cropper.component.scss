@@ -4,4 +4,14 @@
     transition: opacity 0.2s;
   }
   transition: opacity 0.5s;
+
+  // These styles are necessary to make sure that the gentics-image-cropper
+  // is not larger than the height of its container in Firefox and Edge.
+  position: absolute;
+  height: 100%;
+  
+  // This is to make sure that the two lines above don't break the display in IE11.
+  max-width: 100%;
+  top: 0;
+  left: 0;
 }

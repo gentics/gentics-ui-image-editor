@@ -1,5 +1,12 @@
 # Gentics UI Image Editor Changelog
 
+## 0.3.4 (not yet released)
+
+### Fixes
+
+* Fix image cropper preview image being too big in Firefox and Edge.
+* Fix crop mode not respecting the intitially set aspect ratio.
+
 ## 0.3.3 (2018-09-27)
 
 ### Fixes

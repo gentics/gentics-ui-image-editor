@@ -91,11 +91,9 @@ export class CropperService implements OnDestroy {
                     responsive: true,
                     ready: () => {
                         if (this.initialData) {
-                            this.setCropAspectRatio('free');
                             this.cropper.setData(this.initialData);
-                        } else {
-                            this.setCropAspectRatio(aspectRatio);
                         }
+                        this.setCropAspectRatio(aspectRatio);
                         resolve();
                     },
                     crop: data => {
