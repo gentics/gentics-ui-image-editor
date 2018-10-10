@@ -4,6 +4,8 @@
 
 ### Fixes
 
+* Fix image cropper preview image being too big in Firefox and Edge.
+
 ## 0.3.3 (2018-09-27)
 
 ### Fixes
