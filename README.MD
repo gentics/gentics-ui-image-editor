@@ -146,7 +146,7 @@ The easiest way to manage the branch is to check it out in the "demo" subfolder:
 
 ```sh
 # check out repo twice, master in ./ and gh-pages in ./demo
-$ git clone -o github -b gh-pages git@github.com:gentics/gentics-ui-core ./demo
+$ git clone -o github -b gh-pages git@github.com:gentics/gentics-ui-image-editor ./demo
 
 # build the demo
 $ npm run demo:build
