@@ -1,5 +1,11 @@
 # Gentics UI Image Editor Changelog
 
+## 0.3.5 (not yet released)
+
+### Fixes
+
+* Fix image cropper preview image not spanning the full width with extreme portrait aspect ratios.
+
 ## 0.3.4 (2018-10-10)
 
 ### Fixes

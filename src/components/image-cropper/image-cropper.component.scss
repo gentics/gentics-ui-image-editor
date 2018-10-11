@@ -8,10 +8,10 @@
   // These styles are necessary to make sure that the gentics-image-cropper
   // is not larger than the height of its container in Firefox and Edge.
   position: absolute;
+  width: 100%;
   height: 100%;
   
-  // This is to make sure that the two lines above don't break the display in IE11.
-  max-width: 100%;
+  // This is to make sure that the Firefox and Edge fix above doesn't break the display in IE11.
   top: 0;
   left: 0;
 }
