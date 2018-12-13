@@ -143,6 +143,10 @@ gentics-ui-image-editor {
   .controls {
     display: flex;
     @include no-select;
+
+    gtx-select {
+      margin: 0;
+    }
   }
 
   .aspect-ratio-controls {
@@ -160,6 +164,13 @@ gentics-ui-image-editor {
       margin-right: 15px;
       label {
         padding-left: 25px !important;
+      }
+    }
+
+    gtx-select {
+      .view-value {
+        color: $gtx-color-dark-gray;
+        border-color: $gtx-color-dark-gray;
       }
     }
   }

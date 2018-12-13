@@ -8,15 +8,20 @@ import {
     OnInit,
     Output,
     SimpleChanges,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ViewChild,
+    ChangeDetectorRef
 } from '@angular/core';
 
-import {AspectRatio, CropRect, ImageTransformParams, Mode} from '../../models';
+import {AspectRatio, CropRect, ImageTransformParams, Mode, AspectRatios} from '../../models';
 import {CropperService} from '../../providers/cropper.service';
 import {ResizeService} from '../../providers/resize.service';
 import {coerceToBoolean, getDefaultCropRect} from '../../utils';
 import {LanguageService, UILanguage} from '../../providers/language.service';
 import {FocalPointService} from '../../providers/focal-point.service';
+import {Select} from 'gentics-ui-core';
+import {TranslatePipe} from '../../pipes/translate.pipe';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'gentics-ui-image-editor',
@@ -35,6 +40,8 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     @Input() src: string;
     @Input() transform: ImageTransformParams;
     @Input() language: UILanguage = 'en';
+    @Input() disableAspectRatios: AspectRatio[] = [];
+    @Input() customAspectRatios: AspectRatio[] = [];
     @Input()
     set canCrop(value: boolean) { this._canCrop = coerceToBoolean(value); }
     get canCrop(): boolean { return this._canCrop }
@@ -48,11 +55,21 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     @Output() transformChange = new EventEmitter<ImageTransformParams>();
     @Output() editing = new EventEmitter<boolean>();
 
+    @ViewChild('customAspectRatio') customCropRatioSelect: Select;
+
     mode: Mode = 'preview';
     imageIsLoading = false;
 
     // crop-related state
-    cropAspectRatio: AspectRatio = 'original';
+    readonly AspectRatio = AspectRatio;
+    readonly AspectRatios = AspectRatios;
+    readonly DefaultAspectRatios: AspectRatio[] = [
+        AspectRatio.get(AspectRatios.Original),
+        AspectRatio.get(AspectRatios.Square),
+        AspectRatio.get(AspectRatios.Free)
+    ];
+    AvailableAspectRatios: AspectRatio[] = [...this.DefaultAspectRatios];
+    cropAspectRatio: AspectRatio = this.AvailableAspectRatios[0];
     cropRect: CropRect;
 
     // resize-related state
@@ -79,12 +96,16 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     constructor(public cropperService: CropperService,
                 public resizeService: ResizeService,
                 private languageService: LanguageService,
-                private elementRef: ElementRef) {}
+                private elementRef: ElementRef,
+                private translate: TranslatePipe,
+                private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.closestAncestorWithHeight = this.getClosestAncestorWithHeight(this.elementRef.nativeElement);
         this.lastAppliedFocalPointX = this.focalPointX;
         this.lastAppliedFocalPointY = this.focalPointY;
+
+        this.updateAspectRatios();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -93,6 +114,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         }
         if ('language' in changes) {
             this.languageService.currentLanguage = this.language;
+            this.showPlaceholder();
         }
         if ('transform' in changes) {
             const transform: ImageTransformParams = changes.transform.currentValue;
@@ -100,6 +122,16 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
                 this.updateTransform(transform);
             }
         }
+        if ('disableAspectRatios' in changes) {
+            this.updateAspectRatios();
+        }
+        if ('customAspectRatios' in changes) {
+            this.updateAspectRatios();
+        }
+    }
+
+    onAspectRatioChange(): void {
+        this.showPlaceholder();
     }
 
     get parentHeight(): number {
@@ -128,7 +160,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     }
 
     resetCrop(): void {
-        this.cropAspectRatio = 'original';
+        this.cropAspectRatio = this.AvailableAspectRatios[0];
         this.cropperService.resetCrop();
     }
 
@@ -218,6 +250,33 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     }
 
     /**
+     * Hacky way to implement placeholder for the Select box. It receives the list of elements,
+     * and if there is nothing selected then it will change the Select box viewValue.
+     * setTimeout required for update after the Select box sets the displayed value itself.
+     *
+     * TODO: Implement placeholder function in GUIC
+     * @param items The selected items of the Select box
+     */
+    showPlaceholder(): void {
+        setTimeout(() => {
+            if ( this.mode === 'crop' && !!this.customCropRatioSelect && this.customAspectRatios.indexOf(this.cropAspectRatio) === -1 ) {
+                this.customCropRatioSelect.viewValue = this.translate.transform('more_aspect_ratios');
+                this.changeDetector.markForCheck();
+            }
+        });
+    }
+
+    shouldShowAspectRatio(value: AspectRatio): boolean {
+        return this.AvailableAspectRatios.some( availableRatio => _.isEqual(availableRatio, value) );
+    }
+
+    filterShowAspectRatio(values: AspectRatio[]): AspectRatio[] {
+        return values.filter(
+            value => this.AvailableAspectRatios.some( availableRatio => _.isEqual(availableRatio, value) )
+        );
+    }
+
+    /**
      * Emit the ImageTransformParams resulting from the currently-applied transformations.
      */
     private emitImageTransformParams(): void {
@@ -280,6 +339,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     private onExitPreviewMode(): void {}
 
     private onEnterCropMode(): void {
+        this.showPlaceholder();
         this.imageIsLoading = true;
     }
 
@@ -354,5 +414,20 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
             this.cropRect = getDefaultCropRect(this.previewImage, transform);
         }
         this.cropperService.setCropData(cropData);
+    }
+
+    private updateAspectRatios() {
+        // Add CustomAspect ratios and filter out disabled AspectRatios
+        this.AvailableAspectRatios = [...this.DefaultAspectRatios, ...this.customAspectRatios].filter(
+            ratio => !this.disableAspectRatios.some( disabledRatio => _.isEqual(disabledRatio, ratio) )
+        );
+
+        // Provide at least one available aspect ratio (Free)
+        if (this.AvailableAspectRatios.length === 0) {
+            this.AvailableAspectRatios.push(AspectRatio.get(AspectRatios.Free));
+        }
+
+        this.cropAspectRatio = this.AvailableAspectRatios[0];
+        this.showPlaceholder();
     }
 }

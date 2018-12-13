@@ -15,7 +15,7 @@ import {LanguageService} from './providers/language.service';
 import {TranslatePipe} from './pipes/translate.pipe';
 import {ImagePreviewWithScalesComponent} from './components/image-preview-with-scales/image-preview-with-scales.component';
 
-export {ImageTransformParams, CropRect} from './models';
+export {ImageTransformParams, CropRect, AspectRatio, AspectRatios} from './models';
 export {GenticsImageEditorComponent} from './components/gentics-image-editor/gentics-image-editor.component';
 export {GenticsImagePreviewComponent} from './components/image-preview/image-preview.component';
 export {ImageCropperComponent} from './components/image-cropper/image-cropper.component';
@@ -58,6 +58,7 @@ export function getCropperConstructor() {
     ],
     providers: [
         LanguageService,
+        TranslatePipe,
         { provide: CropperConstructor, useFactory: getCropperConstructor }
     ],
     exports: [

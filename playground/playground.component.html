@@ -1,3 +1,4 @@
+<gtx-overlay-host></gtx-overlay-host>
 <div class="header">
     <h1>Gentics UI Image Editor</h1>
     <p>
@@ -7,6 +8,8 @@
 </div>
 <div class="editor-container">
     <gentics-ui-image-editor [src]="sourceUrl"
+                             [disableAspectRatios]="disableAspectRatios"
+                             [customAspectRatios]="customAspectRatios"
                              [canCrop]="canCrop"
                              [canResize]="canResize"
                              [canSetFocalPoint]="canSetFocalPoint"
@@ -36,6 +39,14 @@
             <gtx-checkbox [(ngModel)]="canCrop" label="canCrop"></gtx-checkbox>
             <gtx-checkbox [(ngModel)]="canResize" label="canResize"></gtx-checkbox>
             <gtx-checkbox [(ngModel)]="canSetFocalPoint" label="canSetFocalPoint"></gtx-checkbox>
+        </div>
+        <h3>Crop Aspect Ratio settings:</h3>
+        <div class="inputs-row">
+            <gtx-checkbox [(ngModel)]="disableOriginal" label="Disable Original" (change)="updateAspectRatios()"></gtx-checkbox>
+            <gtx-checkbox [(ngModel)]="disableSquare" label="Disable Square" (change)="updateAspectRatios()"></gtx-checkbox>
+            <gtx-checkbox [(ngModel)]="disableFree" label="Disable Free" (change)="updateAspectRatios()"></gtx-checkbox>
+            <gtx-checkbox [(ngModel)]="custom169" label="Add 16:9" (change)="updateAspectRatios()"></gtx-checkbox>
+            <gtx-checkbox [(ngModel)]="custom32" label="Add 3:2" (change)="updateAspectRatios()"></gtx-checkbox>
         </div>
 
     </div>

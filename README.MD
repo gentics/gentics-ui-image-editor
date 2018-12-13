@@ -45,6 +45,8 @@ export class AppModule { }
 <gentics-ui-image-editor [src]="sourceUrl"
                          [(transform)]="transformParams"
                          (editing)="isEditing"
+                         [disableAspectRatios]="disableAspectRatios"
+                         [customAspectRatios]="customAspectRatios"
                          [canCrop]="canCrop"
                          [canResize]="canResize"
                          [canSetFocalPoint]="canSetFocalPoint"
@@ -55,6 +57,8 @@ export class AppModule { }
 
 * **`src`** [`string`] **required** The url of the image to be edited.
 * **`transform`** [`ImageTransformParams`] Sets the image transformation (see below).
+* **`disableAspectRatios`** [`AspectRatio[]`] Disable crop aspect ratios. Defaults to `[]`.
+* **`customAspectRatios`** [`AspectRatio[]`] Provide custom aspect ratios. Defaults to `[]`.
 * **`canCrop`** [`boolean`] Enables the crop functionality. Defaults to `true`.
 * **`canResize`** [`boolean`] Enables the resize functionality. Defaults to `true`.
 * **`canSetFocalPoint`** [`boolean`] Enables the focal point functionality. Defaults to `true`.
@@ -84,6 +88,15 @@ type ImageTransformParams = {
 
 This module does not modify the source image in any way. It simply returns the above parameters which can then be used to process the image. This is typically done using an image manipulation API such as that offered by [Gentics Mesh](https://getmesh.io/docs/beta/features.html#imagemanipulation).
 
+#### Disable built-in aspect ratios
+
+You can pass the following 3 built-in aspect ratios to the **`disableAspectRatios`** input as an array: **`AspectRatio.get(AspectRatios.Original)`**, **`AspectRatio.get(AspectRatios.Square)`**, **`AspectRatio.get(AspectRatios.Free)`**.
+
+_Note: If no built-in nor custom aspect ratios are available, then **Free** aspect ratio will be enabled._
+
+#### Provide custom aspect ratios
+
+You can pass custom aspect ratios to the **`disableAspectRatios`** input as an array, eg.: **`{ kind: AspectRatios.Dimensions, width: 16, height: 9 }`**.
 
 ### `gentics-ui-image-preview`
 
