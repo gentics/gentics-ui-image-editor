@@ -35,7 +35,11 @@ export class PlaygroundAppComponent {
         setTimeout(() => {
             this.disableAspectRatios = [];
             this.customAspectRatios = [];
-            if (this.custom169) { this.customAspectRatios.push({ kind: AspectRatios.Dimensions, width: 16, height: 9 }); }
+            if (this.custom169) {
+                this.customAspectRatios.push({
+                    kind: AspectRatios.Dimensions, width: 16, height: 9, display: 'radio', label: 'Wide'
+                });
+            }
             if (this.custom32) { this.customAspectRatios.push({ kind: AspectRatios.Dimensions, width: 3, height: 2 }); }
             if (this.disableOriginal) { this.disableAspectRatios.push(AspectRatio.get(AspectRatios.Original)); }
             if (this.disableSquare) { this.disableAspectRatios.push(AspectRatio.get(AspectRatios.Square)); }

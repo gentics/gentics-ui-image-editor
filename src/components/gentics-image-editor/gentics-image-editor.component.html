@@ -66,24 +66,36 @@
         </div>
 
         <gentics-control-panel *ngIf="mode === 'crop'"
+                               #cropControlPanel
+                               [class]="'mode-'+mode"
                                [applyLabel]="'crop' | translate"
                                [displayResetButton]="!(cropperService.cropBoxMatchesImage$ | async)"
                                (reset)="resetCrop()"
                                (apply)="applyCrop()"
                                (cancel)="cancelCrop()">
             <div gtx-radio-group [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange($event)" class="aspect-ratio-controls">
-                <div class="aspect-ratio-label">{{ 'aspect_ratio' | translate }}</div>
-                <gtx-radio-button [value]="AspectRatio.get(AspectRatios.Original)" *ngIf="shouldShowAspectRatio(AspectRatio.get(AspectRatios.Original))" [label]="'aspect_ratio_original' | translate"></gtx-radio-button>
-                <gtx-radio-button [value]="AspectRatio.get(AspectRatios.Square)" *ngIf="shouldShowAspectRatio(AspectRatio.get(AspectRatios.Square))" [label]="'aspect_ratio_square' | translate"></gtx-radio-button>
-                <gtx-radio-button [value]="AspectRatio.get(AspectRatios.Free)" *ngIf="shouldShowAspectRatio(AspectRatio.get(AspectRatios.Free))" [label]="'aspect_ratio_free' | translate"></gtx-radio-button>
-                <gtx-select #customAspectRatio [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange($event)" *ngIf="filterShowAspectRatio(customAspectRatios).length > 0">
-                        <gtx-option *ngFor="let aspectRatio of filterShowAspectRatio(customAspectRatios)"
-                                    [value]="aspectRatio">{{ aspectRatio?.width }}:{{ aspectRatio?.height }}</gtx-option>
-                </gtx-select>
+                <div class="aspect-ratios-large" [class.hidden-controls]="!(isAspectRatioControlsFits$ | async)">
+                    <div class="aspect-ratio-label">{{ 'aspect_ratio' | translate }}</div>
+                    <gtx-radio-button *ngFor="let aspectRatio of filterShowAspectRatio(AvailableAspectRatios, 'radio')"
+                                        [value]="aspectRatio"
+                                        [label]="aspectRatio.label | translate"></gtx-radio-button>
+                    <gtx-select #customAspectRatio [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange($event)" *ngIf="filterShowAspectRatio(AvailableAspectRatios, 'select').length > 0">
+                        <gtx-option *ngFor="let aspectRatio of filterShowAspectRatio(AvailableAspectRatios, 'select')"
+                                    [value]="aspectRatio">{{ aspectRatio.label | translate }}</gtx-option>
+                    </gtx-select>
+                </div>
+                <div class="aspect-ratios-small" [class.hidden-controls]="isAspectRatioControlsFits$ | async">
+                    <div class="aspect-ratio-label">{{ 'aspect_ratio' | translate }}</div>
+                    <gtx-select [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange($event)" *ngIf="filterShowAspectRatio(AvailableAspectRatios).length > 0">
+                        <gtx-option *ngFor="let aspectRatio of filterShowAspectRatio(AvailableAspectRatios)"
+                                    [value]="aspectRatio">{{ aspectRatio.label | translate }}</gtx-option>
+                    </gtx-select>
+                </div>
             </div>
         </gentics-control-panel>
 
         <gentics-control-panel *ngIf="mode === 'resize'"
+                               [class]="'mode-'+mode"
                                [applyLabel]="'resize' | translate"
                                [displayResetButton]="resizeScaleX !== 1 || resizeScaleY !== 1"
                                (reset)="resetScale()"
@@ -125,6 +137,7 @@
         </gentics-control-panel>
 
         <gentics-control-panel *ngIf="mode === 'focalPoint'"
+                               [class]="'mode-'+mode"
                                [applyLabel]="'set_focal_point' | translate"
                                [displayResetButton]="focalPointX !== 0.5 || focalPointY !== 0.5"
                                (reset)="resetFocalPoint()"

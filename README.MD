@@ -96,7 +96,9 @@ _Note: If no built-in nor custom aspect ratios are available, then **Free** aspe
 
 #### Provide custom aspect ratios
 
-You can pass custom aspect ratios to the **`disableAspectRatios`** input as an array, eg.: **`{ kind: AspectRatios.Dimensions, width: 16, height: 9 }`**.
+You can pass custom aspect ratios to the **`disableAspectRatios`** input as an array, eg.: **`{ kind: AspectRatios.Dimensions, width: 16, height: 9 }`**. You can also reuse built-in types as kind: **`AspectRatios.Original`**, **`AspectRatios.Square`**, **`AspectRatios.Free`**. Use the **`label`** property to specify the label of aspect ratio, and use **`display`** to specify where you want to display the aspect ratio: `radio` or `select`.
+
+Full example for custom 16:9 ratio as radio button, with label "Wide": **`{ kind: AspectRatios.Dimensions, width: 16, height: 9, display: 'radio', label: 'Wide' }`**
 
 ### `gentics-ui-image-preview`
 

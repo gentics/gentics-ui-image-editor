@@ -22,6 +22,8 @@ import {FocalPointService} from '../../providers/focal-point.service';
 import {Select} from 'gentics-ui-core';
 import {TranslatePipe} from '../../pipes/translate.pipe';
 import * as _ from 'lodash';
+import { Observable, Subject } from 'rxjs';
+import { ControlPanelComponent } from 'components/control-panel/control-panel.component';
 
 @Component({
     selector: 'gentics-ui-image-editor',
@@ -56,6 +58,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     @Output() editing = new EventEmitter<boolean>();
 
     @ViewChild('customAspectRatio') customCropRatioSelect: Select;
+    @ViewChild('cropControlPanel', { read: ElementRef }) cropControlPanel: ElementRef;
 
     mode: Mode = 'preview';
     imageIsLoading = false;
@@ -71,6 +74,8 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     AvailableAspectRatios: AspectRatio[] = [...this.DefaultAspectRatios];
     cropAspectRatio: AspectRatio = this.AvailableAspectRatios[0];
     cropRect: CropRect;
+    isAspectRatioControlsFits$: Observable<boolean>;
+    isAspectRatioControlsUpdated$ = new Subject<boolean>();
 
     // resize-related state
     resizeScaleX = 1;
@@ -105,6 +110,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         this.lastAppliedFocalPointX = this.focalPointX;
         this.lastAppliedFocalPointY = this.focalPointY;
 
+        this.observeAspectRatioControls();
         this.updateAspectRatios();
     }
 
@@ -128,6 +134,24 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         if ('customAspectRatios' in changes) {
             this.updateAspectRatios();
         }
+    }
+
+    observeAspectRatioControls(): void {
+        const checkAspectRatioControlsSize = () => {
+                if (this.cropControlPanel) {
+                    const controlsDiv = this.cropControlPanel.nativeElement.querySelector('div.controls');
+                    const aspectRatioControlsDiv = controlsDiv.querySelector('div.aspect-ratios-large');
+                    return controlsDiv.offsetWidth > aspectRatioControlsDiv.offsetWidth;
+                }
+                return true;
+        }
+
+        const screenSizeChanged$ = Observable.merge(
+            this.isAspectRatioControlsUpdated$.asObservable(),
+            Observable.fromEvent(window, 'resize')
+        ).debounceTime(50).map(checkAspectRatioControlsSize);
+
+        this.isAspectRatioControlsFits$ = screenSizeChanged$.startWith(checkAspectRatioControlsSize());
     }
 
     onAspectRatioChange(): void {
@@ -259,10 +283,16 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
      */
     showPlaceholder(): void {
         setTimeout(() => {
-            if ( this.mode === 'crop' && !!this.customCropRatioSelect && this.customAspectRatios.indexOf(this.cropAspectRatio) === -1 ) {
+            if (this.mode === 'crop' &&
+                !!this.customCropRatioSelect &&
+                this.filterShowAspectRatio(this.AvailableAspectRatios, 'select').indexOf(this.cropAspectRatio) === -1
+            ) {
                 this.customCropRatioSelect.viewValue = this.translate.transform('more_aspect_ratios');
                 this.changeDetector.markForCheck();
             }
+
+            // Notify observer that Aspect Ratio Controls updated
+            this.isAspectRatioControlsUpdated$.next(true);
         });
     }
 
@@ -270,9 +300,13 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
         return this.AvailableAspectRatios.some( availableRatio => _.isEqual(availableRatio, value) );
     }
 
-    filterShowAspectRatio(values: AspectRatio[]): AspectRatio[] {
+    filterShowAspectRatio(values: AspectRatio[], display?: 'radio' | 'select'): AspectRatio[] {
         return values.filter(
-            value => this.AvailableAspectRatios.some( availableRatio => _.isEqual(availableRatio, value) )
+            value => this.AvailableAspectRatios.some( availableRatio => _.isEqual(availableRatio, value) ) &&
+            ( ( display && value.display && display === value.display ) ||
+              ( display && !value.display && display === 'select') ||
+              ( !display )
+            )
         );
     }
 
@@ -427,7 +461,31 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
             this.AvailableAspectRatios.push(AspectRatio.get(AspectRatios.Free));
         }
 
+        // Generate label for aspect ratios
+        this.AvailableAspectRatios = this.AvailableAspectRatios.map(ratio => {
+            if (!ratio.label) {
+                switch (ratio.kind) {
+                    case 'dimensions':
+                        ratio.label = `${ratio.width}:${ratio.height}`;
+                        break;
+                    case 'original':
+                        ratio.label = AspectRatio.get(AspectRatios.Original).label;
+                        break;
+                    case 'square':
+                        ratio.label = AspectRatio.get(AspectRatios.Square).label;
+                        break;
+                    case 'free':
+                        ratio.label = AspectRatio.get(AspectRatios.Free).label;
+                        break;
+                }
+            }
+            return ratio;
+        });
+
         this.cropAspectRatio = this.AvailableAspectRatios[0];
         this.showPlaceholder();
+
+        // Notify observer that Aspect Ratio Controls updated
+        this.isAspectRatioControlsUpdated$.next(true);
     }
 }

@@ -24,11 +24,16 @@ export type ImageTransformParams = {
     focalPointY: number;
 };
 
-export type AspectRatioOriginal = { kind: 'original' };
-export type AspectRatioSquare = { kind: 'square' }
-export type AspectRatioFree = { kind: 'free' }
+export type AspectRatioType = {
+    display?: 'radio' | 'select';
+    label?: string;
+}
 
-export type AspectRatioDimensions2D = {
+export type AspectRatioOriginal = AspectRatioType & { kind: 'original' };
+export type AspectRatioSquare = AspectRatioType & { kind: 'square' }
+export type AspectRatioFree = AspectRatioType & { kind: 'free' }
+
+export type AspectRatioDimensions2D = AspectRatioType & {
     kind: 'dimensions';
     width: number;
     height: number;
@@ -42,7 +47,7 @@ export enum AspectRatios {
 }
 
 export const AspectRatio = new Map<string, AspectRatio>([
-    [AspectRatios.Original, { kind: 'original' }],
-    [AspectRatios.Square, { kind: 'square' }],
-    [AspectRatios.Free, { kind: 'free' }]
+    [AspectRatios.Original, { kind: 'original', display: 'radio', label: 'aspect_ratio_original' }],
+    [AspectRatios.Square, { kind: 'square', display: 'radio', label: 'aspect_ratio_square' }],
+    [AspectRatios.Free, { kind: 'free', display: 'radio', label: 'aspect_ratio_free' }]
 ]);
