@@ -29,15 +29,10 @@ export type AspectRatioType = {
     label?: string;
 }
 
-export type AspectRatioOriginal = AspectRatioType & { kind: 'original' };
-export type AspectRatioSquare = AspectRatioType & { kind: 'square' }
-export type AspectRatioFree = AspectRatioType & { kind: 'free' }
-
-export type AspectRatioDimensions2D = AspectRatioType & {
-    kind: 'dimensions';
-    width: number;
-    height: number;
-}
+export type AspectRatioOriginal = { kind: 'original' } & AspectRatioType;
+export type AspectRatioSquare = { kind: 'square' } & AspectRatioType;
+export type AspectRatioFree = { kind: 'free' } & AspectRatioType;
+export type AspectRatioDimensions2D = { kind: 'dimensions' } & Dimensions2D & AspectRatioType;
 
 export enum AspectRatios {
     Original = 'original',
