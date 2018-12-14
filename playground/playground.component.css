@@ -58,10 +58,12 @@ label {
 .output h3 {
     font-size: 16px;
     margin: 0;
+    margin-top: 15px;
 }
 
-.input-options h3:nth-child(2) {
-    margin-top: 10px;
+.input-options h3:first-child,
+.output h3:first-child {
+    margin: 0;
 }
 
 .output gtx-textarea {
