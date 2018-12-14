@@ -1,6 +1,6 @@
 {
   "name": "gentics-ui-image-editor",
-  "version": "0.0.0",
+  "version": "0.4.0",
   "scripts": {
     "build": "gulp build",
     "build:watch": "gulp",
