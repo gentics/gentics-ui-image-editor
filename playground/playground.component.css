@@ -1,6 +1,10 @@
 :host {
 }
 
+label {
+    color: #9e9e9e;
+}
+
 .header {
     background-color: #0096DC;
     color: white;
@@ -42,7 +46,7 @@
     margin-top: 10px;
 }
 .input-options gtx-checkbox {
-    margin-top: 25px;
+    margin-top: 0;
 }
 .output {
     border: 1px solid #cccccc;
@@ -54,7 +58,14 @@
 .output h3 {
     font-size: 16px;
     margin: 0;
+    margin-top: 15px;
 }
+
+.input-options h3:first-child,
+.output h3:first-child {
+    margin: 0;
+}
+
 .output gtx-textarea {
     font-family: "Consolas", monospace;
     min-width: 25vw;

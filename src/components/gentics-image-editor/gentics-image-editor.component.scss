@@ -143,23 +143,64 @@ gentics-ui-image-editor {
   .controls {
     display: flex;
     @include no-select;
+
+    gtx-select {
+      margin: 0;
+    }
+  }
+
+  gentics-control-panel.mode-crop {
+    overflow: hidden;
+
+    .controls {
+      overflow: hidden;
+    }
   }
 
   .aspect-ratio-controls {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
     .aspect-ratio-label {
       color: $gtx-color-dark-gray;
       margin-right: 15px;
-      @include hide-for-mobile;
+    }
+
+    .aspect-ratios-small {
+      .aspect-ratio-label {
+        @include hide-for-mobile;
+      }
+    }
+
+    .aspect-ratios-small,
+    .aspect-ratios-large {
+      display: flex;
+      align-items: center;
+    }
+
+    .aspect-ratios-small.hidden-controls,
+    .aspect-ratios-large.hidden-controls {
+      position: absolute;
+      visibility: hidden;
+      left: -99999px;
+
+      * {
+        transition: none;
+      }
     }
 
     gtx-radio-button {
       margin-right: 15px;
       label {
         padding-left: 25px !important;
+      }
+    }
+
+    gtx-select {
+      .view-value {
+        color: $gtx-color-dark-gray;
+        border-color: $gtx-color-dark-gray;
       }
     }
   }

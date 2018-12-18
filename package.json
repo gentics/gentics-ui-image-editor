@@ -1,6 +1,6 @@
 {
   "name": "gentics-ui-image-editor",
-  "version": "0.0.0",
+  "version": "0.4.0",
   "scripts": {
     "build": "gulp build",
     "build:watch": "gulp",
@@ -24,6 +24,10 @@
     {
       "name": "Thomas Pusztai",
       "email": "t.pusztai@gentics.com"
+    },
+    {
+      "name": "Péter Nyári",
+      "email": "p.nyari@gentics.com"
     }
   ],
   "keywords": [
@@ -34,8 +38,10 @@
     "url": "https://github.com/gentics/gentics-ui-image-editor/issues"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.119",
     "cropperjs": "^1.3.2",
-    "gentics-ui-core": "^6.1.0"
+    "gentics-ui-core": "^6.4.0",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@angular/animations": "^5.2.8",

@@ -137,7 +137,11 @@ export class CropperService implements OnDestroy {
         if (this.cropper) {
             const imageData = this.cropper.getImageData();
             let aspectRatioNumber: number;
-            switch (value) {
+
+            switch (value.kind) {
+                case 'dimensions':
+                    aspectRatioNumber = value.width / value.height;
+                    break;
                 case 'original':
                     aspectRatioNumber = imageData.naturalWidth / imageData.naturalHeight;
                     break;
@@ -148,6 +152,7 @@ export class CropperService implements OnDestroy {
                     aspectRatioNumber = NaN;
                     break;
             }
+
             this.cropper.setAspectRatio(aspectRatioNumber);
         }
     }

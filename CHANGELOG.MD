@@ -1,5 +1,14 @@
 # Gentics UI Image Editor Changelog
 
+## 0.4.0 (2018-12-14)
+
+### Features
+
+* Allow passing custom aspect ratios for cropping.
+* Allow disable built-in aspect ratios for cropping.
+* Allow set custom label and display mode (radio or select) for aspect ratios.
+* Add mobile view for aspect ratios.
+
 ## 0.3.5 (2018-10-11)
 
 ### Fixes

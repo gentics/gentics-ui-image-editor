@@ -20,6 +20,6 @@ export class TranslatePipe implements PipeTransform {
                 return translation;
             }
         }
-        throw new Error(`No translation for for token "${value}" in ${currentLanguage}`);
+        return value;
     }
 }
