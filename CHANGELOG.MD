@@ -1,6 +1,6 @@
 # Gentics UI Image Editor Changelog
 
-## 0.4.0 (2018-12-14)
+## 0.4.0 (2018-12-18)
 
 ### Features
 
