@@ -1,6 +1,5 @@
 import {Inject, Injectable, OnDestroy, Type} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {AspectRatio, CropperConstructor, CropRect} from '../models';

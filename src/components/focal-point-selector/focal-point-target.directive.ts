@@ -1,6 +1,6 @@
 import {Directive, ElementRef, Input, OnInit} from '@angular/core';
 import {FocalPointService} from '../../providers/focal-point.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 @Directive({selector: '[genticsFocalPointTarget]'})
 export class FocalPointTargetDirective implements OnInit {

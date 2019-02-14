@@ -10,7 +10,7 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {CropRect, ImageTransformParams} from '../../models';

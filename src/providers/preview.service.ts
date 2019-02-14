@@ -1,12 +1,9 @@
 import {Injectable} from '@angular/core';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
-import {Observable} from 'rxjs/Observable';
+import {Observable, combineLatest, Subject, BehaviorSubject} from 'rxjs';
 import {delay, map, share} from 'rxjs/operators';
-import {combineLatest} from 'rxjs/observable/combineLatest';
-import {Subject} from 'rxjs/Subject';
 
 import {CropRect, Dimensions2D} from '../models';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {getDefaultCropRect} from '../utils';
 
 /**
@@ -51,7 +48,7 @@ export class ImagePreviewService {
     /**
      * Sets the container of the image preview, which is used to calculate the maximum dimensions of the preview.
      */
-    registerContainer(container: HTMLElement, maxHeight: number, margin: number = 0): void {
+    registerContainer(container: HTMLElement, maxHeight: number, margin = 0): void {
         this.container = container;
         this.maxHeight = maxHeight;
         this.margin = margin;

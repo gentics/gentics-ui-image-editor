@@ -12,7 +12,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {SafeStyle} from '@angular/platform-browser';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {ImageTransformParams} from '../../models';
 import {ImagePreviewService} from '../../providers/preview.service';
@@ -30,7 +30,7 @@ import {ImagePreviewService} from '../../providers/preview.service';
 })
 export class GenticsImagePreviewComponent implements OnInit, OnChanges {
     @Input() src: string;
-    @Input() maxHeight: number = 5000;
+    @Input() maxHeight = 5000;
     @Input() transform: ImageTransformParams;
     @Output() imageLoad = new EventEmitter<HTMLImageElement>();
 
