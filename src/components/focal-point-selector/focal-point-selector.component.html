@@ -9,14 +9,12 @@
          [style.height.px]="height"
          [style.left.px]="xLineLeft"
     ></div>
-    <div class="focal-point-cross-x"
-         [class.emphasize]="enabled"
-         [style.left.px]="focalPointLeft"
+    <div class="focal-point-cross-x emphasize"
+         [style.left.px]="focalPointLeft + 5"
          [style.top.px]="focalPointTop - 10">
     </div>
-    <div class="focal-point-cross-y"
-         [class.emphasize]="enabled"
-         [style.top.px]="focalPointTop"
+    <div class="focal-point-cross-y emphasize"
+         [style.top.px]="focalPointTop + 5"
          [style.left.px]="focalPointLeft - 10">
     </div>
     <div class="focal-point-overlay"
