@@ -1,13 +1,13 @@
-<div class="target-mask" [style.width.px]="width" [style.height.px]="height">
+<div class="target-mask" [style.width.px]="width + 10" [style.height.px]="height + 10">
     <div class="y-line"
          [class.hidden]="!enabled"
          [style.width.px]="width"
-         [style.top.px]="yLineTop"
+         [style.top.px]="yLineTop + 5"
     ></div>
     <div class="x-line"
          [class.hidden]="!enabled"
          [style.height.px]="height"
-         [style.left.px]="xLineLeft"
+         [style.left.px]="xLineLeft + 5"
     ></div>
     <div class="focal-point-cross-x emphasize"
          [style.left.px]="focalPointLeft + 5"
