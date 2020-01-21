@@ -19,7 +19,7 @@ export class CropperService implements OnDestroy {
     private lastImageSrc: string;
     private initialData: Cropper.Data;
     private lastData: Cropper.Data;
-    private resizeTimer: number;
+    private resizeTimer: any;
     private crop$ = new Subject<Cropper.Data>();
 
     constructor(@Inject(CropperConstructor) private cropperConstructor: Type<Cropper>) {
