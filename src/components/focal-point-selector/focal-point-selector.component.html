@@ -1,20 +1,20 @@
-<div class="target-mask" [style.width.px]="width + 10" [style.height.px]="height + 10">
+<div class="target-mask" [style.width.px]="width + 2*lineExtension" [style.height.px]="height + 2*lineExtension">
     <div class="y-line"
          [class.hidden]="!enabled"
          [style.width.px]="width"
-         [style.top.px]="yLineTop + 5"
+         [style.top.px]="yLineTop + lineExtension"
     ></div>
     <div class="x-line"
          [class.hidden]="!enabled"
          [style.height.px]="height"
-         [style.left.px]="xLineLeft + 5"
+         [style.left.px]="xLineLeft + lineExtension"
     ></div>
     <div class="focal-point-cross-x emphasize"
-         [style.left.px]="focalPointLeft + 5"
+         [style.left.px]="focalPointLeft + lineExtension"
          [style.top.px]="focalPointTop - 10">
     </div>
     <div class="focal-point-cross-y emphasize"
-         [style.top.px]="focalPointTop + 5"
+         [style.top.px]="focalPointTop + lineExtension"
          [style.left.px]="focalPointLeft - 10">
     </div>
     <div class="focal-point-overlay"

@@ -38,6 +38,8 @@ export class FocalPointSelectorComponent implements OnInit, OnChanges, OnDestroy
     focalPointLeft: number;
     focalPointTop: number;
 
+    readonly lineExtension = 5;
+
     private target: HTMLElement;
     private destroy$ = new Subject<void>();
 

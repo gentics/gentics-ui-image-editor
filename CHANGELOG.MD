@@ -1,8 +1,8 @@
 # Gentics UI Image Editor Changelog
 
-## 0.5.0 (2020-01-08)
+## 0.5.0 (2020-01-21)
 
-### Fixes
+### Features
 
 * Improve the visibility of the focal point indicator.
 
