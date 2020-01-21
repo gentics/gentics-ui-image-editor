@@ -1,7 +1,6 @@
-import {fakeAsync, TestBed, tick} from '@angular/core/testing';
-
-import {CropperService} from './cropper.service';
-import {CropperConstructor} from '../models';
+import { CropperConstructor } from '../models';
+import { CropperService } from './cropper.service';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 const mockImageData = {
     naturalWidth: 800,
@@ -39,15 +38,15 @@ describe('CropperService', () => {
 
         it('instantiates cropper on first call', () => {
             const imageEl = { src: 'foo' } as any;
-            cropperService.enable(imageEl, 'original');
+            cropperService.enable(imageEl, { kind: 'original' });
 
             expect(mockCropperConstructor).toHaveBeenCalledWith(imageEl, jasmine.anything());
         });
 
         it('calls cropper.enable on subsequent call', () => {
             const imageEl = { src: 'foo' } as any;
-            cropperService.enable(imageEl, 'original');
-            cropperService.enable(imageEl, 'original');
+            cropperService.enable(imageEl, { kind: 'original' });
+            cropperService.enable(imageEl, { kind: 'original' });
 
             expect(mockCropperConstructor).toHaveBeenCalledTimes(1);
             expect(cropper.enable).toHaveBeenCalledTimes(1);
@@ -55,13 +54,13 @@ describe('CropperService', () => {
 
         it('destroys and re-instantiates cropper again if image src property changes', () => {
             const imageEl = { src: 'foo' } as any;
-            cropperService.enable(imageEl, 'original');
+            cropperService.enable(imageEl, { kind: 'original' });
 
             expect(mockCropperConstructor).toHaveBeenCalledTimes(1);
 
             imageEl.src = 'bar';
             const oldCropper = cropper;
-            cropperService.enable(imageEl, 'original');
+            cropperService.enable(imageEl, { kind: 'original' });
             expect(oldCropper.destroy).toHaveBeenCalledTimes(1);
             expect(mockCropperConstructor).toHaveBeenCalledTimes(2);
         });
@@ -70,7 +69,7 @@ describe('CropperService', () => {
 
     it('disable() calls cropper.disable()', () => {
         const imageEl = { src: 'foo' } as any;
-        cropperService.enable(imageEl, 'original');
+        cropperService.enable(imageEl, { kind: 'original' });
 
         cropperService.disable();
 
@@ -81,24 +80,24 @@ describe('CropperService', () => {
 
         beforeEach(() => {
             const imageEl = { src: 'foo' } as any;
-            cropperService.enable(imageEl, 'original');
+            cropperService.enable(imageEl, { kind: 'original' });
         });
 
         it('calls cropper.setAspectRatio() with correct value for "original"', () => {
             const aspectRatio = mockImageData.naturalWidth / mockImageData.naturalHeight;
-            cropperService.setCropAspectRatio('original');
+            cropperService.setCropAspectRatio({ kind: 'original' });
 
             expect(cropper.setAspectRatio).toHaveBeenCalledWith(aspectRatio);
         });
 
         it('calls cropper.setAspectRatio() with correct value for "square"', () => {
-            cropperService.setCropAspectRatio('square');
+            cropperService.setCropAspectRatio({ kind: 'square' });
 
             expect(cropper.setAspectRatio).toHaveBeenCalledWith(1);
         });
 
         it('calls cropper.setAspectRatio() with correct value for "free"', () => {
-            cropperService.setCropAspectRatio('free');
+            cropperService.setCropAspectRatio({ kind: 'free' });
 
             expect(cropper.setAspectRatio).toHaveBeenCalledWith(NaN);
         });
@@ -107,7 +106,7 @@ describe('CropperService', () => {
 
     it('resetCrop() calls cropper.setData() with the natural image dimensions', fakeAsync(() => {
         const imageEl = { src: 'foo' } as any;
-        cropperService.enable(imageEl, 'original');
+        cropperService.enable(imageEl, { kind: 'original' });
 
         cropperService.resetCrop();
         tick();
@@ -121,7 +120,8 @@ describe('CropperService', () => {
     }));
 
     it('setCropData() calls cropper.setData() if the cropper is already enabled', fakeAsync(() => {
-        cropperService.enable({ src: 'foo' } as any, 'original');
+        const imageEl = { src: 'foo' } as any;
+        cropperService.enable(imageEl, { kind: 'original' });
         tick();
 
         const data: any = { width: 100, height: 100 };
@@ -134,13 +134,15 @@ describe('CropperService', () => {
     }));
 
     it('setCropData() stores the data and sets it once the cropper is ready', fakeAsync(() => {
+        const aspectRatio = mockImageData.naturalWidth / mockImageData.naturalHeight;
         const data: any = { width: 100, height: 100 };
+        const imageEl = { src: 'foo' } as any;
         cropperService.setCropData(data);
 
-        cropperService.enable({ src: 'foo' } as any, 'original');
+        cropperService.enable(imageEl, { kind: 'original' });
         tick();
 
-        expect(cropper.setAspectRatio).toHaveBeenCalledWith(NaN);
+        expect(cropper.setAspectRatio).toHaveBeenCalledWith(aspectRatio);
         expect(cropper.setData).toHaveBeenCalledWith({
             width: 100,
             height: 100
