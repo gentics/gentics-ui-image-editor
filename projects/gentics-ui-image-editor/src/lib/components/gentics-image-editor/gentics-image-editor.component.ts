@@ -1,3 +1,5 @@
+
+import {fromEvent, merge as observableMerge,  Observable, Subject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -22,8 +24,8 @@ import {FocalPointService} from '../../providers/focal-point.service';
 import {Select} from 'gentics-ui-core';
 import {TranslatePipe} from '../../pipes/translate.pipe';
 import * as _ from 'lodash';
-import { Observable, Subject } from 'rxjs';
-import { ControlPanelComponent } from 'components/control-panel/control-panel.component';
+import { ControlPanelComponent } from '../control-panel/control-panel.component';
+import { debounceTime, map, startWith } from 'rxjs/operators';
 
 @Component({
     selector: 'gentics-ui-image-editor',
@@ -46,13 +48,13 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     @Input() customAspectRatios: AspectRatio[] = [];
     @Input()
     set canCrop(value: boolean) { this._canCrop = coerceToBoolean(value); }
-    get canCrop(): boolean { return this._canCrop }
+    get canCrop(): boolean { return this._canCrop; }
     @Input()
     set canResize(value: boolean) { this._canResize = coerceToBoolean(value); }
-    get canResize(): boolean { return this._canResize }
+    get canResize(): boolean { return this._canResize; }
     @Input()
     set canSetFocalPoint(value: boolean) { this._canSetFocalPoint = coerceToBoolean(value); }
-    get canSetFocalPoint(): boolean { return this._canSetFocalPoint }
+    get canSetFocalPoint(): boolean { return this._canSetFocalPoint; }
 
     @Output() transformChange = new EventEmitter<ImageTransformParams>();
     @Output() editing = new EventEmitter<boolean>();
@@ -146,12 +148,15 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
                 return true;
         }
 
-        const screenSizeChanged$ = Observable.merge(
+        const screenSizeChanged$ = observableMerge(
             this.isAspectRatioControlsUpdated$.asObservable(),
-            Observable.fromEvent(window, 'resize')
-        ).debounceTime(50).map(checkAspectRatioControlsSize);
+            fromEvent(window, 'resize')
+        ).pipe(
+          debounceTime(50),
+          map(checkAspectRatioControlsSize),
+        );
 
-        this.isAspectRatioControlsFits$ = screenSizeChanged$.startWith(checkAspectRatioControlsSize());
+        this.isAspectRatioControlsFits$ = screenSizeChanged$.pipe(startWith(checkAspectRatioControlsSize()));
     }
 
     onAspectRatioChange(): void {

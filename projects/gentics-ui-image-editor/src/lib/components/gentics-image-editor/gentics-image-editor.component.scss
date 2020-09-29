@@ -1,5 +1,5 @@
-@import "../../../node_modules/cropperjs/dist/cropper";
-@import "../../../node_modules/gentics-ui-core/dist/styles/variables";
+@import "~cropperjs/dist/cropper.css";
+@import "~gentics-ui-core/styles/variables";
 
 @mixin hide-for-mobile() {
   @media screen and (max-width: 601px){

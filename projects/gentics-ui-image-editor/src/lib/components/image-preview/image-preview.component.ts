@@ -12,7 +12,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {SafeStyle} from '@angular/platform-browser';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {ImageTransformParams} from '../../models';
 import {ImagePreviewService} from '../../providers/preview.service';

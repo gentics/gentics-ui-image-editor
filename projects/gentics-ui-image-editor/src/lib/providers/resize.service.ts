@@ -1,8 +1,5 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Subject} from 'rxjs/Subject';
-import {combineLatest} from 'rxjs/observable/combineLatest';
+import {Observable, BehaviorSubject, Subject, combineLatest} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
 
 import {Dimensions2D} from '../models';

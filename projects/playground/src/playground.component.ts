@@ -1,5 +1,5 @@
 import {Component, ChangeDetectorRef} from "@angular/core";
-import {ImageTransformParams, AspectRatio, AspectRatios} from '../src/models';
+import {ImageTransformParams, AspectRatio, AspectRatios} from 'gentics-ui-image-editor/models';
 
 @Component({
     selector: 'app',

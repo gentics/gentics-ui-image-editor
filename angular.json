@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "playground": {
@@ -24,8 +24,7 @@
             "tsConfig": "projects/playground/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "projects/playground/src/favicon.ico",
-              "projects/playground/src/assets"
+              "projects/playground/src/test-images"
             ],
             "styles": [
               "projects/playground/src/styles.scss"
@@ -88,8 +87,7 @@
             "tsConfig": "projects/playground/tsconfig.spec.json",
             "karmaConfig": "projects/playground/karma.conf.js",
             "assets": [
-              "projects/playground/src/favicon.ico",
-              "projects/playground/src/assets"
+              "projects/playground/src/test-images"
             ],
             "styles": [
               "projects/playground/src/styles.scss"
@@ -128,7 +126,7 @@
       "projectType": "library",
       "root": "projects/gentics-ui-image-editor",
       "sourceRoot": "projects/gentics-ui-image-editor/src",
-      "prefix": "lib",
+      "prefix": "gentics",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",

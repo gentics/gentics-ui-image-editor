@@ -1,8 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {filter, take, takeUntil} from 'rxjs/operators';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class FocalPointService implements OnDestroy {

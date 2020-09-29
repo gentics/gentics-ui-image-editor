@@ -19,9 +19,11 @@
       "dom"
     ],
     "paths": {
+      "gentics-ui-image-editor/*": [
+        "projects/gentics-ui-image-editor/src/lib/*"
+      ],
       "gentics-ui-image-editor": [
-        "dist/gentics-ui-image-editor/gentics-ui-image-editor",
-        "dist/gentics-ui-image-editor"
+        "projects/gentics-ui-image-editor/src/public-api"
       ]
     }
   },

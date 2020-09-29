@@ -61,3 +61,6 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// This is necessary, because GUIC uses the Intl library, which requires a global object (like in Node.js).
+(window as any).global = window;
