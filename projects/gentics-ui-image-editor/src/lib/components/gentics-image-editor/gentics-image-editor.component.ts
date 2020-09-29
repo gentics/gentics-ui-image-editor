@@ -1,4 +1,3 @@
-
 import {fromEvent, merge as observableMerge,  Observable, Subject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
@@ -58,8 +57,8 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     @Output() transformChange = new EventEmitter<ImageTransformParams>();
     @Output() editing = new EventEmitter<boolean>();
 
-    @ViewChild('customAspectRatio', { static: false }) customCropRatioSelect: Select;
-    @ViewChild('cropControlPanel', { read: ElementRef, static: false }) cropControlPanel: ElementRef;
+    @ViewChild('customAspectRatio') customCropRatioSelect: Select;
+    @ViewChild('cropControlPanel', { read: ElementRef }) cropControlPanel: ElementRef;
 
     mode: Mode = 'preview';
     imageIsLoading = false;
