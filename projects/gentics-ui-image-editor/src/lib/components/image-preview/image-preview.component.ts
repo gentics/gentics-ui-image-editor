@@ -34,7 +34,7 @@ export class GenticsImagePreviewComponent implements OnInit, OnChanges {
     @Input() transform: ImageTransformParams;
     @Output() imageLoad = new EventEmitter<HTMLImageElement>();
 
-    @ViewChild('previewImage') previewImage: ElementRef;
+    @ViewChild('previewImage', { static: true }) previewImage: ElementRef;
 
     previewWidth$: Observable<number>;
     previewHeight$: Observable<number>;

@@ -33,7 +33,7 @@ export class ImageCropperComponent implements OnChanges, OnDestroy {
     @Input() aspectRatio: AspectRatio;
     @Output() imageLoad = new EventEmitter<void>();
 
-    @ViewChild('sourceImage') sourceImage: ElementRef;
+    @ViewChild('sourceImage', { static: true }) sourceImage: ElementRef;
 
     @HostBinding('class.resizing')
     resizing = false;

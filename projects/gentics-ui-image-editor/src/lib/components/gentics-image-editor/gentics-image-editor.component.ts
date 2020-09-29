@@ -24,7 +24,6 @@ import {FocalPointService} from '../../providers/focal-point.service';
 import {Select} from 'gentics-ui-core';
 import {TranslatePipe} from '../../pipes/translate.pipe';
 import * as _ from 'lodash';
-import { ControlPanelComponent } from '../control-panel/control-panel.component';
 import { debounceTime, map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -59,8 +58,8 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
     @Output() transformChange = new EventEmitter<ImageTransformParams>();
     @Output() editing = new EventEmitter<boolean>();
 
-    @ViewChild('customAspectRatio') customCropRatioSelect: Select;
-    @ViewChild('cropControlPanel', { read: ElementRef }) cropControlPanel: ElementRef;
+    @ViewChild('customAspectRatio', { static: false }) customCropRatioSelect: Select;
+    @ViewChild('cropControlPanel', { read: ElementRef, static: false }) cropControlPanel: ElementRef;
 
     mode: Mode = 'preview';
     imageIsLoading = false;
