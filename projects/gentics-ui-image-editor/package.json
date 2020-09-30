@@ -2,7 +2,8 @@
   "name": "gentics-ui-image-editor",
   "version": "0.10.0",
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "cropperjs": "^1.5.9"
   },
   "peerDependencies": {
     "@angular/common": "^9.0.7 || ^10.0.0",

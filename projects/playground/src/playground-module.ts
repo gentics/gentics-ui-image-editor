@@ -12,7 +12,7 @@ require('./styles.scss');
 @NgModule({
     bootstrap: [PlaygroundAppComponent],
     declarations: [PlaygroundAppComponent],
-    imports: [BrowserModule, FormsModule, GenticsUIImageEditorModule, GenticsUICoreModule],
+    imports: [BrowserModule, FormsModule, GenticsUIImageEditorModule, GenticsUICoreModule.forRoot()],
     providers: [OverlayHostService]
 })
 export class PlaygroundModule {}

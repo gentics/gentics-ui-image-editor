@@ -7,6 +7,15 @@ const mockImageData = {
     naturalHeight: 600
 };
 
+class MockCropper {
+  destroy = jasmine.createSpy('destroy');
+  disable = jasmine.createSpy('disable');
+  enable = jasmine.createSpy('enable');
+  getImageData = jasmine.createSpy('getImageData').and.returnValue(mockImageData);
+  setAspectRatio = jasmine.createSpy('setAspectRatio');
+  setData = jasmine.createSpy('setData');
+}
+
 describe('CropperService', () => {
 
     let cropperService: CropperService;
@@ -23,6 +32,7 @@ describe('CropperService', () => {
             }
             return cropper;
         });
+
         TestBed.configureTestingModule({
             providers: [
                 CropperService,
@@ -30,8 +40,8 @@ describe('CropperService', () => {
             ]
         });
 
-        cropperService = TestBed.get(CropperService);
-        cropper = TestBed.get(CropperConstructor);
+        cropperService = TestBed.inject(CropperService);
+        cropper = TestBed.inject(CropperConstructor);
     });
 
     describe('enable()', () => {
@@ -150,13 +160,3 @@ describe('CropperService', () => {
     }));
 
 });
-
-
-class MockCropper {
-    destroy = jasmine.createSpy('destroy');
-    disable = jasmine.createSpy('disable');
-    enable = jasmine.createSpy('enable');
-    getImageData = jasmine.createSpy('getImageData').and.returnValue(mockImageData);
-    setAspectRatio = jasmine.createSpy('setAspectRatio');
-    setData = jasmine.createSpy('setData');
-}
