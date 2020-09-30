@@ -8,5 +8,8 @@
       "cropperjs": "cropperjs",
       "lodash": "_"
     }
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+     "cropperjs"
+  ]
 }
