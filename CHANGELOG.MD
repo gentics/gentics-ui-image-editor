@@ -1,5 +1,9 @@
 # Gentics UI Image Editor Changelog
 
+## 0.10.0 (Unreleased)
+
+* Upgrade to Angular 10 with Angular CLI
+
 ## 0.5.0 (2020-01-21)
 
 ### Features

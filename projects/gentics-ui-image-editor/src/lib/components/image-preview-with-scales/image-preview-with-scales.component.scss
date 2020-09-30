@@ -1,0 +1,49 @@
+@import "~gentics-ui-core/styles/variables";
+
+:host {
+  display: flex;
+  max-width: 100%;
+}
+
+.scale-wrapper {
+  margin: auto;
+  position: relative;
+  max-width: 100%;
+}
+
+.scale {
+  position: absolute;
+  display: flex;
+  border: 2px solid $gtx-color-primary;
+
+  &.less-than-actual {
+    border-color: $gtx-color-warning;
+  }
+}
+
+.scale-value {
+  font-size: 16px;
+  color: $gtx-color-primary;
+}
+
+.scale-x {
+  height: 10px;
+  border-bottom-width: 0;
+  left: 0;
+  bottom: 30px;
+  justify-content: center;
+  .scale-value {
+    margin-top: 2px;
+  }
+}
+
+.scale-y {
+  width: 10px;
+  border-right-width: 0;
+  right: 80px;
+  top: 0;
+  align-items: center;
+  .scale-value {
+    margin-left: 5px;
+  }
+}

@@ -1,0 +1,319 @@
+@import "~cropperjs/dist/cropper";
+@import "~gentics-ui-core/styles/variables";
+
+@mixin hide-for-mobile() {
+  @media screen and (max-width: 601px){
+    display: none;
+  }
+}
+
+@mixin no-select() {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+}
+
+@mixin range-thumb-color($color) {
+  input[type=range]::-ms-thumb {
+    background-color: $color;
+  }
+  input[type=range]::-moz-range-thumb {
+    background-color: $color;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    background-color: $color;
+  }
+}
+
+$resize-x-color: #10a0e3;
+$resize-y-color: #53e04c;
+
+gentics-ui-image-editor {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 2px solid $gtx-color-very-dark-gray;
+  border-radius: 3px;
+
+  .image-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACuoAAArqAVDM774AAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTZEaa/1AAAAK0lEQVQ4T2P4jwP8xgFGNSADqDwGIF0DlMYAUH0YYFQDMoDKYwASNfz/DwB/JvcficphowAAAABJRU5ErkJggg==');
+  }
+
+  gentics-image-cropper {
+    overflow: hidden;
+    &.hidden {
+      height: 0;
+      visibility: hidden;
+    }
+    &.loading {
+      opacity: 0;
+      transition: opacity 0s;
+    }
+    opacity: 1;
+    transition: opacity 0.5s;
+  }
+
+  gentics-focal-point-selector.hidden {
+    display: none;
+  }
+
+  img.source-image {
+    max-width: 100%;
+  }
+
+  .image-preview {
+    overflow: hidden;
+    margin: auto;
+
+    img {
+      display: block;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: auto;
+    }
+  }
+
+  gentics-image-preview-with-scales {
+    &.loading {
+      opacity: 0;
+    }
+    &.hidden {
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+    opacity: 1;
+    transition: opacity 0.5s;
+  }
+
+  .mode-selector {
+    padding: 4px 0 2px 0;
+    display: flex;
+
+    .mode-button {
+      width: 70px;
+      text-align: center;
+      margin-right: 10px;
+      transition: width 0.3s, margin 0.3s, opacity 0.3s 0.3s;
+      &.hidden {
+        width: 0;
+        margin-right: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: width 0.3s 0.3s, margin 0.3s 0.3s, opacity 0.3s
+      }
+    }
+
+    .mode-button gtx-button button {
+      cursor: default;
+    }
+
+    .button-label {
+      text-transform: uppercase;
+      font-size: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: $gtx-color-mid-gray;
+    }
+
+    &.preview {
+      .mode-button gtx-button button {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .control-panel {
+    position: relative;
+    background-color: $gtx-color-off-black;
+    height: 65px;
+  }
+
+  .controls {
+    display: flex;
+    @include no-select;
+
+    gtx-select {
+      margin: 0;
+    }
+  }
+
+  gentics-control-panel.mode-crop {
+    overflow: hidden;
+
+    .controls {
+      overflow: hidden;
+    }
+  }
+
+  .aspect-ratio-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    .aspect-ratio-label {
+      color: $gtx-color-dark-gray;
+      margin-right: 15px;
+    }
+
+    .aspect-ratios-small {
+      .aspect-ratio-label {
+        @include hide-for-mobile;
+      }
+    }
+
+    .aspect-ratios-small,
+    .aspect-ratios-large {
+      display: flex;
+      align-items: center;
+    }
+
+    .aspect-ratios-small.hidden-controls,
+    .aspect-ratios-large.hidden-controls {
+      position: absolute;
+      visibility: hidden;
+      left: -99999px;
+
+      * {
+        transition: none;
+      }
+    }
+
+    gtx-radio-button {
+      margin-right: 15px;
+      label {
+        padding-left: 25px !important;
+      }
+    }
+
+    gtx-select {
+      .view-value {
+        color: $gtx-color-dark-gray;
+        border-color: $gtx-color-dark-gray;
+      }
+    }
+  }
+
+  .resize-controls {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .resize-controls.ratio-locked {
+    .resize-factor {
+      top: 2px;
+
+      .scale-x:before {
+        display: none;
+      }
+
+      .scale-y {
+        max-width: 0;
+        margin-left: 0;
+        opacity: 0;
+      }
+    }
+
+    .range-controls {
+      .x {
+        top: 23px;
+      }
+      .y {
+        height: 0;
+        opacity: 0;
+      }
+    }
+  }
+
+  .resize-factor {
+    text-align: center;
+    position: absolute;
+    top: 22px;
+    z-index: 1;
+    width: 100%;
+    font-size: $gtx-font-size-lead;
+    color: $gtx-color-dark-gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: top 0.2s;
+
+    .scale-y {
+      overflow: hidden;
+      max-width: 100px;
+      margin-left: 30px;
+      transition: max-width 0.2s, margin 0.2s, opacity 0.4s;
+
+      &:before {
+        content: 'y:';
+        margin-right: 3px;
+        color: darken($resize-y-color, 15%);
+      }
+    }
+
+    .scale-x {
+      &:before {
+        content: 'x:';
+        margin-right: 3px;
+        color: darken($resize-x-color, 10%);
+      }
+    }
+
+    gtx-button {
+      margin-left: 10px;
+    }
+  }
+
+  .range-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gtx-range {
+      flex: 1;
+      .range-field {
+        margin: 0;
+      }
+    }
+
+    > icon {
+      margin: 0 20px;
+      color: $gtx-color-light-gray;
+      font-size: 32px;
+      @include hide-for-mobile;
+    }
+
+    .range-controls {
+      flex: 1;
+      height: 100%;
+
+      .x {
+        top: 0;
+        transition: top 0.2s;
+        @include range-thumb-color($resize-x-color);
+      }
+
+      .y {
+        overflow: hidden;
+        opacity: 1;
+        height: 30px;
+        transition: height 0.2s, opacity 0.4s;
+        @include range-thumb-color($resize-y-color);
+      }
+    }
+  }
+}
+

@@ -1,15 +1,34 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "module": "es2020",
     "moduleResolution": "node",
-    "rootDir": "./src",
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "lib": [
-      "es2015",
+      "es2018",
       "dom"
     ],
-    "skipLibCheck": true,
-    "types": ["jasmine", "node"]
+    "paths": {
+      "gentics-ui-image-editor/*": [
+        "projects/gentics-ui-image-editor/src/lib/*"
+      ],
+      "gentics-ui-image-editor": [
+        "projects/gentics-ui-image-editor/src/public-api"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }
