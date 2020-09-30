@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build gentics-ui-image-editor --prod",
     "build-demo": "ng build",
-    "test": "ng test",
+    "test": "ng test --watch=false",
+    "test-watch": "ng test gentics-ui-image-editor",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
