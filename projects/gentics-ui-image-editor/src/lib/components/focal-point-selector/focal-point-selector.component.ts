@@ -109,7 +109,7 @@ export class FocalPointSelectorComponent implements OnInit, OnChanges, OnDestroy
 
     @HostListener('window:scroll')
     @HostListener('window:resize')
-    private updatePositions(mouseX?: number, mouseY?: number): void {
+    updatePositions(mouseX?: number, mouseY?: number): void {
         if (this.target) {
             const { width, height, top, left } = this.target.getBoundingClientRect();
             const crosshairX = mouseX - left;

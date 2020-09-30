@@ -4,7 +4,7 @@ import {ImageTransformParams, AspectRatio, AspectRatios} from 'gentics-ui-image-
 @Component({
     selector: 'app',
     templateUrl: './playground.component.html',
-    styleUrls: ['./playground.component.css']
+    styleUrls: ['./playground.component.scss']
 })
 export class PlaygroundAppComponent {
     language = 'en';

@@ -73,20 +73,20 @@
                                (reset)="resetCrop()"
                                (apply)="applyCrop()"
                                (cancel)="cancelCrop()">
-            <div gtx-radio-group [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange($event)" class="aspect-ratio-controls">
+            <div gtx-radio-group [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange()" class="aspect-ratio-controls">
                 <div class="aspect-ratios-large" [class.hidden-controls]="!(isAspectRatioControlsFits$ | async)">
                     <div class="aspect-ratio-label">{{ 'aspect_ratio' | translate }}</div>
                     <gtx-radio-button *ngFor="let aspectRatio of filterShowAspectRatio(AvailableAspectRatios, 'radio')"
                                         [value]="aspectRatio"
                                         [label]="aspectRatio.label | translate"></gtx-radio-button>
-                    <gtx-select #customAspectRatio [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange($event)" *ngIf="filterShowAspectRatio(AvailableAspectRatios, 'select').length > 0">
+                    <gtx-select #customAspectRatio [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange()" *ngIf="filterShowAspectRatio(AvailableAspectRatios, 'select').length > 0">
                         <gtx-option *ngFor="let aspectRatio of filterShowAspectRatio(AvailableAspectRatios, 'select')"
                                     [value]="aspectRatio">{{ aspectRatio.label | translate }}</gtx-option>
                     </gtx-select>
                 </div>
                 <div class="aspect-ratios-small" [class.hidden-controls]="isAspectRatioControlsFits$ | async">
                     <div class="aspect-ratio-label">{{ 'aspect_ratio' | translate }}</div>
-                    <gtx-select [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange($event)" *ngIf="filterShowAspectRatio(AvailableAspectRatios).length > 0">
+                    <gtx-select [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange()" *ngIf="filterShowAspectRatio(AvailableAspectRatios).length > 0">
                         <gtx-option *ngFor="let aspectRatio of filterShowAspectRatio(AvailableAspectRatios)"
                                     [value]="aspectRatio">{{ aspectRatio.label | translate }}</gtx-option>
                     </gtx-select>
