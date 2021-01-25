@@ -27,7 +27,7 @@ export class PlaygroundAppComponent {
     constructor(private changeDetector: ChangeDetectorRef) {}
 
     get sourceUrl(): string {
-        const base = this.slowConnection ? 'http://localhost:4000/' : './test-images/';
+        const base = this.slowConnection ? './slow?ttfb=2&url=/test-images/' : './test-images/';
         return base + this.sourceImage;
     }
 

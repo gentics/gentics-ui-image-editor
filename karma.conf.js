@@ -1,3 +1,5 @@
+process.env.CHROME_BIN = require('puppeteer').executablePath()
+
 const path = require('path');
 const webpack = require('webpack');
 

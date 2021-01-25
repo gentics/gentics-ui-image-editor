@@ -33,7 +33,8 @@
                 <gtx-radio-button value="landscape.jpg" label="landscape.jpg" (change)="transformParams = {}"></gtx-radio-button>
             </div>
 
-            <gtx-checkbox *ngIf="!prodMode" [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>
+            <!-- @TODO: Needs extending devServer -->
+            <!--<gtx-checkbox *ngIf="!prodMode" [(ngModel)]="slowConnection" label="Simulate slow connection"></gtx-checkbox>!-->
         </div>
         <div class="inputs-row">
             <gtx-checkbox [(ngModel)]="canCrop" label="canCrop"></gtx-checkbox>

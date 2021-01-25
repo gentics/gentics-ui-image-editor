@@ -86,7 +86,7 @@
                 </div>
                 <div class="aspect-ratios-small" [class.hidden-controls]="isAspectRatioControlsFits$ | async">
                     <div class="aspect-ratio-label">{{ 'aspect_ratio' | translate }}</div>
-                    <gtx-select [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange()" *ngIf="filterShowAspectRatio(AvailableAspectRatios).length > 0">
+                    <gtx-select [(ngModel)]="cropAspectRatio" (ngModelChange)="onAspectRatioChange()" *ngIf="filterShowAspectRatio(AvailableAspectRatios).length > 0" [placeholder]="'more_aspect_ratios' | translate">
                         <gtx-option *ngFor="let aspectRatio of filterShowAspectRatio(AvailableAspectRatios)"
                                     [value]="aspectRatio">{{ aspectRatio.label | translate }}</gtx-option>
                     </gtx-select>

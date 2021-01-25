@@ -290,7 +290,7 @@ export class GenticsImageEditorComponent implements OnInit, OnChanges {
                 !!this.customCropRatioSelect &&
                 this.filterShowAspectRatio(this.AvailableAspectRatios, 'select').indexOf(this.cropAspectRatio) === -1
             ) {
-                this.customCropRatioSelect.viewValue = this.translate.transform('more_aspect_ratios');
+                this.customCropRatioSelect.placeholder = this.translate.transform('more_aspect_ratios');
                 this.changeDetector.markForCheck();
             }
 
